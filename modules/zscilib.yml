@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: zscilib
+title: Zephyr Scientific Library (zscilib)
+summary: >-
+  Scientific computing for MCUs: matrices, vectors, quaternions, statistics and sensor fusion.
+description: |
+  The Zephyr Scientific Library ([zscilib](https://github.com/zephyrproject-rtos/zscilib)) is an
+  attempt to provide a set of functions useful for scientific computing, data analysis, and data
+  manipulation in the context of resource-constrained embedded hardware devices.
+
+  It is written entirely in C. While the main development target for the library is the Zephyr
+  Project, it aims to be as portable as possible. A standalone reference project is included to
+  use this library in non-Zephyr-based projects.
+category: data
+keywords: [linear-algebra]
+license: Apache-2.0
+maintainers:
+  - github: zephyrproject-rtos
+links:
+  repository: https://github.com/zephyrproject-rtos/zscilib
+  documentation: https://zephyrproject-rtos.github.io/zscilib/
+  examples: https://github.com/zephyrproject-rtos/zscilib/tree/master/samples
+west:
+  revision: master
+  path: modules/lib/zscilib
