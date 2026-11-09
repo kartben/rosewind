@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: emlearn
+title: emlearn
+summary: >-
+  Converts scikit-learn and Keras models into portable C code for inference on microcontrollers.
+description: |
+  [emlearn](https://github.com/emlearn/emlearn) is an open source library for deploying machine
+  learning models on micro-controllers and embedded systems. It provides portable C code
+  generation from models trained with scikit-learn or Keras.
+
+  A Python library allows converting complex machine learning models to a minimal C code
+  representation, which enables running ML inference on resource-constrained embedded devices.
+
+  emlearn is licensed under the MIT license.
+category: ml
+tags: [tinyml, scikit-learn, keras]
+license: MIT
+maintainers:
+  - github: emlearn
+links:
+  repository: https://github.com/emlearn/emlearn
+  documentation: https://emlearn.readthedocs.io/en/latest/getting_started_zephyr.html
+west:
+  revision: master
+  path: modules/lib/emlearn
