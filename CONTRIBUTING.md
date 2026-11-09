@@ -80,6 +80,7 @@ dependencies along with the module.
 A module can add its logo as `logos/<name>.svg` (preferred), `.png`, `.webp` or `.jpg`,
 where `<name>` is the entry name. Keep it square, at most 100 KiB and, for PNG files, at least
 64 px wide. SVG files must not contain scripts, event handlers or references to other files.
+Use the project's own logo and say in the commit message where it comes from.
 
 Without a logo, the site shows the icon that the module's `homepage` (or `documentation`
 site) declares, or the module's initials when there is none.

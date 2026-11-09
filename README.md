@@ -19,6 +19,9 @@ Each module is one YAML file in [`modules/`](modules/) that follows
 Listing a module is not an endorsement by the Zephyr Project. Modules are maintained by their
 authors under their own licenses.
 
+Logos in `logos/` belong to their projects and only identify them; the commit that adds each one
+names its source.
+
 The initial entries were migrated from the "External Projects/Modules" pages of the Zephyr
 documentation (`doc/develop/manifest/external/`), keeping the revisions those pages listed. Until
 each module's maintainers confirm their entry, `maintainers` names the owner of the repository.
