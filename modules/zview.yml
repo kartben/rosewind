@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: zview
+title: ZView
+summary: >-
+  Live view of threads, stacks and kernel objects of a running target over an SWD probe, with west zview.
+description: |
+  [ZView](https://github.com/wkhadgar/zview) is a runtime visualizer for Zephyr RTOS applications,
+  providing live system-wide thread and kernel object statistics via an SWD debug probe.
+
+  It reads kernel object locations and inspects memory through the APB bus 'without halting' the
+  CPU, keeping the on-target footprint to nearly zero — no UART, no Shell, no additional Kconfig
+  overhead beyond the standard thread introspection options.
+
+  The tool runs entirely on the host as a TUI application, displaying the live state of the
+  application's threads and kernel objects.
+category: tools
+tags: [debug, swd, threads]
+license: Apache-2.0
+maintainers:
+  - github: wkhadgar
+links:
+  repository: https://github.com/wkhadgar/zview
+west:
+  revision: main
+  path: modules/tools/zview
+  west-commands: scripts/west-commands.yml
