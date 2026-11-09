@@ -1,0 +1,40 @@
+{#- Install instructions for one module record `m`. -#}
+{% set names = m.install_set | map(attribute='name') | join(' ') %}
+{% set post = [] %}
+{% if 'pip' in m.provides %}{% set _ = post.append('west packages -m ' ~ m.name ~ ' pip --install') %}{% endif %}
+{% if 'blobs' in m.provides %}{% set _ = post.append('west blobs fetch ' ~ m.name) %}{% endif %}
+<div class="install">
+  <div class="tabs" role="tablist" aria-label="Ways to add {{ m.title }}">
+    {% if config.west_command %}<button role="tab" type="button" data-tab="west" aria-selected="true">west</button>{% endif %}
+    <button role="tab" type="button" data-tab="quick" aria-selected="{{ 'false' if config.west_command else 'true' }}">Zephyr workspace</button>
+    <button role="tab" type="button" data-tab="yml" aria-selected="false">Own west.yml</button>
+  </div>
+  {% if config.west_command %}
+  <div class="tabpanel" data-panel="west" role="tabpanel">
+    <div class="cmd"><span class="p">$</span><code>{{ config.west_command.format(name=m.name) }}</code><button class="copy" type="button">Copy</button></div>
+  </div>
+  {% endif %}
+  <div class="tabpanel" data-panel="quick" role="tabpanel"{% if config.west_command %} hidden{% endif %}>
+    <div class="codebox">
+      <div class="codebox-head">
+        <div class="os-switch" role="group" aria-label="Shell">
+          <button type="button" data-os="unix" aria-pressed="true">macOS / Linux</button>
+          <button type="button" data-os="windows" aria-pressed="false">Windows</button>
+        </div>
+        <button class="copy" type="button">Copy</button>
+      </div>
+<pre data-os="unix">{% for x in m.install_set %}curl -fsSL {{ x.submanifest_url }} \
+     -o zephyr/submanifests/{{ x.name }}.yaml
+{% endfor %}west update {{ names }}{% for p in post %}{{ '\n' ~ p }}{% endfor %}</pre>
+<pre data-os="windows" hidden>{% for x in m.install_set %}Invoke-WebRequest {{ x.submanifest_url }} `
+  -OutFile zephyr/submanifests/{{ x.name }}.yaml
+{% endfor %}west update {{ names }}{% for p in post %}{{ '\n' ~ p }}{% endfor %}</pre>
+    </div>
+    <p class="hint">Run from the workspace root.{% if m.install_set|length > 1 %} Includes {{ m.install_set[:-1] | map(attribute='name') | join(', ') }}, a dependency.{% endif %}</p>
+  </div>
+  <div class="tabpanel" data-panel="yml" role="tabpanel" hidden>
+    {% set lines = [] %}{% for x in m.install_set %}{% for l in project_lines(x.west, 4) %}{% set _ = lines.append(l) %}{% endfor %}{% endfor %}
+    <div class="codebox"><div class="codebox-head"><span class="path">west.yml</span><button class="copy" type="button">Copy</button></div><pre>{{ ("manifest:\n  projects:\n" ~ lines | join("\n")) | yaml_highlight }}</pre></div>
+    <p class="hint">Then run <code class="inline">west update {{ names }}</code>.</p>
+  </div>
+</div>

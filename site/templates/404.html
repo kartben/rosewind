@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Page not found · {{ config.name }}{% endblock %}
+{% block band %}
+<section class="band band-page">
+  <div class="wrap">
+    <a class="back" href="{{ depth }}">← All modules</a>
+    <h1>Page not found</h1>
+    <p class="lead">This module may have been renamed or removed from the registry. <a href="{{ depth }}">Search all modules</a>.</p>
+  </div>
+</section>
+{% endblock %}
+{% block main %}{% endblock %}

@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import struct
@@ -20,6 +21,8 @@ ROOT = Path(__file__).resolve().parent.parent
 MODULES_DIR = ROOT / 'modules'
 CATEGORIES_FILE = ROOT / 'categories.yml'
 ENTRY_SCHEMA = ROOT / 'schema' / 'entry.schema.json'
+INDEX_SCHEMA = ROOT / 'schema' / 'index.schema.json'
+SITE_CONFIG = ROOT / 'site.yml'
 LOGOS_DIR = ROOT / 'logos'
 
 # Optional west project keys copied verbatim from an entry, in output order.
@@ -78,6 +81,12 @@ def entry_paths(paths=None) -> list[Path]:
     if paths:
         return [Path(p).resolve() for p in paths]
     return sorted(MODULES_DIR.glob('*.yml'))
+
+
+def load_site_config() -> dict:
+    if SITE_CONFIG.exists():
+        return load_yaml(SITE_CONFIG) or {}
+    return {}
 
 
 # --- logos -------------------------------------------------------------------
@@ -143,6 +152,55 @@ def check_svg(data: bytes) -> list[str]:
             if name == 'href' and not value.startswith(('#', 'data:image/')):
                 errors.append(f'external reference {value} is not allowed')
     return sorted(set(errors))
+
+
+# --- YAML emission -----------------------------------------------------------
+
+_PLAIN = re.compile(r'^[A-Za-z0-9_][A-Za-z0-9 ._/+@():-]*$')
+_RESERVED = re.compile(r'^(true|false|yes|no|on|off|null|~|[0-9][0-9._]*)$', re.I)
+
+
+def yaml_scalar(value) -> str:
+    """Emit a scalar, quoting only when plain style would change its meaning."""
+    if isinstance(value, bool):
+        return 'true' if value else 'false'
+    s = str(value)
+    if _PLAIN.match(s) and not _RESERVED.match(s) and not s.endswith((' ', ':')) and ': ' not in s:
+        return s
+    return json.dumps(s, ensure_ascii=False)
+
+
+def project_lines(proj: dict, indent: int = 4) -> list[str]:
+    """Lines of one west project as a list item, in a fixed key order."""
+    pad = ' ' * indent
+    lines = [f'{pad}- name: {yaml_scalar(proj["name"])}']
+    for key in ('url', 'revision', 'path'):
+        lines.append(f'{pad}  {key}: {yaml_scalar(proj[key])}')
+    for key in WEST_OPTIONAL_KEYS:
+        if key not in proj:
+            continue
+        val = proj[key]
+        if key == 'submodules' and isinstance(val, list):
+            lines.append(f'{pad}  submodules:')
+            for sub in val:
+                first = True
+                for k, v in sub.items():
+                    lead = '- ' if first else '  '
+                    lines.append(f'{pad}    {lead}{k}: {yaml_scalar(v)}')
+                    first = False
+        elif isinstance(val, list):
+            lines.append(f'{pad}  {key}: [{", ".join(yaml_scalar(v) for v in val)}]')
+        else:
+            lines.append(f'{pad}  {key}: {yaml_scalar(val)}')
+    return lines
+
+
+def submanifest_text(proj: dict, source_url: str | None = None) -> str:
+    """A complete west submanifest that adds one project."""
+    head = [f'# {proj["name"]} from Rosewind, the catalog of third-party Zephyr modules']
+    if source_url:
+        head.append(f'# {source_url}')
+    return '\n'.join(head + ['manifest:', '  projects:'] + project_lines(proj, 4)) + '\n'
 
 
 # --- licenses ----------------------------------------------------------------

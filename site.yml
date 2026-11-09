@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: Rosewind
+title: Rosewind · Third-party modules for Zephyr
+headline: Extend Zephyr with third-party modules
+# Absolute URL of the published site, without trailing slash. build_site.py --base-url overrides it.
+base_url: https://zephyrproject-rtos.github.io/rosewind
+repository: https://github.com/zephyrproject-rtos/rosewind
+branch: main
+docs_url: https://docs.zephyrproject.org/latest/develop/modules.html
+tagline: >-
+  Discover modules you can add to any Zephyr workspace to bring in new protocols,
+  libraries, language runtimes and more.
+# Command shown in the "west command" tab once Zephyr ships one, with {name}
+# replaced by the module name, e.g. "west modules add {name}". null hides the tab.
+west_command: null

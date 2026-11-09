@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/zephyrproject-rtos/rosewind/schema/index.schema.json",
+  "title": "Rosewind index",
+  "description": "Published as index.json. Tools (west commands, IDE extensions) can rely on this contract; a breaking change increments schema-version.",
+  "type": "object",
+  "required": ["schema-version", "generated", "site", "categories", "modules"],
+  "properties": {
+    "schema-version": {"const": 1},
+    "generated": {"type": "string", "format": "date-time"},
+    "site": {"type": "string"},
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "description"],
+        "properties": {"id": {"type": "string"}, "label": {"type": "string"}, "description": {"type": "string"}}
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "title", "summary", "description", "category", "keywords", "license", "license_kind",
+                     "maintainers", "links", "status", "west", "provides", "dependencies", "checks",
+                     "page_url", "submanifest_url", "revision_kind", "repo", "newer_release", "image"],
+        "properties": {
+          "name": {"type": "string"},
+          "title": {"type": "string"},
+          "summary": {"type": "string"},
+          "description": {"type": "string", "description": "Markdown subset; empty when absent."},
+          "category": {"type": "string"},
+          "keywords": {"type": "array", "items": {"type": "string"}},
+          "license": {"type": "string", "description": "SPDX expression."},
+          "license_kind": {"enum": ["permissive", "copyleft", "other"]},
+          "maintainers": {"type": "array", "items": {"type": "object"}},
+          "links": {"type": "object", "required": ["repository"]},
+          "status": {"enum": ["active", "deprecated", "unmaintained"]},
+          "west": {
+            "description": "A complete west project: add it under manifest.projects as is.",
+            "type": "object",
+            "required": ["name", "url", "revision", "path"],
+            "properties": {
+              "name": {"type": "string"},
+              "url": {"type": "string"},
+              "revision": {"type": "string"},
+              "path": {"type": "string"}
+            }
+          },
+          "revision_kind": {"enum": ["tag", "branch", "sha", null]},
+          "provides": {"type": "array", "items": {"type": "string"}},
+          "dependencies": {
+            "description": "Zephyr modules named in build.depends; entry is the registry module providing it, or null.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["module", "entry"],
+              "properties": {"module": {"type": "string"}, "entry": {"type": ["string", "null"]}}
+            }
+          },
+          "repo": {
+            "type": ["object", "null"],
+            "properties": {
+              "stars": {"type": ["integer", "null"]},
+              "pushed_at": {"type": ["string", "null"]},
+              "archived": {"type": ["boolean", "null"]},
+              "latest_release": {
+                "type": ["object", "null"],
+                "properties": {"tag": {"type": "string"}, "date": {"type": "string"}}
+              }
+            }
+          },
+          "newer_release": {"type": ["string", "null"]},
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["level", "code", "message"],
+              "properties": {
+                "level": {"enum": ["pass", "info", "warning", "error"]},
+                "code": {"type": "string"},
+                "message": {"type": "string"}
+              }
+            }
+          },
+          "image": {
+            "description": "Absolute URL of the module's logo, or of the icon its website declares; null when neither exists.",
+            "type": ["string", "null"]
+          },
+          "page_url": {"type": "string"},
+          "submanifest_url": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block canonical %}<link rel="canonical" href="{{ base_url }}/">{% endblock %}
+{% block band %}
+<section class="band">
+  <div class="wrap">
+    <h1>{{ config.headline }}</h1>
+    <p class="lead">{{ config.tagline }}</p>
+    <form class="search" role="search" action="./" method="get">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <input id="q" name="q" type="search" placeholder="Search modules" autocomplete="off" aria-label="Search modules">
+      <kbd>/</kbd>
+    </form>
+  </div>
+</section>
+{% endblock %}
+{% block main %}
+<nav class="pills" id="f-category" aria-label="Categories">
+  <a href="./" data-facet="category" data-v="" aria-current="true"><span class="lbl">All</span><span class="n">{{ records|length }}</span></a>
+  {% for k, c in categories.items() | sort(attribute='1.label') %}
+  <a href="./?category={{ k }}" data-facet="category" data-v="{{ k }}"><span class="lbl">{{ c.label }}</span><span class="n">{{ category_counts.get(k, 0) }}</span></a>
+  {% endfor %}
+</nav>
+<div class="toolbar">
+  <div class="count" id="count"><b>{{ records|length }}</b> modules</div>
+  <button class="reset" id="reset" type="button" hidden>Clear filters</button>
+  <div class="segmented" id="f-license" role="group" aria-label="License">
+    <a href="./" data-facet="license" data-v="" aria-current="true"><span class="lbl">Any license</span></a>
+    {% for k, label in license_labels.items() %}{% if license_counts.get(k) %}
+    <a href="./?license={{ k }}" data-facet="license" data-v="{{ k }}"><span class="lbl">{{ label }}</span><span class="n">{{ license_counts[k] }}</span></a>
+    {% endif %}{% endfor %}
+  </div>
+</div>
+<div class="grid" id="grid">
+  {% for m in records %}
+  <article class="card" data-name="{{ m.name }}">
+    <div class="card-head">
+      <div class="thumb{{ ' thumb-logo' if m.image_kind == 'logo' }}"{% if not m.image %} style="--h:{{ m.hue }}"{% endif %}>{% if m.image %}<img src="{{ depth }}{{ m.image }}" alt="" width="44" height="44" loading="lazy">{% else %}<span aria-hidden="true">{{ m.initials }}</span>{% endif %}</div>
+      <div class="card-title">
+        <h2><a href="m/{{ m.name }}/" data-module="{{ m.name }}">{{ m.title }}</a></h2>
+        <div class="owner">{{ m.owner }}</div>
+      </div>
+      {% if m.repo and m.repo.stars is not none %}<span class="stars" title="GitHub stars">★ {{ m.repo.stars | stars }}</span>{% endif %}
+    </div>
+    <p>{{ m.summary }}</p>
+    <div class="meta">
+      {% if m.activity %}<span class="status {{ m.activity }}" title="Last commit {{ m.repo.pushed_at[:10] }}">{{ m.days | ago }}</span>{% endif %}
+      <span class="lic" title="{{ m.license }}">{{ m.license }}</span>
+      {% if 'west-commands' in m.provides %}<span class="badge">West commands</span>{% endif %}
+    </div>
+  </article>
+  {% endfor %}
+  <div class="empty" id="empty" hidden>No module matches. Missing one? <a href="contribute/">List it</a>.</div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-label="Module details" aria-hidden="true">
+  <div class="panel-inner">
+    <div class="panel-bar"><a id="panel-page" href="#">Open full page</a><button class="close" type="button" id="close" aria-label="Close details">×</button></div>
+    <div id="panel-body"></div>
+  </div>
+</aside>
+<script type="application/json" id="cards">{{ cards_json }}</script>
+<script type="application/json" id="taxonomy">{{ {'categories': categories, 'licenses': license_labels} | tojson }}</script>
+{% endblock %}
