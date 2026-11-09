@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Registry maintainers review every change. Replace with the team created for
+# the repository in the zephyrproject-rtos organization.
+*                       @zephyrproject-rtos/rosewind-maintainers
