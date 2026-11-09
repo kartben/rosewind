@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: edge-impulse
+title: Edge Impulse SDK
+summary: >-
+  Run Edge Impulse signal processing and ML inference in Zephyr apps, with west commands to deploy models.
+description: |
+  Edge Impulse is a leading edge AI design and development platform for deploying machine learning
+  to edge devices. The Edge Impulse SDK for Zephyr packages the Edge Impulse inferencing SDK as a
+  Zephyr module, enabling easy integration with Zephyr's build system. Sign up for a free account
+  [here](https://www.edgeimpulse.com/signup).
+
+  The module packages the Edge Impulse inferencing SDK as a Zephyr module, enabling easy
+  integration with Zephyr's build system. It can also provide west extension commands to build (on
+  the Edge Impulse platform) and download model deployment artifacts into your workspace for
+  integration into a Zephyr application.
+
+  The Edge Impulse SDK is provided under the [BSD-3-Clause-Clear
+  license](https://github.com/edgeimpulse/edge-impulse-sdk-zephyr?tab=BSD-3-Clause-Clear-1-ov-file).
+  Note that Edge Impulse cloud services require at least a free tier account or api-key to a
+  public project; see the [Edge Impulse website](https://edgeimpulse.com) for pricing and terms of
+  service.
+category: ml
+keywords: [tinyml, dsp]
+license: BSD-3-Clause-Clear
+maintainers:
+  - github: edgeimpulse
+links:
+  repository: https://github.com/edgeimpulse/edge-impulse-sdk-zephyr
+  documentation: https://docs.edgeimpulse.com/hardware/deployments/run-zephyr-module
+  homepage: https://edgeimpulse.com
+west:
+  revision: v1.82.3
+  path: modules/lib/edge-impulse-sdk-zephyr
+  west-commands: west/west-commands.yml
