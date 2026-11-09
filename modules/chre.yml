@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: chre
+title: Context Hub Runtime Environment (CHRE)
+summary: >-
+  Android's Context Hub Runtime Environment for always-on nanoapps on a low-power core.
+description: |
+  The [Context Hub Runtime
+  Environment](https://source.android.com/docs/core/interaction/contexthub) (CHRE) is Android's
+  platform for always-on applications, called *nanoapps*, which run on a low-power processor next
+  to the application processor running Android. Nanoapps are written against the CHRE API, which
+  is standardized across platforms, and are hosted by the CHRE framework, the AOSP reference
+  implementation of that API.
+
+  The [zephyrproject-rtos/chre](https://github.com/zephyrproject-rtos/chre) repository is a fork
+  of the AOSP framework with a Zephyr port under `platform/zephyr`. The port runs the CHRE event
+  loop in a dedicated thread and provides the platform primitives (memory, timers, system time,
+  logging and host link) the framework needs. The Platform Abstraction Layers (PALs) for audio,
+  GNSS, sensors, WiFi and WWAN are not implemented for Zephyr.
+
+  CHRE is licensed under the Apache-2.0 license.
+category: languages
+tags: [android, nanoapps, sensor-hub]
+license: Apache-2.0
+maintainers:
+  - github: zephyrproject-rtos
+links:
+  repository: https://github.com/zephyrproject-rtos/chre
+  documentation: https://source.android.com/docs/core/interaction/contexthub
+west:
+  revision: zephyr
+  path: modules/lib/chre
