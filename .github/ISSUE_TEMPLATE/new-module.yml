@@ -46,6 +46,12 @@ body:
       description: A release tag is preferred; a branch or commit SHA also works.
     validations:
       required: true
+  - type: input
+    id: path
+    attributes:
+      label: Workspace path (optional)
+      description: Where west checks the module out. Leave empty for modules/lib/<name>.
+      placeholder: modules/lib/zenoh-pico
   - type: dropdown
     id: category
     attributes:
@@ -73,12 +79,28 @@ body:
     id: maintainers
     attributes:
       label: Maintainers (GitHub handles)
+      description: Separate handles with commas.
+      placeholder: alice, bob
     validations:
       required: true
   - type: input
     id: documentation
     attributes:
-      label: Documentation URL
+      label: Documentation URL (optional)
+  - type: input
+    id: homepage
+    attributes:
+      label: Homepage URL (optional)
+      description: The site's icon becomes the module's image unless you add a logo later.
+  - type: input
+    id: keywords
+    attributes:
+      label: Keywords (optional)
+      description: >-
+        Up to 5 search terms, separated by commas, that the title, summary and description do
+        not already contain: protocols, standards, use cases. Not the module name, vendor or
+        category.
+      placeholder: mqtt, tinyml
   - type: textarea
     id: description
     attributes:

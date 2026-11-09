@@ -56,6 +56,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). In short: add `modules/<name>.yml`, run
 | `scripts/validate.py` | Offline checks; `--online` also checks the repository and revision |
 | `scripts/enrich.py` | Collects revision, `zephyr/module.yml`, activity and release data into `build/enriched.json` |
 | `scripts/build_site.py` | Builds `_site/` from the entries and `build/enriched.json` |
+| `scripts/issue_to_entry.py` | Writes `modules/<name>.yml` from the answers of a New module issue |
 | `site/` | Jinja templates, stylesheet and script of the website |
 | `site.yml` | Site settings (base URL, repository, optional west command) |
 | `tests/` | pytest suite |
