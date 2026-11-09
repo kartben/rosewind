@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: zephyr-lang-rust
+title: Rust Language Support
+summary: >-
+  Write Zephyr applications in Rust: the zephyr crate, Cargo build integration and devicetree codegen.
+description: |
+  The [zephyr-lang-rust](https://github.com/zephyrproject-rtos/zephyr-lang-rust) module adds
+  support for writing Zephyr applications in Rust. It provides the `zephyr` crate, which exposes
+  Zephyr kernel services, devices and logging to Rust code, the build support that compiles an
+  application's Cargo crate and links it into the Zephyr image, and code generation from the
+  devicetree.
+
+  The module is licensed under the Apache-2.0 license.
+category: languages
+license: Apache-2.0
+maintainers:
+  - github: zephyrproject-rtos
+links:
+  repository: https://github.com/zephyrproject-rtos/zephyr-lang-rust
+west:
+  revision: main
+  path: modules/lang/rust
