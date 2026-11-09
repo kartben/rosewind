@@ -1,31 +1,42 @@
 {% extends 'base.html' %}
-{% block title %}List your module · {{ config.title }}{% endblock %}
-{% block description %}Add a Zephyr module to the community registry with one YAML file.{% endblock %}
+{% set nav = 'contribute' %}
+{% block title %}List your module · {{ config.name }}{% endblock %}
+{% block description %}Add a Zephyr module to {{ config.name }} with a short form or a pull request.{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ base_url }}/contribute/">{% endblock %}
 {% block band %}
 <section class="band band-page">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ depth }}">Modules</a></nav>
+    <a class="back" href="{{ depth }}">← All modules</a>
     <h1>List your module</h1>
-    <p class="lead">Each module is one YAML file in the registry repository. Validation runs on every pull request, and the site updates when it merges.</p>
+    <p class="lead">Fill in a short form, or add the entry yourself with a pull request. A registry maintainer reviews every listing against the <a href="{{ config.repository }}/blob/{{ config.branch }}/CONTRIBUTING.md">listing criteria</a>.</p>
   </div>
 </section>
 {% endblock %}
 {% block main %}
 <div class="detail-page">
-  <div class="contrib">
-    <ol class="steps">
-      <li><div><b>Add one file</b><p>Fork <a href="{{ config.repository }}">the registry</a> and create <code>modules/&lt;name&gt;.yml</code>.</p></div></li>
-      <li><div><b>Check it</b><p><code>python scripts/validate.py --online modules/&lt;name&gt;.yml</code></p></div></li>
-      <li><div><b>Open a pull request</b><p>A registry maintainer reviews it against the <a href="{{ config.repository }}/blob/{{ config.branch }}/CONTRIBUTING.md">listing criteria</a>.</p></div></li>
-    </ol>
-    {% if sample %}
-    <div class="codebox">
-      <div class="codebox-head"><span class="path">modules/{{ sample.name }}.yml</span><button class="copy" type="button">Copy</button></div>
-      <pre>{{ sample_entry | yaml_highlight }}</pre>
-    </div>
-    {% endif %}
+  <div class="options">
+    <section class="option option-main" aria-labelledby="h-form">
+      <span class="option-tag">Easiest</span>
+      <h2 id="h-form">Fill in a form</h2>
+      <p>Answer a few questions in a GitHub issue: name, repository, revision, license, category. A registry maintainer writes the entry for you.</p>
+      <a class="btn" href="{{ config.repository }}/issues/new?template=new-module.yml" rel="noopener">Open the New module form ↗</a>
+      <p class="option-note">All you need is a GitHub account.</p>
+    </section>
+    <section class="option" aria-labelledby="h-pr">
+      <h2 id="h-pr">Open a pull request</h2>
+      <ol class="steps">
+        <li><div><b>Add one file</b><p>Fork <a href="{{ config.repository }}">the registry</a> and create <code>modules/&lt;name&gt;.yml</code>, like the example below.</p></div></li>
+        <li><div><b>Check it</b><p><code>python scripts/validate.py --online modules/&lt;name&gt;.yml</code></p></div></li>
+        <li><div><b>Open the pull request</b><p>CI runs the same checks and builds a preview of the site.</p></div></li>
+      </ol>
+    </section>
   </div>
-  <p class="note">Prefer a form? Open a <a href="{{ config.repository }}/issues/new?template=new-module.yml">New module</a> issue.</p>
+  {% if sample %}
+  <h2 class="example-title">Example entry</h2>
+  <div class="codebox">
+    <div class="codebox-head"><span class="path">modules/{{ sample.name }}.yml</span><button class="copy" type="button">Copy</button></div>
+    <pre>{{ sample_entry | yaml_highlight }}</pre>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}
