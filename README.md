@@ -80,6 +80,8 @@ Only the fields of an entry are written by hand. Everything else is derived:
   requirements, blobs). This works with any git host.
 - For repositories on GitHub, the REST API adds stars, last push, archive status and the latest
   release.
+- The module's homepage, or its documentation site, gives the icon shown for modules that have
+  no logo in `logos/`. SVG icons that contain scripts and raster icons under 32 px are ignored.
 
 The nightly publish job writes a report of entries needing attention (unreachable repositories,
 missing `zephyr/module.yml`, no activity for a year, newer releases than the listed tag) to the

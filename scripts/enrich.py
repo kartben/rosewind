@@ -6,8 +6,10 @@
 
 Uses git for everything that works on any host (revision, tags,
 zephyr/module.yml) and the GitHub REST API for stars, activity and releases
-when the repository is on github.com. Set GITHUB_TOKEN to raise the API rate
-limit. --report writes a Markdown summary of what needs attention.
+when the repository is on github.com. It also saves the icon that the
+module's homepage (or documentation site) declares, next to the output, as
+the image of modules without a logo in logos/. Set GITHUB_TOKEN to raise the
+API rate limit. --report writes a Markdown summary of what needs attention.
 """
 
 from __future__ import annotations
@@ -17,6 +19,8 @@ import json
 import os
 import re
 import sys
+from html.parser import HTMLParser
+from urllib.parse import urljoin, urlsplit
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -68,7 +72,92 @@ def github_info(url: str) -> dict | None:
     return info
 
 
-def enrich_one(entry: registry.Entry, use_github: bool) -> dict:
+ICON_MIN_PX = 32
+ICON_MAX_BYTES = 200 * 1024
+# Sites whose favicon is the host's, not the project's.
+GENERIC_HOSTS = ('github.com', 'gitlab.com', 'readthedocs.io', 'readthedocs.org', 'github.io')
+
+
+class IconLinks(HTMLParser):
+    """Collect <link rel="icon"> and <link rel="apple-touch-icon"> declarations."""
+
+    def __init__(self):
+        super().__init__()
+        self.icons = []
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        rel = (a.get('rel') or '').lower().split()
+        if tag == 'link' and a.get('href') and ('icon' in rel or 'apple-touch-icon' in rel):
+            self.icons.append(a)
+
+
+def fetch(url: str, limit: int) -> bytes:
+    req = urllib.request.Request(url, headers={'User-Agent': 'zephyr-community-modules'})
+    with urllib.request.urlopen(req, timeout=20) as r:  # noqa: S310 (URL from a reviewed entry)
+        return r.read(limit + 1)
+
+
+def icon_candidates(page_url: str, html: str, allow_favicon: bool) -> list[str]:
+    """Icon URLs declared by a page, best first: SVG, then the largest size."""
+    parser = IconLinks()
+    parser.feed(html)
+
+    def rank(a):
+        href = a['href'].lower()
+        if a.get('type') == 'image/svg+xml' or href.split('?')[0].endswith('.svg'):
+            return 10000
+        sizes = [int(s.split('x')[0]) for s in (a.get('sizes') or '').lower().split() if 'x' in s and s.split('x')[0].isdigit()]
+        if sizes:
+            return max(sizes)
+        return 180 if 'apple-touch-icon' in a.get('rel', '').lower() else 16
+
+    urls = [urljoin(page_url, a['href']) for a in sorted(parser.icons, key=rank, reverse=True)]
+    if allow_favicon:
+        urls.append(urljoin(page_url, '/favicon.ico'))
+    return list(dict.fromkeys(urls))
+
+
+def fetch_site_icon(entry: registry.Entry, dest: Path) -> tuple[str, str] | None:
+    """Save the icon of the module's homepage or documentation site.
+
+    Returns (file name, source URL). Raster icons under ICON_MIN_PX and SVG
+    files that fail the logo checks are skipped.
+    """
+    links = entry.data.get('links', {})
+    for key in ('homepage', 'documentation'):
+        page = links.get(key)
+        if not page:
+            continue
+        host = urlsplit(page).hostname or ''
+        if any(host == g or host.endswith('.' + g) for g in GENERIC_HOSTS) and key == 'homepage':
+            continue
+        try:
+            html = fetch(page, 2 * 1024 * 1024).decode('utf-8', 'replace')
+        except (urllib.error.URLError, TimeoutError, ValueError):
+            continue
+        generic = any(host == g or host.endswith('.' + g) for g in GENERIC_HOSTS)
+        for url in icon_candidates(page, html, allow_favicon=key == 'homepage' and not generic):
+            try:
+                data = fetch(url, ICON_MAX_BYTES)
+            except (urllib.error.URLError, TimeoutError, ValueError):
+                continue
+            kind = registry.image_type(data)
+            if not kind or len(data) > ICON_MAX_BYTES:
+                continue
+            if kind == 'svg' and registry.check_svg(data):
+                continue
+            size = registry.image_size(data)
+            if kind != 'svg' and (size is None and kind in ('png', 'ico') or size and min(size) < ICON_MIN_PX):
+                continue
+            dest.mkdir(parents=True, exist_ok=True)
+            name = f'{entry.name}.{kind}'
+            (dest / name).write_bytes(data)
+            return name, url
+    return None
+
+
+def enrich_one(entry: registry.Entry, use_github: bool, icon_dir: Path) -> dict:
     proj = entry.west_project()
     out: dict = {}
     try:
@@ -95,6 +184,11 @@ def enrich_one(entry: registry.Entry, use_github: bool) -> dict:
         except (urllib.error.URLError, TimeoutError) as e:
             out['repo'] = None
             out['github_error'] = str(e)
+
+    if use_github:
+        icon = fetch_site_icon(entry, icon_dir)
+        if icon:
+            out['icon'], out['icon_source'] = icon
 
     latest = ((out.get('repo') or {}).get('latest_release') or {}).get('tag') or out['latest_tag']
     if kind == 'tag' and latest and registry.is_newer(latest, proj['revision']):
@@ -135,7 +229,9 @@ def main(argv=None) -> int:
         data = json.loads(args.out.read_text()).get('modules', {})
 
     with ThreadPoolExecutor(max_workers=8) as pool:
-        for entry, result in zip(targets, pool.map(lambda e: enrich_one(e, not args.no_github), targets)):
+        icon_dir = args.out.parent / 'icons'
+        results = pool.map(lambda e: enrich_one(e, not args.no_github, icon_dir), targets)
+        for entry, result in zip(targets, results):
             data[entry.name] = result
             status = result.get('error') or (
                 f'{result["revision"]["kind"]}, module.yml {"yes" if result["module"]["found"] else "no"}'
