@@ -19,7 +19,6 @@ description: |
   any input file as a dictionary, though only the final 64KB are used. This capability can be
   combined
 category: data
-tags: [compression]
 license: BSD-2-Clause
 maintainers:
   - github: zephyrproject-rtos

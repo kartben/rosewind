@@ -17,7 +17,7 @@ description: |
   data structures, and abstracts away transport and protocol details, which lets developers focus
   on application logic.
 category: communication
-tags: [rpc, idl, codegen]
+keywords: [codegen]
 license: Apache-2.0
 maintainers:
   - github: zephyrproject-rtos

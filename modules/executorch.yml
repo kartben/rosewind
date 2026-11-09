@@ -18,7 +18,6 @@ description: |
   ExecuTorch is licensed under the [BSD 3-Clause
   License](https://github.com/pytorch/executorch/blob/main/LICENSE).
 category: ml
-tags: [pytorch, ethos-u, npu]
 license: BSD-3-Clause
 maintainers:
   - github: pytorch

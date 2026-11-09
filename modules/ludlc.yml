@@ -16,7 +16,7 @@ description: |
 
   LuDLC is dual-licensed under (Apache-2.0 OR GPL-2.0-or-later) licenses.
 category: communication
-tags: [data-link, serial, framing]
+keywords: [serial, framing]
 license: Apache-2.0 OR GPL-2.0-only
 maintainers:
   - github: avolkov-1221

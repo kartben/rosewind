@@ -16,7 +16,6 @@ description: |
   The tool runs entirely on the host as a TUI application, displaying the live state of the
   application's threads and kernel objects.
 category: tools
-tags: [debug, swd, threads]
 license: Apache-2.0
 maintainers:
   - github: wkhadgar

@@ -75,6 +75,21 @@ def check_license(expr: str, links: dict) -> list[tuple[str, str]]:
     return out
 
 
+def check_keywords(data: dict, category_label: str) -> list[tuple[str, str]]:
+    """Keywords add search terms; flag those the entry already contains."""
+    fields = {'name': data['name'], 'title': data['title'], 'summary': data['summary'],
+              'description': data.get('description', ''), 'category': category_label}
+    out = []
+    for kw in data.get('keywords', []):
+        variants = {kw, kw.replace('-', ' '), kw.replace('_', ' ')}
+        for where, text in fields.items():
+            if any(re.search(rf'\b{re.escape(v)}\b', text, re.I) for v in variants):
+                out.append(('warning', f'keyword "{kw}" already appears in the {where}; keywords are for '
+                            'search terms the entry does not contain'))
+                break
+    return out
+
+
 def check_description(text: str) -> list[tuple[str, str]]:
     out = []
     stripped = re.sub(r'`[^`]*`', '', text)
@@ -129,6 +144,9 @@ def offline(paths: list[Path], report: Report) -> list[registry.Entry]:
             report.add(level, path, msg)
         if 'description' in data:
             for level, msg in check_description(data['description']):
+                report.add(level, path, msg)
+        if data['category'] in categories:
+            for level, msg in check_keywords(data, categories[data['category']]['label']):
                 report.add(level, path, msg)
 
         proj = entry.west_project()

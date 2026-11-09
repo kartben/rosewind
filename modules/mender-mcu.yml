@@ -21,7 +21,7 @@ description: |
 
   mender-mcu is licensed under the Apache-2.0 license.
 category: device-mgmt
-tags: [ota, mcuboot, fleet]
+keywords: [fleet]
 license: Apache-2.0
 maintainers:
   - github: mendersoftware

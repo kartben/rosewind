@@ -15,7 +15,7 @@ description: |
 
   emlearn is licensed under the MIT license.
 category: ml
-tags: [tinyml, scikit-learn, keras]
+keywords: [tinyml]
 license: MIT
 maintainers:
   - github: emlearn

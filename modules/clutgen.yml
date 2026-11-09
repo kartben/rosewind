@@ -18,7 +18,7 @@ description: |
   This Zephyr module integrates CLUTGen directly into the west build system. LUT generation runs
   at CMake configure time and the generated files are automatically linked into the application.
 category: tools
-tags: [adc, calibration, codegen]
+keywords: [codegen]
 license: Apache-2.0
 maintainers:
   - github: wkhadgar

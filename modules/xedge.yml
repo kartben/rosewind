@@ -12,7 +12,7 @@ description: |
 
   Xedge is licensed under the GPLv2 license with a commercial license option.
 category: languages
-tags: [lua, web-server, iot]
+keywords: [web-server]
 license: GPL-2.0-only
 maintainers:
   - github: RealTimeLogic

@@ -177,7 +177,7 @@ def build_records(entries, categories, enriched, today: date, base_url: str, ico
             'category': d['category'],
             'category_label': categories[d['category']]['label'],
             'hue': categories[d['category']]['hue'],
-            'tags': d.get('tags', []),
+            'keywords': d.get('keywords', []),
             'license': d['license'],
             'license_kind': registry.license_kind(d['license']),
             'maintainers': d['maintainers'],
@@ -215,7 +215,7 @@ def build_records(entries, categories, enriched, today: date, base_url: str, ico
 def index_json(records, categories, generated: str, base_url: str) -> dict:
     mods = []
     for r in records:
-        m = {k: r[k] for k in ('name', 'title', 'summary', 'category', 'tags', 'license', 'license_kind',
+        m = {k: r[k] for k in ('name', 'title', 'summary', 'category', 'keywords', 'license', 'license_kind',
                                'maintainers', 'links', 'status', 'west', 'provides', 'page_url',
                                'submanifest_url')}
         m['description'] = r['description']
@@ -240,7 +240,8 @@ def card_data(records) -> list[dict]:
     """The subset of fields the catalog script filters and searches on."""
     return [{
         'name': r['name'], 'title': r['title'], 'summary': r['summary'], 'category': r['category'],
-        'tags': r['tags'], 'license': r['license'], 'license_kind': r['license_kind'], 'owner': r['owner'],
+        'keywords': r['keywords'], 'description': r['description'], 'license': r['license'],
+        'license_kind': r['license_kind'], 'owner': r['owner'],
     } for r in records]
 
 

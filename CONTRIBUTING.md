@@ -41,7 +41,7 @@ description: |
   Optional. Paragraphs, `-` lists, `inline code`, *emphasis*, **strong** and
   [https links](https://zenoh.io). No HTML, no headings, at most 2000 characters.
 category: communication
-tags: [pubsub, zenoh, ros2]
+keywords: [pubsub, ros2]
 license: EPL-2.0 OR Apache-2.0
 maintainers:
   - github: eclipse-zenoh
@@ -62,7 +62,7 @@ Field rules (enforced by `scripts/validate.py`):
 | `title` | 2 to 60 characters |
 | `summary` | One sentence, 40 to 160 characters, ending with a period |
 | `category` | A key of [`categories.yml`](categories.yml) |
-| `tags` | Up to 8, lowercase, `-` or `_` as separators |
+| `keywords` | Optional, up to 5, lowercase: see below |
 | `license` | SPDX expression; `LicenseRef-*` needs `links.license` |
 | `links.repository` | Required; every link uses https |
 | `west.revision` | A release tag (preferred), a branch or a commit SHA |
@@ -70,6 +70,11 @@ Field rules (enforced by `scripts/validate.py`):
 | `west.url` | Optional, defaults to `links.repository` |
 | `west.submodules`, `west.west-commands`, `west.groups` | Optional, same meaning as in a west manifest |
 | `status` | Set by registry maintainers: `active`, `deprecated` or `unmaintained` |
+
+`keywords` help people find the module with words its title, summary and description do not
+contain: protocols, standards and use cases such as `mqtt`, `ros2` or `tinyml`. Do not repeat the
+module name, its vendor or its category, which search already covers; `validate.py` warns about a
+keyword the entry already contains. Most entries need none.
 
 `west.import` is not accepted: an entry adds exactly one project. Dependencies between modules are
 read from `build.depends` in the module's own `zephyr/module.yml`, and the site installs listed

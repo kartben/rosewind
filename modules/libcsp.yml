@@ -17,7 +17,7 @@ description: |
 
   libcsp is licensed under the MIT license.
 category: communication
-tags: [cubesat, space, can]
+keywords: [can]
 license: MIT
 maintainers:
   - github: libcsp

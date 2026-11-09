@@ -22,7 +22,7 @@ description: |
   public project; see the [Edge Impulse website](https://edgeimpulse.com) for pricing and terms of
   service.
 category: ml
-tags: [tinyml, inference, dsp]
+keywords: [tinyml, dsp]
 license: BSD-3-Clause-Clear
 maintainers:
   - github: edgeimpulse

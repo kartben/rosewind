@@ -19,7 +19,6 @@ description: |
   The heatshrink library is licensed under the ISC license. The Zephyr integration files are
   licensed under the Apache-2.0 license.
 category: data
-tags: [compression, lzss]
 license: ISC AND Apache-2.0
 maintainers:
   - github: kickmaker

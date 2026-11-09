@@ -13,7 +13,7 @@ description: |
 
   Both CANopenNode and CANopenNodeZephyr are licensed under the Apache-2.0 license.
 category: industrial
-tags: [canopen, can, fieldbus]
+keywords: [fieldbus]
 license: Apache-2.0
 maintainers:
   - github: zephyrproject-rtos

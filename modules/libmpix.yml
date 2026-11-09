@@ -13,7 +13,7 @@ description: |
   It pipelines multiple operations together, eliminating intermediate buffers. This allows larger
   image resolutions to fit in constrained systems without compromising performance.
 category: graphics
-tags: [camera, video, image-processing]
+keywords: [camera, video]
 license: Apache-2.0
 maintainers:
   - github: libmpix

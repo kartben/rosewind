@@ -11,7 +11,7 @@ description: |
   networking stack. It also includes built-in shell commands to interact with HTTP(S) endpoints
   directly from the Zephyr shell.
 category: communication
-tags: [http, rest, shell]
+keywords: [rest]
 license: Apache-2.0
 maintainers:
   - github: walidbadar

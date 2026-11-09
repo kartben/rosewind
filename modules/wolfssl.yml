@@ -17,7 +17,7 @@ description: |
 
   wolfSSL is dual licensed under GPLv3 and commercial licenses.
 category: security
-tags: [tls, crypto, pqc]
+keywords: [pqc]
 license: GPL-3.0-or-later
 maintainers:
   - github: wolfssl

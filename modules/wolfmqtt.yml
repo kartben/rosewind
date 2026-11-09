@@ -18,7 +18,7 @@ description: |
 
   wolfMQTT is dual licensed under GPLv3 and commercial licenses.
 category: communication
-tags: [mqtt, iot, pubsub]
+keywords: [pubsub]
 license: GPL-3.0-or-later
 maintainers:
   - github: wolfssl

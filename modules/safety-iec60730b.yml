@@ -26,7 +26,6 @@ description: |
 
   :header-rows: 1 :widths: 30 35 35
 category: security
-tags: [iec-60730, functional-safety, nxp]
 license: Apache-2.0 AND LicenseRef-NXP-Software-License
 maintainers:
   - github: nxp-mcuxpresso

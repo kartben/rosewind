@@ -1,0 +1,15 @@
+# expect: is too long
+name: too-many-keywords
+title: Example Module
+summary: >-
+  A module used by the tests to check that the validator rejects bad entries.
+category: tools
+keywords: [aa, bb, cc, dd, ee, ff]
+license: Apache-2.0
+maintainers:
+  - github: example
+links:
+  repository: https://github.com/example/example-module
+west:
+  revision: v1.0.0
+  path: modules/lib/too-many-keywords

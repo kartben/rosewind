@@ -33,7 +33,6 @@ description: |
   All of the above can be analyzed with [Zephelin Trace
   Viewer](https://antmicro.github.io/zephelin-trace-viewer).
 category: tools
-tags: [profiling, tracing, ml]
 license: Apache-2.0
 maintainers:
   - github: antmicro

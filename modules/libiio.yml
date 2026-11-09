@@ -28,7 +28,6 @@ description: |
   2.0. The Zephyr integration described above is licensed under the MIT license, as are the core
   files it statically links against.
 category: data
-tags: [adi, iio, sensors]
 license: MIT
 maintainers:
   - github: analogdevicesinc

@@ -21,7 +21,7 @@ description: |
 
   CHRE is licensed under the Apache-2.0 license.
 category: languages
-tags: [android, nanoapps, sensor-hub]
+keywords: [sensor-hub]
 license: Apache-2.0
 maintainers:
   - github: zephyrproject-rtos

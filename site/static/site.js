@@ -91,7 +91,7 @@
   const byName = new Map(CARDS.map(c => [c.name, c]));
   const elByName = new Map($$('.card', grid).map(el => [el.dataset.name, el]));
   for (const c of CARDS) {
-    c.hay = [c.name, c.title, c.summary, c.tags.join(' '), TAX.categories[c.category].label, c.owner, c.license].join(' ').toLowerCase();
+    c.hay = [c.name, c.title, c.summary, c.keywords.join(' '), c.description, TAX.categories[c.category].label, c.owner, c.license].join(' ').toLowerCase();
     const el = elByName.get(c.name);
     c.titleEl = el.querySelector('h2 a');
     c.summaryEl = el.querySelector('p');
@@ -112,7 +112,7 @@
       const title = c.title.toLowerCase();
       if (c.name.startsWith(t) || title.startsWith(t)) s += 10;
       else if (c.name.includes(t) || title.includes(t)) s += 6;
-      if (c.tags.some(g => g.startsWith(t))) s += 5;
+      if (c.keywords.some(g => g.startsWith(t))) s += 5;
       if (c.summary.toLowerCase().includes(t)) s += 2;
       s += 1;
     }

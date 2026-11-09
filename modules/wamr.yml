@@ -20,7 +20,6 @@ description: |
 
   WAMR is licensed under the Apache License 2.0 with LLVM exceptions.
 category: languages
-tags: [wasm, sandbox, runtime]
 license: Apache-2.0 WITH LLVM-exception
 maintainers:
   - github: wasm-micro-runtime

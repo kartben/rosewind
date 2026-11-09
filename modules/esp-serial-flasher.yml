@@ -24,7 +24,7 @@ description: |
 
   ESP Serial Flasher is licensed under the Apache License 2.0.
 category: tools
-tags: [espressif, flashing, host]
+keywords: [flashing]
 license: Apache-2.0
 maintainers:
   - github: espressif

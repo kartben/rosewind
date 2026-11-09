@@ -21,7 +21,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "title", "summary", "description", "category", "tags", "license", "license_kind",
+        "required": ["name", "title", "summary", "description", "category", "keywords", "license", "license_kind",
                      "maintainers", "links", "status", "west", "provides", "dependencies", "checks",
                      "page_url", "submanifest_url", "revision_kind", "repo", "newer_release", "image"],
         "properties": {
@@ -30,7 +30,7 @@
           "summary": {"type": "string"},
           "description": {"type": "string", "description": "Markdown subset; empty when absent."},
           "category": {"type": "string"},
-          "tags": {"type": "array", "items": {"type": "string"}},
+          "keywords": {"type": "array", "items": {"type": "string"}},
           "license": {"type": "string", "description": "SPDX expression."},
           "license_kind": {"enum": ["permissive", "copyleft", "other"]},
           "maintainers": {"type": "array", "items": {"type": "object"}},

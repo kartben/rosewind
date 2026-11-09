@@ -23,7 +23,7 @@ description: |
   License](https://github.com/memfault/memfault-firmware-sdk/blob/master/LICENSE) for more
   details.
 category: device-mgmt
-tags: [crash-reporting, metrics, ota]
+keywords: [crash-reporting]
 license: LicenseRef-Memfault-SDK
 maintainers:
   - github: memfault

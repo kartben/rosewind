@@ -18,7 +18,6 @@ description: |
 
   wolfTPM is dual licensed under GPLv3 and commercial licenses.
 category: security
-tags: [tpm, attestation, secure-storage]
 license: GPL-3.0-or-later
 maintainers:
   - github: wolfssl

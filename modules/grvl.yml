@@ -27,7 +27,6 @@ description: |
   grvl is licensed under the Apache License 2.0. tinyxml is licensed under the Zlib license.
   Duktape is licensed under the MIT License.
 category: graphics
-tags: [gui, display, antmicro]
 license: Apache-2.0
 maintainers:
   - github: antmicro

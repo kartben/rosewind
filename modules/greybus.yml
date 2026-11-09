@@ -26,7 +26,7 @@ description: |
 
   Greybus is licensed under a combination of Apache-2.0 and BSD-3-Clause license.
 category: communication
-tags: [rpc, linux, beagleboard]
+keywords: [rpc]
 license: Apache-2.0 AND BSD-3-Clause
 maintainers:
   - github: beagleboard

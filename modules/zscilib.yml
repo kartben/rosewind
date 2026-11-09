@@ -14,7 +14,7 @@ description: |
   Project, it aims to be as portable as possible. A standalone reference project is included to
   use this library in non-Zephyr-based projects.
 category: data
-tags: [math, linear-algebra, sensor-fusion]
+keywords: [linear-algebra]
 license: Apache-2.0
 maintainers:
   - github: zephyrproject-rtos

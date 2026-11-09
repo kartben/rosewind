@@ -17,7 +17,6 @@ description: |
 
   wolfSSH is dual licensed under GPLv3 and commercial licenses.
 category: security
-tags: [ssh, sftp, scp]
 license: GPL-3.0-or-later
 maintainers:
   - github: wolfssl

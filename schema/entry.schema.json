@@ -34,9 +34,10 @@
       "description": "One key of categories.yml.",
       "type": "string"
     },
-    "tags": {
+    "keywords": {
+      "description": "Search terms people may use that the title, summary and description do not contain: protocols, standards, use cases. Not the module name, its vendor or its category.",
       "type": "array",
-      "maxItems": 8,
+      "maxItems": 5,
       "uniqueItems": true,
       "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,30}$"}
     },

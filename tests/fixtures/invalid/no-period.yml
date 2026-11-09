@@ -4,7 +4,6 @@ title: Example Module
 summary: >-
   A module used by the tests to check that the validator rejects bad entries
 category: tools
-tags: [example]
 license: Apache-2.0
 maintainers:
   - github: example

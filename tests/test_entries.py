@@ -68,3 +68,13 @@ def test_fixture_entries_do_not_leak_into_modules():
     names = {p.stem for p in registry.entry_paths()}
     assert not names & {p.stem for p in FIXTURES.glob('*.yml')}
     assert shutil.which('git'), 'git is needed by the online checks'
+
+
+def test_redundant_keyword_warns(tmp_path, capsys):
+    src = registry.MODULES_DIR / 'zenoh-pico.yml'
+    entry = tmp_path / 'zenoh-pico.yml'
+    entry.write_text(src.read_text().replace('keywords: [pubsub, ros2]', 'keywords: [ros2, microcontrollers]'))
+    report, out = run([entry], capsys)
+    assert report.errors == 0
+    assert report.warnings == 1
+    assert 'keyword "microcontrollers" already appears in the summary' in out
