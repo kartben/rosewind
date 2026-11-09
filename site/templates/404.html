@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Page not found · {{ config.title }}{% endblock %}
-{% block crumbs %}<a href="{{ depth }}">Community Modules</a> » Page not found{% endblock %}
-{% block main %}
-<h1>Page not found</h1>
-<p class="intro">This module may have been renamed or removed from the registry. <a href="{{ depth }}">Search all modules</a>.</p>
+{% block band %}
+<section class="band band-page">
+  <div class="wrap">
+    <h1>Page not found</h1>
+    <p class="lead">This module may have been renamed or removed from the registry. <a href="{{ depth }}">Search all modules</a>.</p>
+  </div>
+</section>
 {% endblock %}
+{% block main %}{% endblock %}

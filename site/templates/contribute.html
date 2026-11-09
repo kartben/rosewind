@@ -2,22 +2,30 @@
 {% block title %}List your module · {{ config.title }}{% endblock %}
 {% block description %}Add a Zephyr module to the community registry with one YAML file.{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ base_url }}/contribute/">{% endblock %}
-{% block crumbs %}<a href="{{ depth }}">Community Modules</a> » List your module{% endblock %}
-{% block main %}
-<h1>List your module</h1>
-<p class="intro">Each module is one YAML file in the registry repository. Validation runs on every pull request, and the site updates when it merges.</p>
-<div class="contrib">
-  <ol class="steps">
-    <li><div><b>Add one file</b><p>Fork <a href="{{ config.repository }}">the registry</a> and create <code>modules/&lt;name&gt;.yml</code>.</p></div></li>
-    <li><div><b>Check it</b><p><code>python scripts/validate.py --online modules/&lt;name&gt;.yml</code></p></div></li>
-    <li><div><b>Open a pull request</b><p>A registry maintainer reviews it against the <a href="{{ config.repository }}/blob/{{ config.branch }}/CONTRIBUTING.md">listing criteria</a>.</p></div></li>
-  </ol>
-  {% if sample %}
-  <div class="codebox">
-    <div class="codebox-head"><span class="path">modules/{{ sample.name }}.yml</span><button class="copy" type="button">Copy</button></div>
-    <pre>{{ sample_entry | yaml_highlight }}</pre>
+{% block band %}
+<section class="band band-page">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ depth }}">Modules</a></nav>
+    <h1>List your module</h1>
+    <p class="lead">Each module is one YAML file in the registry repository. Validation runs on every pull request, and the site updates when it merges.</p>
   </div>
-  {% endif %}
+</section>
+{% endblock %}
+{% block main %}
+<div class="detail-page">
+  <div class="contrib">
+    <ol class="steps">
+      <li><div><b>Add one file</b><p>Fork <a href="{{ config.repository }}">the registry</a> and create <code>modules/&lt;name&gt;.yml</code>.</p></div></li>
+      <li><div><b>Check it</b><p><code>python scripts/validate.py --online modules/&lt;name&gt;.yml</code></p></div></li>
+      <li><div><b>Open a pull request</b><p>A registry maintainer reviews it against the <a href="{{ config.repository }}/blob/{{ config.branch }}/CONTRIBUTING.md">listing criteria</a>.</p></div></li>
+    </ol>
+    {% if sample %}
+    <div class="codebox">
+      <div class="codebox-head"><span class="path">modules/{{ sample.name }}.yml</span><button class="copy" type="button">Copy</button></div>
+      <pre>{{ sample_entry | yaml_highlight }}</pre>
+    </div>
+    {% endif %}
+  </div>
+  <p class="note">Prefer a form? Open a <a href="{{ config.repository }}/issues/new?template=new-module.yml">New module</a> issue.</p>
 </div>
-<p class="note">Prefer a form? Open a <a href="{{ config.repository }}/issues/new?template=new-module.yml">New module</a> issue.</p>
 {% endblock %}

@@ -2,8 +2,8 @@
  * SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
  * SPDX-License-Identifier: Apache-2.0
  *
- * Theme toggle, install tabs, shell switch, copy buttons and the phone menu on
- * every page; live search, sidebar filters and the detail panel on the
+ * Theme toggle, install tabs, shell switch and copy buttons on every page;
+ * live search, category and license filters and the detail panel on the
  * catalog. The catalog is fully rendered by the generator; this script
  * filters, reorders and highlights it.
  */
@@ -81,13 +81,7 @@
     }
   });
 
-  /* sidebar folds into a header on phones */
-  $('#menu-btn')?.addEventListener('click', e => {
-    const open = $('#side').classList.toggle('open');
-    e.currentTarget.setAttribute('aria-expanded', String(open));
-  });
-
-  /* catalog: on other pages the sidebar search and filters are plain links to it */
+  /* catalog */
   const grid = $('#grid');
   const cardsEl = $('#cards');
   if (!grid || !cardsEl) return;
@@ -136,14 +130,16 @@
     return out.replace(re, '<mark>$1</mark>');
   }
 
-  /* sidebar filters: update counts, hide options with no match unless selected */
+  /* filters: update counts, hide options with no match unless selected; "" means all */
   function updateFacets(ts) {
     for (const a of $$('a[data-facet]')) {
       const key = a.dataset.facet;
-      const n = CARDS.filter(c => c[FIELD[key]] === a.dataset.v && passes(c, key) && score(c, ts) > 0).length;
-      const on = state[key] === a.dataset.v;
-      a.querySelector('.n').textContent = n;
-      a.closest('li').hidden = !n && !on;
+      const v = a.dataset.v;
+      const n = CARDS.filter(c => (!v || c[FIELD[key]] === v) && passes(c, key) && score(c, ts) > 0).length;
+      const on = (state[key] || '') === v;
+      const count = a.querySelector('.n');
+      if (count) count.textContent = n;
+      a.hidden = Boolean(v) && !n && !on;
       if (on) a.setAttribute('aria-current', 'true');
       else a.removeAttribute('aria-current');
     }
@@ -153,7 +149,8 @@
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault();
     const key = a.dataset.facet;
-    state[key] = state[key] === a.dataset.v ? null : a.dataset.v;
+    const v = a.dataset.v || null;
+    state[key] = state[key] === v ? null : v;
     render(true);
   });
 
@@ -182,10 +179,6 @@
     $('#empty').hidden = scored.length > 0;
     $('#count').innerHTML = `<b>${scored.length}</b> module${scored.length === 1 ? '' : 's'}`;
 
-    const active = [];
-    if (state.category) active.push(['category', TAX.categories[state.category]?.label || state.category]);
-    if (state.license) active.push(['license', TAX.licenses[state.license] || state.license]);
-    $('#active').innerHTML = active.map(([k, l]) => `<button type="button" data-clear="${k}" aria-label="Remove filter ${esc(l)}">${esc(l)}</button>`).join('');
     $('#reset').hidden = !(state.q || state.category || state.license);
     if (updateUrl) syncUrl();
   }
@@ -194,12 +187,6 @@
   $('#reset').addEventListener('click', () => {
     Object.assign(state, { q: '', category: null, license: null });
     q.value = '';
-    render(true);
-  });
-  $('#active').addEventListener('click', e => {
-    const b = e.target.closest('button');
-    if (!b) return;
-    state[b.dataset.clear] = null;
     render(true);
   });
 

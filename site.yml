@@ -7,7 +7,6 @@ base_url: https://zephyrproject-rtos.github.io/community-modules
 repository: https://github.com/zephyrproject-rtos/community-modules
 branch: main
 docs_url: https://docs.zephyrproject.org/latest/develop/modules.html
-docs_url_root: https://docs.zephyrproject.org/latest/
 tagline: >-
   A catalog of Zephyr modules maintained by the community outside the main Zephyr
   repository, from protocol stacks and libraries to language runtimes and tools,

@@ -271,7 +271,7 @@ def main(argv=None) -> int:
                        submanifest_text=registry.submanifest_text, project_lines=registry.project_lines,
                        enriched_at=enriched_doc.get('generated'), generated=generated,
                        category_counts=Counter(r['category'] for r in records),
-                       license_counts=Counter(r['license_kind'] for r in records), current_category=None)
+                       license_counts=Counter(r['license_kind'] for r in records))
 
     out = args.out
     if out.exists():
@@ -298,8 +298,7 @@ def main(argv=None) -> int:
     for r in records:
         page = out / 'm' / r['name']
         page.mkdir()
-        (page / 'index.html').write_text(env.get_template('module.html').render(
-            m=r, depth='../../', current_category=r['category']))
+        (page / 'index.html').write_text(env.get_template('module.html').render(m=r, depth='../../'))
         (out / 'm' / f'{r["name"]}.yaml').write_text(registry.submanifest_text(r['west'], r['page_url']))
     (out / '404.html').write_text(env.get_template('404.html').render(depth=base_url + '/' if base_url else '/'))
 
