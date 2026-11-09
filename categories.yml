@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Controlled vocabulary for the "category" field of a module entry.
+# "hue" (0-359) colors the category on the site.
+
+communication:
+  label: Communication & networking
+  description: Network and messaging protocols, RPC, data links and IoT connectivity.
+  hue: 205
+security:
+  label: Security & safety
+  description: Cryptography, TLS/SSH, TPM, functional-safety self-tests.
+  hue: 350
+ml:
+  label: AI & machine learning
+  description: Inference runtimes, model converters and ML toolchains.
+  hue: 280
+tools:
+  label: Developer tools & debug
+  description: West extensions, debug and profiling aids, code generators, flashers.
+  hue: 232
+languages:
+  label: Languages & runtimes
+  description: Language bindings, interpreters, virtual machines and alternative APIs.
+  hue: 42
+data:
+  label: Data, math & sensors
+  description: Compression, scientific computing and sensor data frameworks.
+  hue: 135
+device-mgmt:
+  label: Device management & OTA
+  description: Firmware updates, fleet monitoring, crash reporting.
+  hue: 172
+industrial:
+  label: Industrial & CAN
+  description: Fieldbus stacks, CAN tooling and industrial protocols.
+  hue: 22
+graphics:
+  label: Graphics & imaging
+  description: GUI toolkits, display and camera image processing.
+  hue: 318
