@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: zenoh-pico
+title: zenoh-pico
+summary: >-
+  Eclipse Zenoh for microcontrollers: pub/sub, queries and storage over UDP, TCP and serial.
+description: |
+  [zenoh-pico](https://github.com/eclipse-zenoh/zenoh-pico) is the [Eclipse
+  Zenoh](https://zenoh.io) implementation that targets constrained devices, offering a native C
+  API. It provides Zero Overhead Pub/sub, Store/Query and Compute capabilities for embedded
+  systems and microcontrollers.
+
+  zenoh-pico unifies data in motion, data at rest, and computations while retaining time and space
+  efficiency well beyond mainstream stacks. It is fully compatible with the main Rust Zenoh
+  implementation, providing a lightweight implementation of most functionalities.
+
+  zenoh-pico is licensed under the Eclipse Public License 2.0 and Apache License 2.0.
+category: communication
+keywords: [pubsub, ros2]
+license: EPL-2.0 OR Apache-2.0
+maintainers:
+  - github: eclipse-zenoh
+links:
+  repository: https://github.com/eclipse-zenoh/zenoh-pico
+  documentation: https://zenoh-pico.readthedocs.io/en/latest/
+  homepage: https://zenoh.io
+  examples: https://github.com/eclipse-zenoh/zenoh-pico/tree/main/examples/zephyr
+west:
+  revision: main
+  path: modules/lib/zenoh-pico
