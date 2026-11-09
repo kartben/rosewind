@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: wamr
+title: WebAssembly Micro Runtime (WAMR)
+summary: >-
+  Load and run sandboxed WebAssembly modules at runtime, without reflashing the firmware.
+description: |
+  [WebAssembly Micro Runtime](https://github.com/wasm-micro-runtime/wasm-micro-runtime) (WAMR) is
+  a lightweight standalone WebAssembly runtime designed for embedded and resource constrained
+  devices. It lets an application load and execute WebAssembly (WASM) modules at runtime, so
+  functionality can be updated or extended without reflashing the firmware, and untrusted code can
+  run in the sandbox the WASM specification defines. See the [WAMR
+  documentation](https://github.com/wasm-micro-runtime/wasm-micro-runtime/tree/main/doc) for the
+  runtime APIs, the execution modes and the `wamrc` AOT compiler.
+
+  WAMR supports Zephyr through a dedicated platform layer, and ships the Zephyr module glue
+  (`zephyr/module.yml`, `zephyr/Kconfig` and `zephyr/CMakeLists.txt`) in its own repository, so an
+  application only has to select a few Kconfig options to get the runtime linked into its image.
+
+  WAMR is licensed under the Apache License 2.0 with LLVM exceptions.
+category: languages
+license: Apache-2.0 WITH LLVM-exception
+maintainers:
+  - github: wasm-micro-runtime
+links:
+  repository: https://github.com/wasm-micro-runtime/wasm-micro-runtime
+west:
+  revision: main
+  path: modules/lib/wasm-micro-runtime
