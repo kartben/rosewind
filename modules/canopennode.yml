@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: canopennode
+title: CANopenNode
+summary: >-
+  CANopen protocol stack with Zephyr glue code: SDO, PDO, NMT, LSS and object dictionary storage.
+description: |
+  [CANopenNode](https://github.com/CANopenNode/CANopenNode) is free and open source CANopen
+  protocol stack. Glue code for integrating the stack with Zephyr is available in a dedicated
+  [CANopenNodeZephyr](https://github.com/zephyrproject-rtos/CANopenNodeZephyr) repository, which
+  includes CANopenNode as a Git submodule.
+
+  Both CANopenNode and CANopenNodeZephyr are licensed under the Apache-2.0 license.
+category: industrial
+keywords: [fieldbus]
+license: Apache-2.0
+maintainers:
+  - github: zephyrproject-rtos
+links:
+  repository: https://github.com/zephyrproject-rtos/CANopenNodeZephyr
+west:
+  revision: main
+  path: modules/lib/canopennode
+  submodules:
+    - path: CANopenNode
