@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: safety-iec60730b
+title: IEC 60730 Class B Safety Tests
+summary: >-
+  Runs NXP's IEC 60730 Class B self-tests (CPU, RAM, flash, clock, watchdog) from a Zephyr application.
+description: |
+  [safety_iec60730b](https://github.com/nxp-mcuxpresso/mcux-safety-iec60730b) is a Zephyr module
+  providing a test subsystem that runs the IEC 60730 Class B safety self-tests from a Zephyr
+  application.
+
+  [IEC 60730-1](https://webstore.iec.ch/publication/66089) is an international standard defining
+  safety requirements for automatic electrical controls used in household appliances and similar
+  equipment. Annex H Class B describes the software fault/error detection measures a control has
+  to implement to detect random hardware faults that could otherwise lead to a dangerous
+  malfunction.
+
+  The subsystem exposes those "continuously performed" self-tests through a single, vendor-neutral
+  API, integrates them with Zephyr through Kconfig and the device driver model, and delegates the
+  actual test execution to a selectable backend. The default backend on NXP SoCs is the [NXP IEC
+  60730 Class B Safety
+  Library](https://www.nxp.com/applications/technologies/functional-safety/iec-60730-safety-standard-for-household-appliances:APIEC60730).
+
+  The following Class B test routines are exposed, each individually selectable through Kconfig:
+
+  :header-rows: 1 :widths: 30 35 35
+category: security
+license: Apache-2.0 AND LicenseRef-NXP-Software-License
+maintainers:
+  - github: nxp-mcuxpresso
+links:
+  repository: https://github.com/nxp-mcuxpresso/mcux-safety-iec60730b
+  license: https://github.com/nxp-mcuxpresso/mcux-safety-iec60730b/blob/main_github/IEC60730-LICENSE.txt
+west:
+  revision: main_github
+  path: modules/safety/iec60730b
