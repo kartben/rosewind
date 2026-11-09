@@ -1,0 +1,124 @@
+{
+ "generated": "2026-11-09T00:00:00+00:00",
+ "modules": {
+  "wolfssl": {
+   "revision": {
+    "kind": "branch",
+    "sha": "b749485bd47df0f1b292365c3fdbe371dc2a5c5e"
+   },
+   "module": {
+    "found": true,
+    "name": "wolfssl",
+    "depends": [],
+    "provides": []
+   },
+   "latest_tag": "wolfEntropyv7.0.0-CHKIN",
+   "repo": {
+    "host": "github",
+    "full_name": "wolfSSL/wolfssl",
+    "stars": 2985,
+    "pushed_at": "2026-11-09T09:45:21Z",
+    "archived": false,
+    "default_branch": "master",
+    "latest_release": {
+     "tag": "v5.9.4-stable",
+     "date": "2026-09-27T03:55:55Z"
+    }
+   }
+  },
+  "wolftpm": {
+   "revision": {
+    "kind": "tag",
+    "sha": "1c61ff6c826bfcf8e1094817b44735720ecff160"
+   },
+   "module": {
+    "found": true,
+    "name": "wolftpm",
+    "depends": [
+     "wolfssl"
+    ],
+    "provides": []
+   },
+   "latest_tag": "v4.2.0",
+   "repo": {
+    "host": "github",
+    "full_name": "wolfSSL/wolfTPM",
+    "stars": 348,
+    "pushed_at": "2026-11-07T05:18:14Z",
+    "archived": false,
+    "default_branch": "master",
+    "latest_release": {
+     "tag": "v4.2.0",
+     "date": "2026-09-14T23:16:19Z"
+    }
+   },
+   "newer_release": "v4.2.0"
+  },
+  "xedge": {
+   "revision": {
+    "kind": "branch",
+    "sha": "5d78dce2a836d7d928623b612bfeee2ba72bd9c6"
+   },
+   "module": {
+    "found": false
+   },
+   "latest_tag": null,
+   "repo": {
+    "host": "github",
+    "full_name": "RealTimeLogic/Xedge4Zephyr",
+    "stars": 7,
+    "pushed_at": "2026-11-08T16:49:41Z",
+    "archived": false,
+    "default_branch": "main",
+    "latest_release": null
+   }
+  },
+  "zenoh-pico": {
+   "revision": {
+    "kind": "branch",
+    "sha": "fce6280a7946332ee1368dcbe3d704b431c49194"
+   },
+   "module": {
+    "found": true,
+    "name": "zenoh-pico",
+    "depends": [],
+    "provides": []
+   },
+   "latest_tag": "1.10.2",
+   "repo": {
+    "host": "github",
+    "full_name": "eclipse-zenoh/zenoh-pico",
+    "stars": 294,
+    "pushed_at": "2026-11-09T00:27:17Z",
+    "archived": false,
+    "default_branch": "main",
+    "latest_release": {
+     "tag": "1.10.2",
+     "date": "2026-10-28T10:26:09Z"
+    }
+   }
+  },
+  "heatshrink": {
+   "revision": {
+    "kind": "branch",
+    "sha": "c47356093c4ea079749214de2864186a578668a0"
+   },
+   "module": {
+    "found": true,
+    "name": "heatshrink",
+    "depends": [],
+    "provides": []
+   },
+   "latest_tag": null,
+   "repo": {
+    "host": "github",
+    "full_name": "kickmaker/heatshrink",
+    "stars": 6,
+    "pushed_at": "2025-06-20T14:34:28Z",
+    "archived": false,
+    "default_branch": "zephyr",
+    "latest_release": null
+   }
+  }
+ }
+}

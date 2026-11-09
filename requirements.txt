@@ -6,4 +6,5 @@ license-expression>=30.0
 pyyaml>=6.0
 west>=1.2
 # checks and tests
+pytest>=8.0
 yamllint>=1.35

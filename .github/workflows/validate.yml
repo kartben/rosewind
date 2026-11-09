@@ -51,6 +51,9 @@ jobs:
           python scripts/validate.py --online --format github "${changed[@]}"
           python scripts/enrich.py --no-github "${changed[@]}"
 
+      - name: Run tests
+        run: pytest -q
+
       - name: Build site preview
         run: python scripts/build_site.py --base-url "https://example.invalid/preview"
 
