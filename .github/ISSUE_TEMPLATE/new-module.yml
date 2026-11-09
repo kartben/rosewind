@@ -1,0 +1,121 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: New module
+description: Propose a module for Rosewind without writing the YAML yourself.
+title: "New module: "
+labels: [new-module]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A workflow turns your answers into a pull request that adds `modules/<name>.yml`, checks
+        it, and links it here; a registry maintainer then reviews it. Edit this issue to update
+        the pull request. You can also open a pull request yourself; see CONTRIBUTING.md.
+  - type: input
+    id: name
+    attributes:
+      label: Module name
+      description: Lowercase, used as the west project name and the page URL.
+      placeholder: zenoh-pico
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Display name
+      placeholder: zenoh-pico
+    validations:
+      required: true
+  - type: input
+    id: summary
+    attributes:
+      label: One-sentence summary (40 to 160 characters)
+      placeholder: "Eclipse Zenoh for microcontrollers: pub/sub, queries and storage over UDP, TCP and serial."
+    validations:
+      required: true
+  - type: input
+    id: repository
+    attributes:
+      label: Repository URL (https)
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Revision to list
+      description: A release tag is preferred; a branch or commit SHA also works.
+    validations:
+      required: true
+  - type: input
+    id: path
+    attributes:
+      label: Workspace path (optional)
+      description: Where west checks the module out. Leave empty for modules/lib/<name>.
+      placeholder: modules/lib/zenoh-pico
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - communication
+        - security
+        - ml
+        - tools
+        - languages
+        - data
+        - device-mgmt
+        - industrial
+        - graphics
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: License (SPDX expression)
+      placeholder: Apache-2.0
+    validations:
+      required: true
+  - type: input
+    id: maintainers
+    attributes:
+      label: Maintainers (GitHub handles)
+      description: Separate handles with commas.
+      placeholder: alice, bob
+    validations:
+      required: true
+  - type: input
+    id: documentation
+    attributes:
+      label: Documentation URL (optional)
+  - type: input
+    id: homepage
+    attributes:
+      label: Homepage URL (optional)
+      description: The site's icon becomes the module's image unless you add a logo later.
+  - type: input
+    id: keywords
+    attributes:
+      label: Keywords (optional)
+      description: >-
+        Up to 5 search terms, separated by commas, that the title, summary and description do
+        not already contain: protocols, standards, use cases. Not the module name, vendor or
+        category.
+      placeholder: mqtt, tinyml
+  - type: textarea
+    id: description
+    attributes:
+      label: Longer description (Markdown, optional)
+  - type: checkboxes
+    id: criteria
+    attributes:
+      label: Listing criteria
+      options:
+        - label: The repository is public and reachable over https.
+          required: true
+        - label: It contains zephyr/module.yml at the listed revision, or provides west extension commands.
+          required: true
+        - label: Its README explains how to use it with Zephyr.
+          required: true
+        - label: I maintain this module or have the maintainers' agreement to list it.
+          required: true
