@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: libcsp
+title: libcsp (CubeSat Space Protocol)
+summary: >-
+  CubeSat Space Protocol: a small routed network stack for satellites and other distributed systems.
+description: |
+  libcsp is an implementation of the CubeSat Space Protocol (CSP). It is a small protocol stack
+  written in C. CSP is designed to ease communication between distributed embedded systems in
+  small networks, such as CubeSats.  The design follows the TCP/IP model and includes a transport
+  protocol, a routing protocol, and several MAC-layer interfaces. The core of libcsp includes a
+  router, a connection-oriented socket API, and message and connection pools.
+
+  Zephyr is used in some Cubesats and they use libcsp to communicates with the other components in
+  the Cubesats.
+
+  libcsp is licensed under the MIT license.
+category: communication
+tags: [cubesat, space, can]
+license: MIT
+maintainers:
+  - github: libcsp
+links:
+  repository: https://github.com/libcsp/libcsp
+  documentation: https://libcsp.github.io/libcsp/
+west:
+  revision: develop
+  path: modules/lib/libcsp
