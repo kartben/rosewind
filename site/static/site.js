@@ -2,10 +2,10 @@
  * SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
  * SPDX-License-Identifier: Apache-2.0
  *
- * Theme toggle, install tabs, shell switch and copy buttons on every page;
- * search, category/license filters and the detail panel on the catalog. The
- * catalog is fully rendered by the generator; this script filters,
- * reorders and highlights it.
+ * Theme toggle, install tabs, shell switch, copy buttons and the phone menu on
+ * every page; live search, sidebar filters and the detail panel on the
+ * catalog. The catalog is fully rendered by the generator; this script
+ * filters, reorders and highlights it.
  */
 (() => {
   'use strict';
@@ -81,7 +81,13 @@
     }
   });
 
-  /* catalog */
+  /* sidebar folds into a header on phones */
+  $('#menu-btn')?.addEventListener('click', e => {
+    const open = $('#side').classList.toggle('open');
+    e.currentTarget.setAttribute('aria-expanded', String(open));
+  });
+
+  /* catalog: on other pages the sidebar search and filters are plain links to it */
   const grid = $('#grid');
   const cardsEl = $('#cards');
   if (!grid || !cardsEl) return;
@@ -93,16 +99,16 @@
   for (const c of CARDS) {
     c.hay = [c.name, c.title, c.summary, c.tags.join(' '), TAX.categories[c.category].label, c.owner, c.license].join(' ').toLowerCase();
     const el = elByName.get(c.name);
-    c.titleEl = el.querySelector('h3 a');
+    c.titleEl = el.querySelector('h2 a');
     c.summaryEl = el.querySelector('p');
   }
+  const FIELD = { category: 'category', license: 'license_kind' };
 
   const params = new URLSearchParams(location.search);
   const state = { q: params.get('q') || '', category: params.get('category') || null, license: params.get('license') || null };
   const q = $('#q');
   q.value = state.q;
-  $('#rail').hidden = false;
-  $('#filters-btn').hidden = false;
+  q.closest('form').addEventListener('submit', e => e.preventDefault());
 
   const terms = () => state.q.toLowerCase().split(/\s+/).filter(Boolean);
   function score(c, ts) {
@@ -130,23 +136,26 @@
     return out.replace(re, '<mark>$1</mark>');
   }
 
-  /* one facet; options with no match are hidden unless selected */
-  function facet(id, key, field, entries) {
-    const ts = terms();
-    $(id).innerHTML = entries.map(([value, label, hue]) => {
-      const n = CARDS.filter(c => c[field] === value && passes(c, key) && score(c, ts) > 0).length;
-      const on = state[key] === value;
-      if (!n && !on) return '';
-      const dot = hue !== undefined ? `<span class="dot" style="--h:${hue}"></span>` : '';
-      return `<button type="button" data-v="${esc(value)}" aria-pressed="${on}"><span class="lbl">${dot}<span>${esc(label)}</span></span><span class="n">${n}</span></button>`;
-    }).join('');
-    $(id).onclick = e => {
-      const b = e.target.closest('button');
-      if (!b) return;
-      state[key] = state[key] === b.dataset.v ? null : b.dataset.v;
-      render(true);
-    };
+  /* sidebar filters: update counts, hide options with no match unless selected */
+  function updateFacets(ts) {
+    for (const a of $$('a[data-facet]')) {
+      const key = a.dataset.facet;
+      const n = CARDS.filter(c => c[FIELD[key]] === a.dataset.v && passes(c, key) && score(c, ts) > 0).length;
+      const on = state[key] === a.dataset.v;
+      a.querySelector('.n').textContent = n;
+      a.closest('li').hidden = !n && !on;
+      if (on) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    }
   }
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[data-facet]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    const key = a.dataset.facet;
+    state[key] = state[key] === a.dataset.v ? null : a.dataset.v;
+    render(true);
+  });
 
   function syncUrl() {
     const p = new URLSearchParams();
@@ -159,9 +168,7 @@
 
   function render(updateUrl) {
     const ts = terms();
-    facet('#f-category', 'category', 'category', Object.entries(TAX.categories).map(([k, v]) => [k, v.label, v.hue]));
-    facet('#f-license', 'license', 'license_kind', Object.entries(TAX.licenses));
-
+    updateFacets(ts);
     const scored = CARDS.map(c => [c, score(c, ts)]).filter(([c, s]) => s > 0 && passes(c));
     scored.sort((a, b) => b[1] - a[1] || a[0].title.localeCompare(b[0].title));
     const shown = new Set(scored.map(([c]) => c.name));
@@ -194,10 +201,6 @@
     if (!b) return;
     state[b.dataset.clear] = null;
     render(true);
-  });
-  $('#filters-btn').addEventListener('click', e => {
-    const open = $('#rail').classList.toggle('open');
-    e.currentTarget.setAttribute('aria-expanded', String(open));
   });
 
   /* detail panel: loads the module page and shows its #module-detail */

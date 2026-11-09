@@ -1,10 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Page not found · {{ config.title }}{% endblock %}
+{% block crumbs %}<a href="{{ depth }}">Community Modules</a> » Page not found{% endblock %}
 {% block main %}
-<div class="notfound">
-  <div class="wrap">
-    <h1>Page not found</h1>
-    <p>This module may have been renamed or removed from the registry. <a href="{{ depth }}">Search all modules</a>.</p>
-  </div>
-</div>
+<h1>Page not found</h1>
+<p class="intro">This module may have been renamed or removed from the registry. <a href="{{ depth }}">Search all modules</a>.</p>
 {% endblock %}

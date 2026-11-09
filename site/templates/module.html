@@ -2,19 +2,12 @@
 {% block title %}{{ m.title }} · {{ config.title }}{% endblock %}
 {% block description %}{{ m.summary }}{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ m.page_url }}">{% endblock %}
-{% block hero %}
-  <div class="page-head">
-    <div class="wrap">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ depth }}">Modules</a><span>/</span><a href="{{ depth }}?category={{ m.category }}#main">{{ m.category_label }}</a></nav>
-      <h1>{{ m.title }}</h1>
-      <p class="lede">{{ m.summary }}</p>
-    </div>
-  </div>
-{% endblock %}
+{% block crumbs %}<a href="{{ depth }}">Community Modules</a> » {{ m.title }}{% endblock %}
+{% block github_label %}Edit on GitHub{% endblock %}
 {% block main %}
+<h1>{{ m.title }}</h1>
+<p class="intro">{{ m.summary }}</p>
 <div class="detail-page">
-  <div class="wrap">
-    {% include '_detail.html' %}
-  </div>
+  {% include '_detail.html' %}
 </div>
 {% endblock %}

@@ -1,53 +1,30 @@
 {% extends 'base.html' %}
 {% block canonical %}<link rel="canonical" href="{{ base_url }}/">{% endblock %}
-{% block hero %}
-  <div class="hero">
-    <div class="wrap">
-      <h1 class="visually-hidden">{{ config.title }}</h1>
-      <form class="search" role="search" onsubmit="return false">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
-        <input id="q" name="q" type="search" placeholder="Search modules" autocomplete="off" aria-label="Search modules">
-        <kbd>/</kbd>
-      </form>
-    </div>
-  </div>
-{% endblock %}
 {% block main %}
-<div class="catalog-page">
-  <div class="wrap">
-    <div class="catalog">
-      <aside class="rail" id="rail" aria-label="Filters" hidden>
-        <div><h2>Category</h2><div class="facet" id="f-category"></div></div>
-        <div><h2>License</h2><div class="facet" id="f-license"></div></div>
-        <button class="reset" id="reset" type="button" hidden>Clear filters</button>
-      </aside>
-      <section aria-label="Modules">
-        <div class="toolbar">
-          <button class="filters-btn" id="filters-btn" type="button" aria-controls="rail" aria-expanded="false" hidden>Filters</button>
-          <div class="count" id="count"><b>{{ records|length }}</b> modules</div>
-          <div class="active-filters" id="active"></div>
-        </div>
-        <div class="grid" id="grid">
-          {% for m in records %}
-          <article class="card" data-name="{{ m.name }}">
-            <div class="card-head">
-              <h3><a href="m/{{ m.name }}/" data-module="{{ m.name }}">{{ m.title }}</a></h3>
-              {% if m.repo and m.repo.stars is not none %}<span class="stars" title="GitHub stars">★ {{ m.repo.stars | stars }}</span>{% endif %}
-            </div>
-            <div class="owner">{{ m.owner }}</div>
-            <p>{{ m.summary }}</p>
-            <div class="meta">
-              {% if m.activity %}<span class="status {{ m.activity }}" title="Last commit {{ m.repo.pushed_at[:10] }}">{{ m.days | ago }}</span>{% endif %}
-              <span class="lic" title="{{ m.license }}">{{ m.license }}</span>
-              {% if 'west-commands' in m.provides %}<span class="badge">West commands</span>{% endif %}
-            </div>
-          </article>
-          {% endfor %}
-          <div class="empty" id="empty" hidden>No module matches. Missing one? <a href="contribute/">List it</a>.</div>
-        </div>
-      </section>
+<h1>Community Modules</h1>
+<p class="intro">{{ config.tagline }}</p>
+<div class="toolbar">
+  <div class="count" id="count"><b>{{ records|length }}</b> modules</div>
+  <div class="active-filters" id="active"></div>
+  <button class="reset" id="reset" type="button" hidden>Clear filters</button>
+</div>
+<div class="grid" id="grid">
+  {% for m in records %}
+  <article class="card" data-name="{{ m.name }}">
+    <div class="card-head">
+      <h2><a href="m/{{ m.name }}/" data-module="{{ m.name }}">{{ m.title }}</a></h2>
+      {% if m.repo and m.repo.stars is not none %}<span class="stars" title="GitHub stars">★ {{ m.repo.stars | stars }}</span>{% endif %}
     </div>
-  </div>
+    <div class="owner">{{ m.owner }}</div>
+    <p>{{ m.summary }}</p>
+    <div class="meta">
+      {% if m.activity %}<span class="status {{ m.activity }}" title="Last commit {{ m.repo.pushed_at[:10] }}">{{ m.days | ago }}</span>{% endif %}
+      <span class="lic" title="{{ m.license }}">{{ m.license }}</span>
+      {% if 'west-commands' in m.provides %}<span class="badge">West commands</span>{% endif %}
+    </div>
+  </article>
+  {% endfor %}
+  <div class="empty" id="empty" hidden>No module matches. Missing one? <a href="contribute/">List it</a>.</div>
 </div>
 
 <div class="scrim" id="scrim"></div>

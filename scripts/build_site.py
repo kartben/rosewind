@@ -20,6 +20,7 @@ import json
 import re
 import shutil
 import sys
+from collections import Counter
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -268,7 +269,9 @@ def main(argv=None) -> int:
     env.globals.update(config=config, base_url=base_url, categories=categories,
                        provides_labels=PROVIDES_LABELS, license_labels=LICENSE_LABELS,
                        submanifest_text=registry.submanifest_text, project_lines=registry.project_lines,
-                       enriched_at=enriched_doc.get('generated'), generated=generated)
+                       enriched_at=enriched_doc.get('generated'), generated=generated,
+                       category_counts=Counter(r['category'] for r in records),
+                       license_counts=Counter(r['license_kind'] for r in records), current_category=None)
 
     out = args.out
     if out.exists():
@@ -295,7 +298,8 @@ def main(argv=None) -> int:
     for r in records:
         page = out / 'm' / r['name']
         page.mkdir()
-        (page / 'index.html').write_text(env.get_template('module.html').render(m=r, depth='../../'))
+        (page / 'index.html').write_text(env.get_template('module.html').render(
+            m=r, depth='../../', current_category=r['category']))
         (out / 'm' / f'{r["name"]}.yaml').write_text(registry.submanifest_text(r['west'], r['page_url']))
     (out / '404.html').write_text(env.get_template('404.html').render(depth=base_url + '/' if base_url else '/'))
 
