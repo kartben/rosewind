@@ -1,0 +1,15 @@
+# expect: Additional properties are not allowed ('import'
+name: has-import
+title: Example Module
+summary: >-
+  A module used by the tests to check that the validator rejects bad entries.
+category: tools
+license: Apache-2.0
+maintainers:
+  - github: example
+links:
+  repository: https://github.com/example/example-module
+west:
+  revision: v1.0.0
+  path: modules/lib/has-import
+  import: true
