@@ -75,6 +75,12 @@ Field rules (enforced by `scripts/validate.py`):
 read from `build.depends` in the module's own `zephyr/module.yml`, and the site installs listed
 dependencies along with the module.
 
+## Adding a logo
+
+A module can add its logo as `logos/<name>.svg` (preferred), `.png`, `.webp` or `.jpg`,
+where `<name>` is the entry name. Keep it square, at most 100 KiB and, for PNG files, at least
+64 px wide. SVG files must not contain scripts, event handlers or references to other files.
+
 ## Checking it
 
 ```shell

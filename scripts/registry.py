@@ -8,8 +8,10 @@ from __future__ import annotations
 import json
 import os
 import re
+import struct
 import subprocess
 import tempfile
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -21,6 +23,7 @@ CATEGORIES_FILE = ROOT / 'categories.yml'
 ENTRY_SCHEMA = ROOT / 'schema' / 'entry.schema.json'
 INDEX_SCHEMA = ROOT / 'schema' / 'index.schema.json'
 SITE_CONFIG = ROOT / 'site.yml'
+LOGOS_DIR = ROOT / 'logos'
 
 # Optional west project keys copied verbatim from an entry, in output order.
 WEST_OPTIONAL_KEYS = ('submodules', 'west-commands', 'groups')
@@ -84,6 +87,71 @@ def load_site_config() -> dict:
     if SITE_CONFIG.exists():
         return load_yaml(SITE_CONFIG) or {}
     return {}
+
+
+# --- logos -------------------------------------------------------------------
+
+LOGO_SUFFIXES = ('.svg', '.png', '.webp', '.jpg', '.jpeg')
+LOGO_MAX_BYTES = 100 * 1024
+
+
+def logo_path(name: str) -> Path | None:
+    """The logo a module provides as logos/<name>.<ext>, if any."""
+    for suffix in LOGO_SUFFIXES:
+        path = LOGOS_DIR / f'{name}{suffix}'
+        if path.is_file():
+            return path
+    return None
+
+
+def image_type(data: bytes) -> str | None:
+    """Sniff an image format from its first bytes: png, jpg, webp, ico or svg."""
+    if data.startswith(b'\x89PNG\r\n\x1a\n'):
+        return 'png'
+    if data.startswith(b'\xff\xd8\xff'):
+        return 'jpg'
+    if data[:4] == b'RIFF' and data[8:12] == b'WEBP':
+        return 'webp'
+    if data[:4] == b'\x00\x00\x01\x00':
+        return 'ico'
+    if b'<svg' in data[:2048]:
+        return 'svg'
+    return None
+
+
+def image_size(data: bytes) -> tuple[int, int] | None:
+    """Pixel size of a PNG, or of the largest image of an ICO; None otherwise."""
+    kind = image_type(data)
+    if kind == 'png' and len(data) >= 24:
+        return struct.unpack('>II', data[16:24])
+    if kind == 'ico' and len(data) >= 6:
+        count = struct.unpack('<H', data[4:6])[0]
+        sizes = [(data[6 + 16 * i] or 256, data[7 + 16 * i] or 256)
+                 for i in range(count) if len(data) >= 8 + 16 * i]
+        return max(sizes) if sizes else None
+    return None
+
+
+def check_svg(data: bytes) -> list[str]:
+    """An SVG logo must be self-contained and free of script."""
+    try:
+        root = ET.fromstring(data)
+    except ET.ParseError as e:
+        return [f'not valid XML: {e}']
+    if not root.tag.endswith('svg'):
+        return ['root element is not <svg>']
+    errors = []
+    for el in root.iter():
+        tag = el.tag.rsplit('}', 1)[-1]
+        if tag in ('script', 'foreignObject'):
+            errors.append(f'<{tag}> is not allowed')
+        for attr, value in el.attrib.items():
+            name = attr.rsplit('}', 1)[-1]
+            if name.lower().startswith('on'):
+                errors.append(f'event attribute {name} is not allowed')
+            if name == 'href' and not value.startswith(('#', 'data:image/')):
+                errors.append(f'external reference {value} is not allowed')
+    return sorted(set(errors))
 
 
 # --- YAML emission -----------------------------------------------------------

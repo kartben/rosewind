@@ -47,6 +47,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). In short: add `modules/<name>.yml`, run
 | Path | Content |
 | --- | --- |
 | `modules/<name>.yml` | One entry per module |
+| `logos/<name>.svg` | Optional module logo (also `.png`, `.webp`, `.jpg`) |
 | `categories.yml` | Allowed values of `category` |
 | `schema/` | JSON Schemas of an entry and of `index.json` |
 | `scripts/validate.py` | Offline checks; `--online` also checks the repository and revision |

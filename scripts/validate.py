@@ -147,6 +147,51 @@ def offline(paths: list[Path], report: Report) -> list[registry.Entry]:
     return entries
 
 
+def check_logo(path: Path) -> list[tuple[str, str]]:
+    data = path.read_bytes()
+    out = []
+    if len(data) > registry.LOGO_MAX_BYTES:
+        out.append(('error', f'{len(data) // 1024} KiB; logos must be at most '
+                    f'{registry.LOGO_MAX_BYTES // 1024} KiB'))
+    suffix = path.suffix.lower()
+    if suffix == '.svg':
+        out += [('error', f'SVG {msg}') for msg in registry.check_svg(data)]
+    elif suffix == '.png':
+        if registry.image_type(data) != 'png':
+            out.append(('error', 'not a PNG file'))
+        else:
+            width, height = registry.image_size(data)
+            if min(width, height) < 64:
+                out.append(('error', f'{width}x{height} px; logos must be at least 64 px wide and high'))
+            elif not 0.8 <= width / height <= 1.25:
+                out.append(('warning', f'{width}x{height} px; a square logo displays best'))
+    elif suffix in ('.jpg', '.jpeg') and registry.image_type(data) != 'jpg':
+        out.append(('error', 'not a JPEG file'))
+    elif suffix == '.webp' and registry.image_type(data) != 'webp':
+        out.append(('error', 'not a WebP file'))
+    return out
+
+
+def check_logos(names: set[str], report: Report, only: set[str] | None = None):
+    """Check logos/<name>.<ext>: known module, one per module, allowed format."""
+    if not registry.LOGOS_DIR.is_dir():
+        return
+    seen = {}
+    for path in sorted(registry.LOGOS_DIR.iterdir()):
+        if path.name.startswith('.') or (only is not None and path.stem not in only):
+            continue
+        if path.suffix.lower() not in registry.LOGO_SUFFIXES:
+            report.add('error', path, f'unsupported logo format; use one of {", ".join(registry.LOGO_SUFFIXES)}')
+            continue
+        if path.stem not in names:
+            report.add('error', path, f'no module named "{path.stem}" in modules/')
+        if path.stem in seen:
+            report.add('error', path, f'"{path.stem}" already has a logo: {seen[path.stem]}')
+        seen[path.stem] = path.name
+        for level, msg in check_logo(path):
+            report.add(level, path, msg)
+
+
 def zephyr_projects(local: list[str] | None) -> dict[str, str]:
     """Names and paths of the projects in Zephyr's manifest."""
     texts = []
@@ -211,6 +256,8 @@ def main(argv=None) -> int:
     report = Report(args.format)
     paths = registry.entry_paths(args.files)
     entries = offline(paths, report)
+    names = {p.stem for p in registry.entry_paths()}
+    check_logos(names, report, {e.name for e in entries} if args.files else None)
 
     if args.online or args.zephyr_manifest:
         try:
