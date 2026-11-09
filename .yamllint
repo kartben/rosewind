@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+extends: default
+rules:
+  document-start: disable
+  line-length:
+    max: 120
+  truthy:
+    allowed-values: ['true', 'false', 'on']
+  comments:
+    min-spaces-from-content: 1
