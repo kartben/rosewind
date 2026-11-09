@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: golioth-firmware-sdk
+title: Golioth Firmware SDK
+summary: >-
+  Connect devices to the Golioth cloud for OTA updates, logging, settings and data streaming.
+category: device-mgmt
+keywords: [coap, lwm2m]
+license: Apache-2.0
+maintainers:
+  - github: golioth
+links:
+  repository: https://github.com/golioth/golioth-firmware-sdk
+  documentation: https://docs.golioth.io
+  homepage: https://golioth.io
+west:
+  revision: main
+  path: modules/lib/golioth-firmware-sdk
