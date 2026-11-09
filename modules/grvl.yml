@@ -1,0 +1,39 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: grvl
+title: grvl
+summary: >-
+  Lightweight GUI library for MCUs that aims for a modern, responsive feel on small displays.
+description: |
+  [Graphics Rendering Visual Library](https://github.com/antmicro/grvl) (grvl) is a lightweight
+  GUI library for Zephyr-based MCUs, providing a portable solution that is both suitable for
+  resource-constrained devices and offers a modern, responsive user experience.
+
+  Internally, grvl links to a standard XML library called
+  [tinyxml](https://github.com/leethomason/tinyxml2) that is used for parsing the GUI config
+  instead of code. The UI interaction can be scripted with JavaScript using the integrated
+  [Duktape](https://github.com/svaarala/duktape) JavaScript engine.
+
+  grvl features:
+
+  - Native support for PNG and JPEG graphics
+  - Simple DirectMedia Layer compatibility
+  - POSIX compliance and Zephyr support
+  - Built-in components: popups, fonts, labels, buttons and sliders
+  - User-defined prefabs that can be used to instantiate complex structures at runtime
+  - XML-based layout and a JavaScript engine
+
+  grvl is licensed under the Apache License 2.0. tinyxml is licensed under the Zlib license.
+  Duktape is licensed under the MIT License.
+category: graphics
+tags: [gui, display, antmicro]
+license: Apache-2.0
+maintainers:
+  - github: antmicro
+links:
+  repository: https://github.com/antmicro/grvl
+  documentation: https://antmicro.github.io/grvl/
+west:
+  revision: main
+  path: modules/lib/grvl
