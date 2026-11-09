@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: requests
+title: requests
+summary: >-
+  Simple HTTP(S) client API (GET, POST, PUT, DELETE) over Zephyr networking, with shell commands.
+description: |
+  The [requests](https://github.com/walidbadar/requests) project provides an easy-to-use interface
+  for performing common HTTP(S) operations such as GET, POST, PUT and DELETE using Zephyr's
+  networking stack. It also includes built-in shell commands to interact with HTTP(S) endpoints
+  directly from the Zephyr shell.
+category: communication
+tags: [http, rest, shell]
+license: Apache-2.0
+maintainers:
+  - github: walidbadar
+links:
+  repository: https://github.com/walidbadar/requests
+west:
+  revision: main
+  path: modules/lib/requests
