@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: libmpix
+title: libmpix
+summary: >-
+  Image processing for MCUs: pixel format conversion, debayer, resize, blur, sharpen and color correction.
+description: |
+  The [libmpix](https://github.com/libmpix/libmpix) project provides a library for working with
+  image data on microcontrollers. It supports pixel format conversion, debayer, blur, sharpen,
+  color correction, resizing and more.
+
+  It pipelines multiple operations together, eliminating intermediate buffers. This allows larger
+  image resolutions to fit in constrained systems without compromising performance.
+category: graphics
+tags: [camera, video, image-processing]
+license: Apache-2.0
+maintainers:
+  - github: libmpix
+links:
+  repository: https://github.com/libmpix/libmpix
+west:
+  revision: main
+  path: modules/lib/libmpix
