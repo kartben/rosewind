@@ -1,0 +1,32 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: dtsh
+title: DTSh
+summary: >-
+  Interactive devicetree shell: navigate, search and export the DTS of your build with west dtsh.
+description: |
+  [DTSh](https://dottspina.github.io/dtsh/handbook.html) is an interactive DTS file viewer with a
+  shell-like command line interface:
+
+  - easily *navigate* and *visualize* the devicetree
+  - find nodes based on e.g. supported bus protocols, bindings, generated IRQs, memory size, or
+    keywords like "sensor" or "PWM"
+  - redirect commands output to files (text, HTML, SVG) to document hardware configurations or
+    simply take notes
+  - contextual auto-completion, commands history, semantic highlighting, user profiles
+  - script-able (aka batch modes)
+
+  This Zephyr module adds DTSh as a West extension to your Zephyr workspace.
+category: tools
+keywords: [cli]
+license: Apache-2.0
+maintainers:
+  - github: dottspina
+links:
+  repository: https://github.com/dottspina/dtsh
+  documentation: https://dottspina.github.io/dtsh/handbook.html
+west:
+  revision: zephyr
+  path: modules/tools/dtsh
+  west-commands: scripts/west-commands.yml
