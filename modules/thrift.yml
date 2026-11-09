@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: thrift
+title: Apache Thrift
+summary: >-
+  Thrift IDL, RPC framework and code generator, with Zephyr transports, samples and tests.
+description: |
+  [Apache Thrift](https://github.com/apache/thrift) is an
+  [IDL](https://en.wikipedia.org/wiki/Interface_description_language) specification,
+  [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) framework, and [code
+  generator](https://en.wikipedia.org/wiki/Automatic_programming). It works across all major
+  operating systems, supports over 27 programming languages, 7 protocols, and 6 low-level
+  transports. Thrift was originally developed at [Facebook in
+  2006](https://thrift.apache.org/static/files/thrift-20070401.pdf) and then shared with the
+  [Apache Software Foundation](https://www.apache.org). Thrift supports a rich set of types and
+  data structures, and abstracts away transport and protocol details, which lets developers focus
+  on application logic.
+category: communication
+tags: [rpc, idl, codegen]
+license: Apache-2.0
+maintainers:
+  - github: zephyrproject-rtos
+links:
+  repository: https://github.com/zephyrproject-rtos/thrift
+  homepage: https://thrift.apache.org/
+west:
+  revision: zephyr
+  path: modules/lib/thrift
