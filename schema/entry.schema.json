@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/zephyrproject-rtos/community-modules/schema/entry.schema.json",
+  "title": "Zephyr community module entry",
+  "description": "One file per module: modules/<name>.yml",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "title", "summary", "category", "license", "maintainers", "links", "west"],
+  "properties": {
+    "name": {
+      "description": "Unique module name. Must match the file name; used as the west project name.",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,62}$"
+    },
+    "title": {
+      "description": "Display name.",
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 60
+    },
+    "summary": {
+      "description": "One plain-text sentence shown on the module card.",
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 160,
+      "pattern": "^[^\\n]*$"
+    },
+    "description": {
+      "description": "Longer description in a small Markdown subset (paragraphs, lists, inline code, links).",
+      "type": "string",
+      "maxLength": 2000
+    },
+    "category": {
+      "description": "One key of categories.yml.",
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,30}$"}
+    },
+    "license": {
+      "description": "SPDX license expression. A LicenseRef-* identifier requires links.license.",
+      "type": "string",
+      "minLength": 2
+    },
+    "maintainers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "github": {"type": "string", "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$"},
+          "email": {"type": "string", "format": "email"}
+        },
+        "anyOf": [{"required": ["github"]}, {"required": ["name"]}]
+      }
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository"],
+      "properties": {
+        "repository": {"$ref": "#/$defs/https"},
+        "documentation": {"$ref": "#/$defs/https"},
+        "homepage": {"$ref": "#/$defs/https"},
+        "examples": {"$ref": "#/$defs/https"},
+        "issues": {"$ref": "#/$defs/https"},
+        "license": {"$ref": "#/$defs/https"}
+      }
+    },
+    "west": {
+      "description": "The west project added to a workspace. name defaults to the entry name, url to links.repository.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "path"],
+      "properties": {
+        "url": {"$ref": "#/$defs/https"},
+        "revision": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/+-]*$", "maxLength": 100},
+        "path": {"type": "string", "pattern": "^modules/[a-z0-9][a-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$"},
+        "submodules": {
+          "oneOf": [
+            {"type": "boolean"},
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["path"],
+                "properties": {"path": {"type": "string"}, "name": {"type": "string"}}
+              }
+            }
+          ]
+        },
+        "west-commands": {"type": "string", "pattern": "^[^/][^\\n]*\\.ya?ml$"},
+        "groups": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Za-z0-9_][A-Za-z0-9_-]*$"}
+        }
+      }
+    },
+    "status": {
+      "description": "Set by registry maintainers.",
+      "enum": ["active", "deprecated", "unmaintained"],
+      "default": "active"
+    }
+  },
+  "$defs": {
+    "https": {"type": "string", "pattern": "^https://[^\\s]+$"}
+  }
+}
