@@ -1,17 +1,21 @@
 # SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
 # SPDX-License-Identifier: Apache-2.0
 
-"""Module logos: logos/<name>.<ext> must belong to a module and be a safe,
-reasonably sized image."""
+"""Module images: logos/<name>.<ext> is validated and preferred; the icon of the
+module's website, saved by enrich.py, is the fallback; initials otherwise."""
 
+import json
 import struct
 import zlib
+from pathlib import Path
 
 import pytest
 
+import build_site
 import registry
 import validate
 
+ENRICHED = Path(__file__).parent / 'fixtures' / 'enriched.json'
 SVG = b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30"/></svg>'
 
 
@@ -76,3 +80,28 @@ def test_non_square_png_warns(logos, capsys):
     report, out = check(capsys)
     assert report.errors == 0 and report.warnings == 1, out
 
+
+def test_logo_then_icon_then_initials(logos, tmp_path):
+    (logos / 'lz4.svg').write_bytes(SVG)
+    enriched = json.loads(ENRICHED.read_text())
+    enriched['modules']['zenoh-pico']['icon'] = 'zenoh-pico.png'
+    build = tmp_path / 'build'
+    (build / 'icons').mkdir(parents=True)
+    (build / 'icons' / 'zenoh-pico.png').write_bytes(png(128, 128))
+    (build / 'enriched.json').write_text(json.dumps(enriched))
+    out = tmp_path / 'site'
+    rc = build_site.main(['--out', str(out), '--enriched', str(build / 'enriched.json'),
+                          '--base-url', 'https://modules.example.org', '--today', '2026-11-09'])
+    assert rc == 0
+
+    assert (out / 'img' / 'lz4.svg').read_bytes() == SVG
+    assert (out / 'img' / 'icons' / 'zenoh-pico.png').is_file()
+    assert 'src="../../img/lz4.svg"' in (out / 'm' / 'lz4' / 'index.html').read_text()
+    catalog = (out / 'index.html').read_text()
+    assert 'src="img/icons/zenoh-pico.png"' in catalog
+    assert '<span aria-hidden="true">DT</span>' in catalog
+
+    mods = {m['name']: m for m in json.loads((out / 'index.json').read_text())['modules']}
+    assert mods['lz4']['image'] == 'https://modules.example.org/img/lz4.svg'
+    assert mods['zenoh-pico']['image'] == 'https://modules.example.org/img/icons/zenoh-pico.png'
+    assert mods['dtsh']['image'] is None

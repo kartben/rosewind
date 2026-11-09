@@ -34,6 +34,7 @@
   {% for m in records %}
   <article class="card" data-name="{{ m.name }}">
     <div class="card-head">
+      <div class="thumb{{ ' thumb-logo' if m.image_kind == 'logo' }}"{% if not m.image %} style="--h:{{ m.hue }}"{% endif %}>{% if m.image %}<img src="{{ depth }}{{ m.image }}" alt="" width="44" height="44" loading="lazy">{% else %}<span aria-hidden="true">{{ m.initials }}</span>{% endif %}</div>
       <div class="card-title">
         <h2><a href="m/{{ m.name }}/" data-module="{{ m.name }}">{{ m.title }}</a></h2>
         <div class="owner">{{ m.owner }}</div>

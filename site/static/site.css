@@ -36,6 +36,8 @@
   --idle: #5f6372;
   --idle-bg: #eceaf2;
   --mark: #fff0a0;
+  --tile-l: 94%;
+  --tile-ink-l: 30%;
   --shadow: 0 1px 2px rgb(40 20 80 / 0.06), 0 8px 20px -10px rgb(40 20 80 / 0.25);
   --show-sun: none;
   --show-moon: inline;
@@ -52,6 +54,7 @@
     --code-bg: #1a1822; --code-ink: #e2e0ea; --code-key: #7df0cb; --code-str: #ffe7a0; --code-com: #a8a4b8;
     --term-bg: #0f0e13; --ok: #6fd6a0; --warn: #f2b45c; --warn-bg: #3d2f1b; --idle: #a8a6b3; --idle-bg: #2c2a33;
     --mark: #5a4b18; --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 24px -12px rgb(0 0 0 / 0.7);
+    --tile-l: 24%; --tile-ink-l: 82%;
     --show-sun: inline; --show-moon: none; --show-logo-light: none; --show-logo-dark: block;
     color-scheme: dark;
   }
@@ -62,6 +65,7 @@
   --code-bg: #1a1822; --code-ink: #e2e0ea; --code-key: #7df0cb; --code-str: #ffe7a0; --code-com: #a8a4b8;
   --term-bg: #0f0e13; --ok: #6fd6a0; --warn: #f2b45c; --warn-bg: #3d2f1b; --idle: #a8a6b3; --idle-bg: #2c2a33;
   --mark: #5a4b18; --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 24px -12px rgb(0 0 0 / 0.7);
+  --tile-l: 24%; --tile-ink-l: 82%;
   --show-sun: inline; --show-moon: none; --show-logo-light: none; --show-logo-dark: block;
   color-scheme: dark;
 }
@@ -148,6 +152,13 @@ main { padding-block: 22px 8px; }
 .card:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
 .card-head { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
 .card-title { flex: 1; min-width: 0; }
+.thumb {
+  width: 44px; height: 44px; flex: none; border-radius: 10px; overflow: hidden; display: grid; place-items: center;
+  background: #ffffff; border: 1px solid var(--line);
+}
+.thumb img { width: 100%; height: 100%; object-fit: contain; padding: 6px; display: block; }
+.thumb:not(:has(img)) { background: hsl(var(--h) 55% var(--tile-l)); border-color: transparent; }
+.thumb span { font-weight: 700; font-size: 16px; color: hsl(var(--h) 50% var(--tile-ink-l)); }
 .card h2 { font-size: 17px; line-height: 1.3; overflow-wrap: anywhere; }
 .card h2 a { color: var(--ink); }
 .card h2 a:hover { text-decoration: none; }
@@ -199,6 +210,10 @@ footer .wrap { display: flex; gap: 16px; flex-wrap: wrap; justify-content: space
 .close { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; color: var(--ink); font-size: 18px; line-height: 1; }
 .detail { display: grid; gap: 20px; min-width: 0; }
 .detail-head { display: flex; align-items: center; gap: 14px; }
+.detail-head .thumb { width: 56px; height: 56px; border-radius: 12px; }
+.band-head { display: flex; align-items: center; gap: 16px; }
+.band-head .thumb { width: 64px; height: 64px; border-radius: 14px; }
+.band-head .thumb span { font-size: 22px; }
 .detail-head h2 { font-size: 26px; line-height: 1.15; }
 .detail-head .owner { margin-top: 2px; font-size: 13px; }
 .detail-page { max-width: 880px; }

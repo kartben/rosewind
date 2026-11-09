@@ -6,7 +6,10 @@
 <section class="band band-page">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ depth }}">Modules</a> / <a href="{{ depth }}?category={{ m.category }}">{{ m.category_label }}</a></nav>
-    <h1>{{ m.title }}</h1>
+    <div class="band-head">
+      <div class="thumb{{ ' thumb-logo' if m.image_kind == 'logo' }}"{% if not m.image %} style="--h:{{ m.hue }}"{% endif %}>{% if m.image %}<img src="{{ depth }}{{ m.image }}" alt="" width="64" height="64" loading="lazy">{% else %}<span aria-hidden="true">{{ m.initials }}</span>{% endif %}</div>
+      <h1>{{ m.title }}</h1>
+    </div>
     <p class="lead">{{ m.summary }}</p>
   </div>
 </section>

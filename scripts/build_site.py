@@ -9,6 +9,7 @@ Output layout (default _site/):
   m/<name>/index.html   one page per module
   m/<name>.yaml         ready-to-use west submanifest
   index.json            machine-readable index (schema/index.schema.json)
+  img/                  module logos (logos/) and website icons (build/icons/)
   404.html, sitemap.xml, robots.txt, .nojekyll, static/
 """
 
@@ -102,6 +103,24 @@ def yaml_highlight(src: str) -> Markup:
     return Markup('\n'.join(out))
 
 
+def initials(title: str) -> str:
+    words = re.sub(r'\(.*?\)', '', title)
+    words = re.sub(r'[^A-Za-z0-9 ]', ' ', words).split()
+    s = (words[0][0] + words[1][0]) if len(words) > 1 else title[:2]
+    return s[0].upper() + s[1:]
+
+
+def module_image(name: str, enr: dict, icon_dir: Path) -> tuple[str | None, Path | None]:
+    """The logo in logos/, else the website icon enrich.py saved: (site path, source file)."""
+    logo = registry.logo_path(name)
+    if logo:
+        return f'img/{name}{logo.suffix.lower()}', logo
+    icon = enr.get('icon')
+    if icon and (icon_dir / icon).is_file():
+        return f'img/icons/{icon}', icon_dir / icon
+    return None, None
+
+
 def ago(days: int | None) -> str:
     if days is None:
         return 'unknown'
@@ -122,7 +141,7 @@ def fmt_stars(n) -> str:
 
 # --- model -------------------------------------------------------------------
 
-def build_records(entries, categories, enriched, today: date, base_url: str):
+def build_records(entries, categories, enriched, today: date, base_url: str, icon_dir: Path):
     by_module_name = {}
     for e in entries:
         mod = (enriched.get(e.name) or {}).get('module') or {}
@@ -145,6 +164,7 @@ def build_records(entries, categories, enriched, today: date, base_url: str):
             target = by_module_name.get(dep)
             deps.append({'module': dep, 'entry': target})
 
+        image, image_src = module_image(e.name, enr, icon_dir)
         pushed = repo.get('pushed_at')
         days = (today - date.fromisoformat(pushed[:10])).days if pushed else None
         activity = None if days is None else 'active' if days <= 90 else 'quiet' if days <= 365 else 'inactive'
@@ -175,6 +195,10 @@ def build_records(entries, categories, enriched, today: date, base_url: str):
             'days': days,
             'activity': activity,
             'owner': proj['url'].split('://', 1)[-1].split('/')[1],
+            'initials': initials(d['title']),
+            'image': image,
+            'image_src': image_src,
+            'image_kind': None if not image else 'icon' if '/icons/' in image else 'logo',
             'page_url': f'{base_url}/m/{e.name}/',
             'submanifest_url': f'{base_url}/m/{e.name}.yaml',
             'entry_text': e.text,
@@ -195,6 +219,7 @@ def index_json(records, categories, generated: str, base_url: str) -> dict:
                                'maintainers', 'links', 'status', 'west', 'provides', 'page_url',
                                'submanifest_url')}
         m['description'] = r['description']
+        m['image'] = f"{base_url}/{r['image']}" if r['image'] else None
         m['revision_kind'] = r['revision_kind']
         m['dependencies'] = r['dependencies']
         m['repo'] = r['repo']
@@ -260,7 +285,7 @@ def main(argv=None) -> int:
     today = args.today or date.today()
     generated = datetime.now(timezone.utc).isoformat(timespec='seconds')
 
-    records = build_records(entries, categories, enriched, today, base_url)
+    records = build_records(entries, categories, enriched, today, base_url, args.enriched.parent / 'icons')
 
     env = Environment(loader=FileSystemLoader(SITE_DIR / 'templates'),
                       autoescape=select_autoescape(['html']), trim_blocks=True, lstrip_blocks=True)
@@ -278,6 +303,10 @@ def main(argv=None) -> int:
         shutil.rmtree(out)
     (out / 'm').mkdir(parents=True)
     shutil.copytree(SITE_DIR / 'static', out / 'static')
+    for r in records:
+        if r['image']:
+            (out / r['image']).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(r['image_src'], out / r['image'])
     (out / '.nojekyll').write_text('')
 
     index = index_json(records, categories, generated, base_url)
