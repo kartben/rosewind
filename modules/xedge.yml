@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: xedge
+title: Xedge
+summary: >-
+  Lua-based IoT and web application framework built on the Barracuda App Server.
+description: |
+  Xedge is a secure, embedded web and IoT edge framework designed for resource-constrained devices
+  and RTOS environments. It is built on the Barracuda App Server technology and provides a
+  high-level, Lua-based application environment for developing secure, network-connected devices.
+
+  Xedge is licensed under the GPLv2 license with a commercial license option.
+category: languages
+tags: [lua, web-server, iot]
+license: GPL-2.0-only
+maintainers:
+  - github: RealTimeLogic
+links:
+  repository: https://github.com/RealTimeLogic/Xedge4Zephyr
+  homepage: https://realtimelogic.com/products/xedge/
+west:
+  revision: main
+  path: modules/lib/xedge
