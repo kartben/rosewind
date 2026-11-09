@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: wolfssh
+title: wolfSSH
+summary: >-
+  SSH server and client, SCP and SFTP for embedded and resource-constrained devices.
+description: |
+  wolfSSH is a lightweight, portable SSH library optimized for embedded systems, RTOS
+  environments, and resource-constrained devices. It provides secure shell functionality including
+  SSH server and client implementations, SCP, and SFTP support. Its support for multiple build
+  configurations makes it suitable for a wide range of applications and hardware platforms that
+  are utilizing Zephyr RTOS.
+
+  wolfSSH has support for the Zephyr networking stack so applications can use the wolfSSH API to
+  establish secure SSH connections with other devices or services over the network.
+
+  wolfSSH is dual licensed under GPLv3 and commercial licenses.
+category: security
+tags: [ssh, sftp, scp]
+license: GPL-3.0-or-later
+maintainers:
+  - github: wolfssl
+links:
+  repository: https://github.com/wolfssl/wolfssh
+  documentation: https://www.wolfssl.com/documentation/manuals/wolfssh/
+west:
+  revision: master
+  path: modules/lib/wolfssh
