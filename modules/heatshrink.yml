@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: heatshrink
+title: heatshrink
+summary: >-
+  LZSS-based compression for embedded systems that runs in as little as 50 bytes of RAM.
+description: |
+  [heatshrink](https://github.com/atomicobject/heatshrink) is a data compression and decompression
+  library for embedded and real-time systems, written by Scott Vokes at Atomic Object. It is based
+  on LZSS and is designed for very low memory usage (as low as 50 bytes of RAM), incremental and
+  bounded CPU use, and either static or dynamic memory allocation.
+
+  The [heatshrink Zephyr module](https://github.com/kickmaker/heatshrink) is a fork of the
+  original project maintained by Kickmaker. It adds the Zephyr integration (Kconfig options, CMake
+  build rules and samples) on top of the upstream library; the compression code itself comes from
+  the original heatshrink project.
+
+  The heatshrink library is licensed under the ISC license. The Zephyr integration files are
+  licensed under the Apache-2.0 license.
+category: data
+license: ISC AND Apache-2.0
+maintainers:
+  - github: kickmaker
+links:
+  repository: https://github.com/kickmaker/heatshrink
+  examples: https://github.com/kickmaker/heatshrink/tree/zephyr/samples/compression
+west:
+  revision: zephyr
+  path: modules/lib/heatshrink
