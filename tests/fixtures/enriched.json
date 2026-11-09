@@ -1,6 +1,55 @@
 {
  "generated": "2026-11-09T00:00:00+00:00",
  "modules": {
+  "dtsh": {
+   "revision": {
+    "kind": "branch",
+    "sha": "93e9973af8024a544fdea6bb0710f4a1b39ab842"
+   },
+   "module": {
+    "found": true,
+    "name": "dtsh",
+    "depends": [],
+    "provides": [
+     "pip"
+    ]
+   },
+   "latest_tag": "v0.2.5",
+   "repo": {
+    "host": "github",
+    "full_name": "dottspina/dtsh",
+    "stars": 76,
+    "pushed_at": "2026-05-04T05:09:42Z",
+    "archived": false,
+    "default_branch": "dtsh-next",
+    "latest_release": {
+     "tag": "v0.2.5",
+     "date": "2025-10-24T03:50:57Z"
+    }
+   }
+  },
+  "heatshrink": {
+   "revision": {
+    "kind": "branch",
+    "sha": "c47356093c4ea079749214de2864186a578668a0"
+   },
+   "module": {
+    "found": true,
+    "name": "heatshrink",
+    "depends": [],
+    "provides": []
+   },
+   "latest_tag": null,
+   "repo": {
+    "host": "github",
+    "full_name": "kickmaker/heatshrink",
+    "stars": 6,
+    "pushed_at": "2025-06-20T14:34:28Z",
+    "archived": false,
+    "default_branch": "zephyr",
+    "latest_release": null
+   }
+  },
   "wolfssl": {
    "revision": {
     "kind": "branch",
@@ -96,28 +145,6 @@
      "tag": "1.10.2",
      "date": "2026-10-28T10:26:09Z"
     }
-   }
-  },
-  "heatshrink": {
-   "revision": {
-    "kind": "branch",
-    "sha": "c47356093c4ea079749214de2864186a578668a0"
-   },
-   "module": {
-    "found": true,
-    "name": "heatshrink",
-    "depends": [],
-    "provides": []
-   },
-   "latest_tag": null,
-   "repo": {
-    "host": "github",
-    "full_name": "kickmaker/heatshrink",
-    "stars": 6,
-    "pushed_at": "2025-06-20T14:34:28Z",
-    "archived": false,
-    "default_branch": "zephyr",
-    "latest_release": null
    }
   }
  }

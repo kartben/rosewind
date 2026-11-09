@@ -25,12 +25,10 @@
       </div>
 <pre data-os="unix">{% for x in m.install_set %}curl -fsSL {{ x.submanifest_url }} \
      -o zephyr/submanifests/{{ x.name }}.yaml
-{% endfor %}west update {{ names }}{% for p in post %}
-{{ p }}{% endfor %}</pre>
+{% endfor %}west update {{ names }}{% for p in post %}{{ '\n' ~ p }}{% endfor %}</pre>
 <pre data-os="windows" hidden>{% for x in m.install_set %}Invoke-WebRequest {{ x.submanifest_url }} `
   -OutFile zephyr/submanifests/{{ x.name }}.yaml
-{% endfor %}west update {{ names }}{% for p in post %}
-{{ p }}{% endfor %}</pre>
+{% endfor %}west update {{ names }}{% for p in post %}{{ '\n' ~ p }}{% endfor %}</pre>
     </div>
     <p class="hint">Run from the workspace root.{% if m.install_set|length > 1 %} Includes {{ m.install_set[:-1] | map(attribute='name') | join(', ') }}, a dependency.{% endif %}</p>
   </div>

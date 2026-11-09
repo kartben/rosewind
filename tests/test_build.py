@@ -76,3 +76,8 @@ def test_detail_hides_passing_checks(site):
     page = (site / 'm' / 'zenoh-pico' / 'index.html').read_text()
     assert 'resolves (' not in page
     assert 'Tracks branch' in page
+
+
+def test_post_install_commands_on_their_own_line(site):
+    page = (site / 'm' / 'dtsh' / 'index.html').read_text()
+    assert 'west update dtsh\nwest packages -m dtsh pip --install' in page
