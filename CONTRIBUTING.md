@@ -5,8 +5,9 @@ SPDX-License-Identifier: Apache-2.0
 
 # Listing a module
 
-One pull request adds or changes one module. Prefer a form? Open a **New module** issue and a
-registry maintainer writes the entry for you.
+One pull request adds or changes one module. Prefer a form? Open a **New module** issue: a
+workflow turns your answers into a pull request and reports its checks on the issue, and a
+registry maintainer then reviews it. Editing the issue updates the pull request.
 
 ## Listing criteria
 

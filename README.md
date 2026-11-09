@@ -61,6 +61,21 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). In short: add `modules/<name>.yml`, run
 | `site.yml` | Site settings (base URL, repository, optional west command) |
 | `tests/` | pytest suite |
 
+## Turning issues into pull requests
+
+The New module issue form gives contributors a way in without git. The `New module` workflow
+writes the entry from the answers, checks it with `validate.py --online`, opens or updates a pull
+request from the `new-module/<issue number>` branch, and comments on the issue with the result.
+It needs:
+
+- a `new-module` label, which the issue form applies;
+- **Allow GitHub Actions to create and approve pull requests**, under Settings > Actions >
+  General.
+
+Pull requests opened by the workflow do not trigger the `Validate` workflow, a GitHub rule for
+events created with the workflow token; the `New module` workflow runs the same checks itself.
+Its commits carry no `Signed-off-by`, so the maintainer who merges adds one.
+
 ## Build the site locally
 
 ```shell

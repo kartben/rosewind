@@ -1,0 +1,130 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Turns a New module issue into a pull request that adds modules/<name>.yml,
+# checks the entry, and reports on the issue. Editing the issue updates the
+# pull request. Needs the new-module label, and "Allow GitHub Actions to
+# create and approve pull requests" in the repository settings.
+
+name: New module
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: new-module-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  entry:
+    if: github.event.issue.state == 'open' && contains(github.event.issue.labels.*.name, 'new-module')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Issue text only reaches the scripts through environment variables.
+      - name: Write the entry from the issue
+        id: entry
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          if python scripts/issue_to_entry.py --body-env ISSUE_BODY \
+              --github-output "$GITHUB_OUTPUT" > entry.log 2>&1; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+          cat entry.log
+
+      - name: Check the entry
+        id: check
+        if: steps.entry.outputs.ok == 'true'
+        env:
+          FILE: ${{ steps.entry.outputs.file }}
+        run: |
+          if python scripts/validate.py --online "$FILE" > check.log 2>&1; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+          cat check.log
+
+      - name: Open or update the pull request
+        id: pr
+        if: steps.entry.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: ${{ github.event.repository.default_branch }}
+          NUMBER: ${{ github.event.issue.number }}
+          AUTHOR: ${{ github.event.issue.user.login }}
+          NAME: ${{ steps.entry.outputs.name }}
+          FILE: ${{ steps.entry.outputs.file }}
+          CHECKED: ${{ steps.check.outputs.ok }}
+        run: |
+          branch="new-module/$NUMBER"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -q -c "$branch"
+          git add -- "$FILE"
+          git commit -q -m "modules: add $NAME" -m "Written from the answers in #$NUMBER, opened by @$AUTHOR."
+          git push -q --force "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" "HEAD:refs/heads/$branch"
+          url=$(gh pr list --repo "$REPO" --head "$branch" --state open --json url --jq '.[0].url // ""')
+          if [ -z "$url" ]; then
+            printf 'Adds `%s`, written from the answers in #%s.\n\nCloses #%s\n' "$FILE" "$NUMBER" "$NUMBER" > pr.md
+            draft=--draft
+            [ "$CHECKED" = "true" ] && draft=
+            url=$(gh pr create --repo "$REPO" --base "$BASE" --head "$branch" \
+              --title "modules: add $NAME" --body-file pr.md $draft)
+          elif [ "$CHECKED" = "true" ]; then
+            gh pr ready "$url" --repo "$REPO" > /dev/null 2>&1 || true
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      # Logs are indented as a code block, so answers cannot add Markdown or mentions.
+      - name: Report on the issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          WRITTEN: ${{ steps.entry.outputs.ok }}
+          CHECKED: ${{ steps.check.outputs.ok }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+        run: |
+          {
+            if [ "$WRITTEN" != "true" ]; then
+              echo "The entry could not be written from this issue:"
+              echo
+              sed 's/^/    /' entry.log 2>/dev/null || echo "    (no output)"
+              echo
+              echo "Edit the issue to fix it; this check runs again."
+            elif [ -z "$PR_URL" ]; then
+              echo "The entry was written, but the pull request could not be opened." \
+                "A registry maintainer will look into it."
+            elif [ "$CHECKED" = "true" ]; then
+              echo "The entry passes the registry checks: $PR_URL. A registry maintainer will review it."
+            else
+              echo "Draft pull request: $PR_URL. The registry checks found problems:"
+              echo
+              sed 's/^/    /' check.log
+              echo
+              echo "Edit the issue to fix them; the pull request is updated."
+            fi
+          } > comment.md
+          gh issue comment "$NUMBER" --repo "$REPO" --body-file comment.md --edit-last 2> /dev/null \
+            || gh issue comment "$NUMBER" --repo "$REPO" --body-file comment.md

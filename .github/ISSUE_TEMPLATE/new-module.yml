@@ -9,8 +9,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        A registry maintainer turns this issue into `modules/<name>.yml`. You can also open a
-        pull request directly; see CONTRIBUTING.md.
+        A workflow turns your answers into a pull request that adds `modules/<name>.yml`, checks
+        it, and links it here; a registry maintainer then reviews it. Edit this issue to update
+        the pull request. You can also open a pull request yourself; see CONTRIBUTING.md.
   - type: input
     id: name
     attributes:
