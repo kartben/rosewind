@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: cannectivity
+title: CANnectivity
+summary: >-
+  Open-source firmware that turns a Zephyr board into a USB-to-CAN adapter speaking the gs_usb protocol.
+description: |
+  [CANnectivity](https://github.com/CANnectivity/cannectivity) is an open source firmware for
+  Universal Serial Bus (USB) to Controller Area Network (CAN) adapters.
+
+  The firmware implements the Geschwister Schneider USB/CAN device protocol (often referred to as
+  "gs_usb"). This protocol is supported by the Linux kernel SocketCAN [gs_usb
+  driver](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/can/usb/gs_usb.c),
+  by [python-can](https://python-can.readthedocs.io/en/stable/interfaces/gs_usb.html), and by many
+  other software packages.
+
+  The firmware, which is based on Zephyr RTOS, allows turning your favorite microcontroller
+  development board into a full-fledged USB to CAN adapter.
+
+  CANnectivity is licensed under the Apache-2.0 license.
+category: industrial
+license: Apache-2.0
+maintainers:
+  - github: CANnectivity
+links:
+  repository: https://github.com/CANnectivity/cannectivity
+west:
+  revision: main
+  path: modules/lib/cannectivity
