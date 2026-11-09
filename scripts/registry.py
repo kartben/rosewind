@@ -191,3 +191,90 @@ def module_info(text: str, west_path: str) -> dict:
         'depends': list(build.get('depends') or []),
         'provides': provides,
     }
+
+
+# --- versions ----------------------------------------------------------------
+
+_VERSION = re.compile(r'^(?P<prefix>\D*?)(?P<num>\d+(?:\.\d+)*)(?P<suffix>.*)$')
+_PRERELEASE = re.compile(r'(rc|alpha|beta|pre|dev|snapshot)', re.I)
+
+
+def parse_version(tag: str):
+    """Split a tag into (prefix, numeric tuple, suffix), or None."""
+    m = _VERSION.match(tag)
+    if not m:
+        return None
+    return m['prefix'], tuple(int(x) for x in m['num'].split('.')), m['suffix']
+
+
+def latest_tag(tags: list[str], like: str | None = None) -> str | None:
+    """Highest release tag, preferring the prefix/suffix family of `like`."""
+    parsed = [(t, parse_version(t)) for t in tags]
+    releases = [(t, v) for t, v in parsed if v and not _PRERELEASE.search(t)]
+    if like and (ref := parse_version(like)):
+        family = [(t, v) for t, v in releases if v[0] == ref[0] and v[2] == ref[2]]
+        releases = family or releases
+    if not releases:
+        return None
+    return max(releases, key=lambda tv: tv[1][1])[0]
+
+
+def is_newer(candidate: str, current: str) -> bool:
+    a, b = parse_version(candidate), parse_version(current)
+    return bool(a and b and a[1] > b[1])
+
+
+# --- checks shown on the site and in the report ------------------------------
+
+def compute_checks(entry: Entry, enr: dict | None, today) -> list[dict]:
+    """Derive the user-facing checks of one entry from its enrichment data."""
+    from datetime import date
+
+    proj = entry.west_project()
+    checks = []
+
+    def add(level, code, message):
+        checks.append({'level': level, 'code': code, 'message': message})
+
+    if not enr:
+        add('info', 'not-enriched', 'Repository checks have not run for this entry yet.')
+        return checks
+    if enr.get('error'):
+        add('error', 'unreachable', enr['error'])
+        return checks
+
+    kind = enr['revision']['kind']
+    label = {'tag': 'release tag', 'branch': 'branch', 'sha': 'commit'}.get(kind, kind)
+    add('pass', 'revision', f'Revision `{proj["revision"]}` resolves ({label}).')
+    if kind == 'branch':
+        add('info', 'tracks-branch', f'Tracks branch `{proj["revision"]}`: `west update` can bring new '
+            'commits at any time. Pin a release tag for reproducible builds.')
+    newer = enr.get('newer_release')
+    if newer:
+        add('info', 'newer-release', f'Upstream has a newer release: `{newer}`.')
+
+    mod = enr.get('module') or {}
+    if mod.get('found'):
+        add('pass', 'module-yml', f'`zephyr/module.yml` found (module name `{mod["name"]}`).')
+    elif 'west-commands' in proj:
+        add('info', 'no-module-yml', 'No `zephyr/module.yml`: listed for its west extension commands.')
+    else:
+        add('warning', 'no-module-yml', f'No `zephyr/module.yml` at `{proj["revision"]}`: the Zephyr build '
+            'will not pick this repository up as a module.')
+
+    repo = enr.get('repo') or {}
+    if repo.get('archived'):
+        add('warning', 'archived', 'The repository is archived upstream.')
+    if repo.get('pushed_at'):
+        pushed = date.fromisoformat(repo['pushed_at'][:10])
+        days = (today - pushed).days
+        if days > 365:
+            add('warning', 'inactive', f'No commits for {days // 30} months.')
+
+    kind_l = license_kind(entry.data['license'])
+    if kind_l == 'other':
+        add('info', 'license', f'License `{entry.data["license"]}` includes custom terms: read them '
+            'before shipping.')
+    else:
+        add('pass', 'license', f'License: `{entry.data["license"]}`.')
+    return checks
