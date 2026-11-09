@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: memfault-firmware-sdk
+title: Memfault Firmware SDK
+summary: >-
+  Crash reports, coredumps, logs, fleet metrics and OTA for MCU devices, backed by the Memfault platform.
+description: |
+  [memfault-firmware-sdk](https://github.com/memfault/memfault-firmware-sdk) provides embedded
+  developers with built-in remote debugging, performance monitoring, and OTA update capabilities
+  for MCU-based devices. It automatically captures crash reports, logs, and stack traces from
+  devices in the field, making it easier to diagnose issues without physical access. The SDK also
+  collects lightweight performance metrics such as memory usage, battery life, connectivity, and
+  firmware stability to track fleet reliability over time.
+
+  The SDK communicates with the [Memfault](https://memfault.com/) platform, which aggregates this
+  data so teams can prioritize and resolve issues faster. In addition, the SDK supports
+  over-the-air firmware updates, enabling controlled rollouts and remote deployment of new
+  releases.
+
+  The SDK is protected under a custom BSD-style license with service-specific use restrictions.
+  See the [Memfault Firmware SDK
+  License](https://github.com/memfault/memfault-firmware-sdk/blob/master/LICENSE) for more
+  details.
+category: device-mgmt
+keywords: [crash-reporting]
+license: LicenseRef-Memfault-SDK
+maintainers:
+  - github: memfault
+links:
+  repository: https://github.com/memfault/memfault-firmware-sdk
+  documentation: https://docs.memfault.com/docs/mcu/zephyr-guide
+  homepage: https://memfault.com/
+  examples: https://github.com/memfault/memfault-firmware-sdk/tree/master/examples
+  license: https://github.com/memfault/memfault-firmware-sdk/blob/master/LICENSE
+west:
+  revision: "1.33.0"
+  path: modules/lib/memfault-firmware-sdk
