@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: esp-serial-flasher
+title: ESP Serial Flasher
+summary: >-
+  Program and control ESP8266 and ESP32-series chips from a host MCU over UART, USB CDC-ACM, SPI and more.
+description: |
+  ESP Serial Flasher is a portable C library developed and maintained by Espressif Systems that
+  enables programming and interacting with Espressif SoCs (ESP8266, ESP32 series) from host
+  microcontrollers running embedded operating systems. The library provides a unified API for
+  flash operations, RAM download and execution, and device management across multiple
+  communication interfaces including UART, USB CDC ACM, SPI, and SDIO.
+
+  This module is particularly valuable for Zephyr-based applications that need to program or
+  interact with Espressif target devices without requiring a PC or Python runtime environment. It
+  offers similar functionality to esptool but is optimized for resource-constrained embedded
+  systems, making it ideal for production programming tools, bootloaders, and firmware update
+  mechanisms.
+
+  ESP Serial Flasher supports a wide range of Espressif SoCs. For the list of supported targets
+  and more information, see [ESP Serial Flasher
+  GitHub](https://github.com/espressif/esp-serial-flasher).
+
+  ESP Serial Flasher is licensed under the Apache License 2.0.
+category: tools
+keywords: [flashing]
+license: Apache-2.0
+maintainers:
+  - github: espressif
+links:
+  repository: https://github.com/espressif/esp-serial-flasher
+  documentation: https://components.espressif.com/components/espressif/esp-serial-flasher
+west:
+  revision: master
+  path: modules/lib/esp-serial-flasher
