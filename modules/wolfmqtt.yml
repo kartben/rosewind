@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: wolfmqtt
+title: wolfMQTT
+summary: >-
+  MQTT v3.1.1 and v5.0 client with QoS 0-2 and Last Will, sized for embedded devices.
+description: |
+  wolfMQTT is a lightweight, portable MQTT client library optimized for embedded systems, RTOS
+  environments, and resource-constrained devices. It provides a client implementation of the MQTT
+  protocol with support for MQTT v3.1.1 and v5.0. The library offers features such as QoS levels
+  0-2, Last Will and Testament (LWT), and compatibility with various MQTT brokers. Its support for
+  multiple build configurations makes it suitable for a wide range of IoT applications and
+  hardware platforms that are utilizing the Zephyr RTOS.
+
+  wolfMQTT has support for the Zephyr networking stack so applications can use the wolfMQTT API to
+  establish MQTT connections with brokers and other devices or services over the network.
+
+  wolfMQTT is dual licensed under GPLv3 and commercial licenses.
+category: communication
+keywords: [pubsub]
+license: GPL-3.0-or-later
+maintainers:
+  - github: wolfssl
+links:
+  repository: https://github.com/wolfssl/wolfmqtt
+  documentation: https://www.wolfssl.com/documentation/manuals/wolfmqtt/
+west:
+  revision: v1.21.0
+  path: modules/lib/wolfmqtt
