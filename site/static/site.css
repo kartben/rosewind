@@ -102,18 +102,23 @@ h1, h2, h3 { font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: -0
   background: none; border: 0; cursor: pointer; font-family: inherit; white-space: nowrap;
 }
 .topbar nav a:hover, #theme:hover { color: var(--ink); background: var(--surface-2); text-decoration: none; }
+.topbar nav a[aria-current="page"] { color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--brand); border-radius: 0; }
 #theme .i-sun { display: var(--show-sun); }
 #theme .i-moon { display: var(--show-moon); }
 
 /* band */
 .band { background: var(--band); border-bottom: 1px solid var(--line); }
 .band .wrap { padding-block: 34px 30px; }
-.band h1 { font-size: 34px; line-height: 1.15; color: var(--brand); }
+.band h1 { font-size: 34px; line-height: 1.15; color: var(--ink); }
 .band .lead { margin: 10px 0 0; font-size: 18px; line-height: 1.5; color: var(--ink); max-width: 68ch; }
 .band-page .wrap { padding-block: 22px 26px; }
 .band-page h1 { font-size: 30px; }
 .band-page .lead { color: var(--muted); }
-.crumbs { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+.crumbs { display: flex; gap: 8px; align-items: baseline; font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+.crumbs a, .back { color: var(--muted); font-size: 14px; }
+.crumbs a:hover, .back:hover { color: var(--ink); }
+.band-page .back { display: inline-block; margin-bottom: 10px; }
+.crumbs .back { margin-bottom: 0; }
 .search {
   display: flex; align-items: center; gap: 10px; margin-top: 20px; max-width: 620px; padding: 4px 8px 4px 16px;
   background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; box-shadow: var(--shadow);
