@@ -1,0 +1,47 @@
+{#- Module details for record `m`, shared by the module page and the catalog panel. -#}
+{% set notes = m.checks | rejectattr('level', 'equalto', 'pass') | list %}
+<article class="detail" id="module-detail" data-name="{{ m.name }}">
+  <div class="detail-head detail-intro">
+    <h2 class="detail-title">{{ m.title }}</h2>
+    <div class="owner">{{ m.owner }}{% if m.repo and m.repo.stars is not none %} · ★ {{ m.repo.stars | stars }}{% endif %}</div>
+  </div>
+
+  <section aria-label="Install">
+    {% include '_install.html' %}
+  </section>
+
+  {% if notes %}
+  <ul class="checks" aria-label="Registry notes">
+    {% for c in notes %}<li class="{{ 'warn' if c.level in ('warning', 'error') else 'info' }}"><span class="ic" aria-hidden="true">{{ '!' if c.level in ('warning', 'error') else 'i' }}</span><span>{{ c.message | inline_code }}</span></li>{% endfor %}
+  </ul>
+  {% endif %}
+
+  <section aria-labelledby="h-details-{{ m.name }}">
+    <h2 id="h-details-{{ m.name }}">Details</h2>
+    <dl class="facts">
+      <dt>Revision</dt><dd><span class="rev">{{ m.west.revision }}</span>{% if m.revision_kind %} <span class="kind">{{ {'tag': 'release', 'branch': 'branch', 'sha': 'commit'}[m.revision_kind] }}</span>{% endif %}</dd>
+      <dt>License</dt><dd>{% if m.links.license %}<a href="{{ m.links.license }}" rel="noopener">{{ m.license }}</a>{% else %}{{ m.license }}{% endif %}</dd>
+      <dt>Maintainers</dt><dd>{% for p in m.maintainers %}{% if p.github %}<a href="https://github.com/{{ p.github }}" rel="noopener">{{ p.name or ('@' ~ p.github) }}</a>{% else %}{{ p.name }}{% endif %}{{ ', ' if not loop.last }}{% endfor %}</dd>
+      {% if m.repo and m.repo.pushed_at %}<dt>Last commit</dt><dd><span class="status {{ m.activity }}">{{ m.days | ago }}</span></dd>{% endif %}
+      {% if m.dependencies %}<dt>Depends on</dt><dd>{% for d in m.dependencies %}{% if d.entry %}<a href="{{ depth }}m/{{ d.entry }}/" data-module="{{ d.entry }}">{{ d.module }}</a>{% else %}{{ d.module }}{% endif %}{{ ', ' if not loop.last }}{% endfor %}</dd>{% endif %}
+    </dl>
+    <div class="links">
+      <a href="{{ m.links.repository }}" rel="noopener">Repository ↗</a>
+      {% if m.links.documentation %}<a href="{{ m.links.documentation }}" rel="noopener">Documentation ↗</a>{% endif %}
+      {% if m.links.homepage %}<a href="{{ m.links.homepage }}" rel="noopener">Homepage ↗</a>{% endif %}
+      {% if m.links.examples %}<a href="{{ m.links.examples }}" rel="noopener">Examples ↗</a>{% endif %}
+    </div>
+  </section>
+
+  {% if m.description %}
+  <section aria-labelledby="h-about-{{ m.name }}">
+    <h2 id="h-about-{{ m.name }}">About</h2>
+    <div class="prose">{{ m.description | markdown }}</div>
+  </section>
+  {% endif %}
+
+  <div class="edit-links">
+    <a href="{{ config.repository }}/edit/{{ config.branch }}/{{ m.entry_file }}" rel="noopener">Edit entry</a>
+    <a href="{{ config.repository }}/issues/new?title={{ ('Listing: ' ~ m.name) | urlencode }}" rel="noopener">Report a problem</a>
+  </div>
+</article>

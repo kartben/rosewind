@@ -1,0 +1,45 @@
+{#- SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors -#}
+{#- SPDX-License-Identifier: Apache-2.0 -#}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}{{ config.title }}{% endblock %}</title>
+<meta name="description" content="{% block description %}Libraries, tools and integrations from the Zephyr community, ready to add to a west workspace.{% endblock %}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:type" content="website">
+{% block canonical %}{% endblock %}
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23333f67'/%3E%3Cpath d='M9 10h14L9 22h14' fill='none' stroke='%23c9a7f5' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="{{ depth }}static/site.css">
+<script>try { var t = localStorage.getItem('cm-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+<header class="masthead">
+  <div class="topnav">
+    <div class="wrap">
+      <a class="brand" href="{{ depth or './' }}"><span>Zephyr Project</span><span class="sep">/</span><b>Community Modules</b></a>
+      <nav aria-label="Site">
+        <a href="{{ depth }}contribute/">List your module</a>
+        <a href="{{ config.docs_url }}" rel="noopener">Docs ↗</a>
+        <a href="{{ config.repository }}" rel="noopener">GitHub ↗</a>
+        <button id="theme" type="button" aria-label="Switch between light and dark theme" title="Theme">◐</button>
+      </nav>
+    </div>
+  </div>
+  {% block hero %}{% endblock %}
+</header>
+<main id="main">
+{% block main %}{% endblock %}
+</main>
+<footer>
+  <div class="wrap">
+    <span>Not an endorsement by the Zephyr Project. Each module keeps its own license.</span>
+    <span>{% if enriched_at %}Repository data from {{ enriched_at[:10] }} · {% endif %}<a href="{{ depth }}index.json">index.json</a></span>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="{{ depth }}static/site.js" defer></script>
+</body>
+</html>

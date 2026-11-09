@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Page not found · {{ config.title }}{% endblock %}
+{% block main %}
+<div class="notfound">
+  <div class="wrap">
+    <h1>Page not found</h1>
+    <p>This module may have been renamed or removed from the registry. <a href="{{ depth }}">Search all modules</a>.</p>
+  </div>
+</div>
+{% endblock %}
