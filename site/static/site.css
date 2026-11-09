@@ -143,10 +143,10 @@ main { padding-block: 22px 8px; }
 .segmented a:hover { color: var(--ink); text-decoration: none; }
 .segmented a[aria-current="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 .card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px 14px; position: relative; min-width: 0;
-  display: grid; grid-template-rows: auto 1fr auto; gap: 8px; transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px 16px; position: relative; min-width: 0;
+  display: grid; grid-template-rows: auto 1fr auto; gap: 10px; transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .card:hover { border-color: color-mix(in oklab, var(--brand) 55%, var(--line)); box-shadow: var(--shadow); }
 .card:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
@@ -166,7 +166,7 @@ main { padding-block: 22px 8px; }
 .card h2 a:focus-visible { outline: none; }
 .owner { font-family: var(--font-mono); font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .stars { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; padding-top: 2px; }
-.card p { margin: 0; font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card p { margin: 0; align-self: start; font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; font-size: 12px; color: var(--muted); min-width: 0; }
 .meta > * { white-space: nowrap; }
 .meta > .status + *::before { content: "·"; margin-right: 8px; }
