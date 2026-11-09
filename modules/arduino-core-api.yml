@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: arduino-core-api
+title: Arduino Core API
+summary: >-
+  Arduino-style APIs (digitalWrite, Wire, SPI, Serial) implemented on top of Zephyr drivers.
+description: |
+  The Arduino-Core-Zephyr module started as a [Google Summer of Code 2022
+  project](https://dhruvag2000.github.io/Blog-GSoC22/) to provide Arduino-style APIs for Zephyr
+  RTOS applications. This module acts as an abstraction layer, allowing developers familiar with
+  Arduino programming to leverage Zephyr's capabilities without having to learn entirely new APIs
+  and libraries.
+category: languages
+tags: [arduino, api, porting]
+license: Apache-2.0
+maintainers:
+  - github: zephyrproject-rtos
+links:
+  repository: https://github.com/zephyrproject-rtos/ArduinoCore-zephyr
+west:
+  revision: main
+  path: modules/lib/arduinocore-zephyr
