@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: zephelin
+title: Zephelin
+summary: >-
+  Profiling library that captures runtime metrics of Zephyr apps, with a focus on AI/ML inference.
+description: |
+  [Zephyr Profiling Library](https://github.com/antmicro/zephelin) (ZPL), or Zephelin for short,
+  is a library which enables capturing and reporting runtime performance metrics for profiling and
+  detailed analysis of Zephyr applications, with a special focus on applications running AI/ML
+  inference workloads.
+
+  In addition to the above, Zephelin also simplifies the analysis of AI runtimes, such as
+  [LiteRT](https://ai.google.dev/edge/litert) and [microTVM](https://tvm.apache.org/docs/),
+  allowing you to gain a better understanding of the underlying bottlenecks or potential
+  opportunities for optimization.
+
+  Zephelin features:
+
+  - Tracing execution of Zephyr applications on hardware
+  - Obtaining traces over UART, USB or a debug adapter
+  - Delivering traces in CTF and TEF formats
+  - Scripts for capturing traces from a device
+  - Collecting readings of memory (stack, heaps, kernel heaps, memory slabs), sensors such as die
+    temperature, thread CPU usage and AI runtimes such as tensor arena usage in LiteRT
+  - Details on neural network layers executed in the LiteRT or microTVM runtime: dimensions of
+    inputs, outputs and weights, layer parameters, and time and resources spent per layer
+  - Compilation-level and runtime-level configuration of the library
+  - Ability to configure a profiling tier, controlling the subsystems and the amount of data
+    collected
+
+  All of the above can be analyzed with [Zephelin Trace
+  Viewer](https://antmicro.github.io/zephelin-trace-viewer).
+category: tools
+tags: [profiling, tracing, ml]
+license: Apache-2.0
+maintainers:
+  - github: antmicro
+links:
+  repository: https://github.com/antmicro/zephelin
+  documentation: https://antmicro.github.io/zephelin/
+west:
+  revision: main
+  path: modules/debug/zephelin
