@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: executorch
+title: ExecuTorch
+summary: >-
+  PyTorch's on-device inference runtime, running models on CPUs and Arm Ethos-U NPUs.
+description: |
+  [ExecuTorch](https://github.com/pytorch/executorch) is PyTorch's on-device inference runtime. In
+  Zephyr, it can be integrated as an external module to run models on CPU and Arm Ethos-U NPUs.
+
+  If you are new to ExecuTorch, these resources are a great place to start learning:
+
+  - [How ExecuTorch Works](https://docs.pytorch.org/executorch/stable/intro-how-it-works.html)
+  - [Getting Started Architecture
+    overview](https://docs.pytorch.org/executorch/stable/getting-started-architecture.html)
+
+  ExecuTorch is licensed under the [BSD 3-Clause
+  License](https://github.com/pytorch/executorch/blob/main/LICENSE).
+category: ml
+license: BSD-3-Clause
+maintainers:
+  - github: pytorch
+links:
+  repository: https://github.com/pytorch/executorch
+  documentation: https://docs.pytorch.org/executorch/stable/getting-started-architecture.html
+  examples: https://github.com/pytorch/executorch/tree/main/zephyr/samples>`_.
+west:
+  revision: v1.4.0
+  path: modules/lib/executorch
+  submodules: true
