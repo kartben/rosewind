@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: greybus
+title: Greybus
+summary: >-
+  Expose a node's GPIO, I2C, SPI and PWM to a remote Linux host with the Greybus protocol.
+description: |
+  Greybus is a lightweight, message-based protocol framework that provides a standardized way for
+  hosts to access hardware functions implemented on remote modules. It was originally developed
+  for modular systems and defines a set of well-specified operation protocols for common
+  peripheral classes such as GPIO, I²C, SPI, PWM, and firmware updates.
+
+  The Greybus module for Zephyr provides an implementation of the Greybus protocol layers that map
+  Greybus operations to Zephyr subsystems. When enabled, a Zephyr device can expose its hardware
+  capabilities to a host using the Greybus protocols. The host discovers available functionality
+  through Greybus manifest data, then issues class-specific requests that the Zephyr module
+  processes and responds to.
+
+  Initially, Greybus was designed for use over [Unipro](https://en.wikipedia.org/wiki/UniPro).
+  However, the protocol itself is mostly independent of underlying transport. Currently, the
+  Greybus module supports TCP socket as transport. However, any transport such as UART, I2C, etc
+  should work fine. See the contents of [this
+  directory](https://github.com/beagleboard/greybus-zephyr/tree/main/subsys/greybus/transport) for
+  the current supported transport backends. Feel free to create PRs for new transport backends.
+
+  Greybus is licensed under a combination of Apache-2.0 and BSD-3-Clause license.
+category: communication
+keywords: [rpc]
+license: Apache-2.0 AND BSD-3-Clause
+maintainers:
+  - github: beagleboard
+links:
+  repository: https://github.com/beagleboard/greybus-zephyr
+  examples: https://github.com/beagleboard/greybus-zephyr/tree/main/samples/basic
+west:
+  revision: main
+  path: modules/lib/greybus
