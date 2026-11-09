@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: mender-mcu
+title: mender-mcu
+summary: >-
+  Robust A/B OTA updates with MCUboot and automatic rollback, managed from a Mender server.
+description: |
+  [mender-mcu](https://github.com/mendersoftware/mender-mcu) enables robust firmware updates on
+  resource-constrained devices by integrating with Zephyr. It implements an Update Module
+  interface, which allows a module to define the specifics of how to handle an update. mender-mcu
+  provides a default Update Module that integrates with MCUboot to provide A/B updates. This
+  allows microcontroller units (MCUs) to perform atomic, fail-safe OTA updates with automatic
+  rollback on failure, similar to Mender's updates for Linux devices.
+
+  The client communicates with the Mender server to report device inventory and identity, checks
+  for available updates, downloads new firmware, and coordinates with the Update Module to install
+  updates safely. Mender server is available as an open-source version licensed under the
+  Apache-2.0 license, and an enterprise version licensed under a commercial license, available
+  through commercial plans for on-prem hosting and hosted Mender, a fully managed service.
+
+  mender-mcu is licensed under the Apache-2.0 license.
+category: device-mgmt
+keywords: [fleet]
+license: Apache-2.0
+maintainers:
+  - github: mendersoftware
+links:
+  repository: https://github.com/mendersoftware/mender-mcu
+  documentation: https://docs.mender.io/operating-system-updates-zephyr
+west:
+  revision: main
+  path: modules/lib/mender-mcu
