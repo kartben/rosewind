@@ -1,0 +1,98 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: New module
+description: Propose a module for the registry without writing the YAML yourself.
+title: "New module: "
+labels: [new-module]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A registry maintainer turns this issue into `modules/<name>.yml`. You can also open a
+        pull request directly; see CONTRIBUTING.md.
+  - type: input
+    id: name
+    attributes:
+      label: Module name
+      description: Lowercase, used as the west project name and the page URL.
+      placeholder: zenoh-pico
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Display name
+      placeholder: zenoh-pico
+    validations:
+      required: true
+  - type: input
+    id: summary
+    attributes:
+      label: One-sentence summary (40 to 160 characters)
+      placeholder: "Eclipse Zenoh for microcontrollers: pub/sub, queries and storage over UDP, TCP and serial."
+    validations:
+      required: true
+  - type: input
+    id: repository
+    attributes:
+      label: Repository URL (https)
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Revision to list
+      description: A release tag is preferred; a branch or commit SHA also works.
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - communication
+        - security
+        - ml
+        - tools
+        - languages
+        - data
+        - device-mgmt
+        - industrial
+        - graphics
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: License (SPDX expression)
+      placeholder: Apache-2.0
+    validations:
+      required: true
+  - type: input
+    id: maintainers
+    attributes:
+      label: Maintainers (GitHub handles)
+    validations:
+      required: true
+  - type: input
+    id: documentation
+    attributes:
+      label: Documentation URL
+  - type: textarea
+    id: description
+    attributes:
+      label: Longer description (Markdown, optional)
+  - type: checkboxes
+    id: criteria
+    attributes:
+      label: Listing criteria
+      options:
+        - label: The repository is public and reachable over https.
+          required: true
+        - label: It contains zephyr/module.yml at the listed revision, or provides west extension commands.
+          required: true
+        - label: Its README explains how to use it with Zephyr.
+          required: true
+        - label: I maintain this module or have the maintainers' agreement to list it.
+          required: true
