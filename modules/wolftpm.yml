@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: wolftpm
+title: wolfTPM
+summary: >-
+  TPM 2.0 library: key generation, sealing, attestation and secure storage with a hardware TPM.
+description: |
+  wolfTPM is a lightweight, portable TPM 2.0 library optimized for embedded systems, RTOS
+  environments, and resource-constrained devices. It provides a full TPM 2.0 implementation
+  including support for cryptographic operations, key generation, secure storage, and attestation.
+
+  wolfTPM has been integrated as a Zephyr module with CMake and Kconfig support, making it simple
+  to include TPM functionality in any Zephyr-based project. The module supports device tree
+  integration for I2C communication with TPM devices - you can configure the I2C bus by setting
+  `WOLFTPM_ZEPHYR_I2C_BUS` in `user_settings.h` to the node describing the I2C bus on your device.
+  I2C speed can be configured with `WOLFTPM_ZEPHYR_I2C_SPEED`.
+
+  wolfTPM is dual licensed under GPLv3 and commercial licenses.
+category: security
+tags: [tpm, attestation, secure-storage]
+license: GPL-3.0-or-later
+maintainers:
+  - github: wolfssl
+links:
+  repository: https://github.com/wolfssl/wolftpm
+  documentation: https://www.wolfssl.com/documentation/manuals/wolftpm/
+west:
+  revision: v3.10.0
+  path: modules/crypto/wolftpm
