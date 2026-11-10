@@ -118,3 +118,9 @@ def test_details_list_what_a_module_includes(site):
     page = (site / 'm' / 'dtsh' / 'index.html').read_text()
     assert '<dt>Includes</dt><dd>West commands, Python requirements</dd>' in page
     assert '<dt>Includes</dt>' not in (site / 'm' / 'lz4' / 'index.html').read_text()
+
+
+def test_submanifest_header_names_the_site(site):
+    name = registry.load_site_config()['name']
+    head = (site / 'm' / 'zenoh-pico.yaml').read_text().splitlines()[:2]
+    assert head == [f'# zenoh-pico from {name}', f'# {BASE}/m/zenoh-pico/']

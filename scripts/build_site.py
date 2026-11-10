@@ -329,7 +329,7 @@ def main(argv=None) -> int:
         page = out / 'm' / r['name']
         page.mkdir()
         (page / 'index.html').write_text(env.get_template('module.html').render(m=r, depth='../../'))
-        (out / 'm' / f'{r["name"]}.yaml').write_text(registry.submanifest_text(r['west'], r['page_url']))
+        (out / 'm' / f'{r["name"]}.yaml').write_text(registry.submanifest_text(r['west'], r['page_url'], config['name']))
     (out / '404.html').write_text(env.get_template('404.html').render(depth=base_url + '/' if base_url else '/'))
 
     urls = [f'{base_url}/', f'{base_url}/contribute/'] + [r['page_url'] for r in records]

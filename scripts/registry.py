@@ -195,9 +195,9 @@ def project_lines(proj: dict, indent: int = 4) -> list[str]:
     return lines
 
 
-def submanifest_text(proj: dict, source_url: str | None = None) -> str:
-    """A complete west submanifest that adds one project."""
-    head = [f'# {proj["name"]} from Rosewind, the catalog of third-party Zephyr modules']
+def submanifest_text(proj: dict, source_url: str | None = None, source: str | None = None) -> str:
+    """A complete west submanifest that adds one project, from the site named `source`."""
+    head = [f'# {proj["name"]} from {source}' if source else f'# {proj["name"]}']
     if source_url:
         head.append(f'# {source_url}')
     return '\n'.join(head + ['manifest:', '  projects:'] + project_lines(proj, 4)) + '\n'
