@@ -98,11 +98,12 @@ h1, h2, h3 { font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: -0
 .brand .logo-dark { display: var(--show-logo-dark); }
 .brand-name { font-size: 19px; font-weight: 700; padding-left: 14px; border-left: 1px solid var(--line); white-space: nowrap; }
 .topbar nav { margin-left: auto; display: flex; align-items: center; gap: 4px; }
-.topbar nav a, #theme {
+.tools { display: flex; align-items: center; gap: 4px; margin-left: -12px; }
+.topbar nav a, .tools a, #theme {
   color: var(--muted); font-size: 15px; padding: 6px 10px; min-height: 36px; border-radius: 8px; display: inline-flex; align-items: center;
   background: none; border: 0; cursor: pointer; font-family: inherit; white-space: nowrap;
 }
-.topbar nav a:hover, #theme:hover { color: var(--ink); background: var(--surface-2); text-decoration: none; }
+.topbar nav a:hover, .tools a:hover, #theme:hover { color: var(--ink); background: var(--surface-2); text-decoration: none; }
 .topbar nav a[aria-current="page"] { color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--brand); border-radius: 0; }
 #theme .i-sun { display: var(--show-sun); }
 #theme .i-moon { display: var(--show-moon); }
@@ -289,7 +290,8 @@ dl.facts dd { margin: 0; overflow-wrap: anywhere; }
   .topbar .wrap { flex-wrap: wrap; gap: 4px 12px; }
   .brand img { height: 36px; }
   .brand-name { font-size: 15px; padding-left: 12px; }
-  .topbar nav { margin-left: -10px; width: 100%; }
+  .topbar nav { order: 3; margin-left: -10px; width: 100%; }
+  .tools { margin-left: auto; margin-right: -10px; }
   .band .wrap { padding-block: 20px 20px; }
   .band h1 { font-size: 26px; }
   .band .lead { font-size: 16px; }
