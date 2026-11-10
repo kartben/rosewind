@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
 # SPDX-License-Identifier: Apache-2.0
 
+import json
+
 import pytest
 import yaml
 
@@ -64,6 +66,13 @@ def test_markdown_subset_escapes_html():
     assert '<a href="https://x.org" rel="noopener">docs</a>' in out
     assert '<ul><li>one <em>two</em></li><li><strong>three</strong></li></ul>' in out
     assert '<script' not in str(build_site.markdown('<script>alert(1)</script>'))
+
+
+def test_script_json_cannot_end_its_element():
+    value = [{'title': 'Foo <!--<script>', 'summary': '</script> & more'}]
+    text = str(build_site.script_json(value))
+    assert not set('<>&') & set(text)
+    assert json.loads(text) == value
 
 
 def test_module_info():

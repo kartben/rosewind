@@ -240,6 +240,16 @@ def card_data(records) -> list[dict]:
     } for r in records]
 
 
+def script_json(value) -> Markup:
+    """JSON to embed in a <script type="application/json"> element.
+
+    "<", ">" and "&" are escaped, so that no value can close the element or
+    start a comment that swallows the rest of the page.
+    """
+    text = json.dumps(value).replace('<', '\\u003c').replace('>', '\\u003e').replace('&', '\\u0026')
+    return Markup(text)
+
+
 def minimal_entry(text: str) -> str:
     """An entry without its license header and description, as a short example."""
     out, skipping = [], False
@@ -315,7 +325,7 @@ def main(argv=None) -> int:
     (out / 'index.json').write_text(json.dumps(index, indent=1, ensure_ascii=False) + '\n')
 
     (out / 'index.html').write_text(env.get_template('index.html').render(
-        records=records, cards_json=Markup(json.dumps(card_data(records)).replace('</', '<\\/')), depth=''))
+        records=records, cards_json=script_json(card_data(records)), depth=''))
     sample = next((r for r in records if r['name'] == 'zenoh-pico'), records[0] if records else None)
     (out / 'contribute').mkdir()
     (out / 'contribute' / 'index.html').write_text(env.get_template('contribute.html').render(
