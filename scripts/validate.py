@@ -79,6 +79,15 @@ def check_license(expr: str, links: dict) -> list[tuple[str, str]]:
                 out.append(('error', f'invalid license expression: {"; ".join(errors)}'))
         except ExpressionError as e:
             out.append(('error', f'invalid license expression: {e}'))
+        # The parser accepts any case; the site classifies and shows identifiers as written.
+        canonical = {k.lower(): k for k in licensing.known_symbols}
+        for ident in registry.license_ids(expr):
+            if ident.startswith('LicenseRef-') or ident in licensing.known_symbols:
+                continue
+            if ident.upper() in ('AND', 'OR', 'WITH'):
+                out.append(('error', f'write the operator "{ident}" as {ident.upper()}'))
+            elif ident.lower() in canonical:
+                out.append(('error', f'write the SPDX identifier "{canonical[ident.lower()]}", not "{ident}"'))
     if any(i.startswith('LicenseRef-') for i in registry.license_ids(expr)) and 'license' not in links:
         out.append(('error', 'a LicenseRef-* license needs links.license pointing to the license text'))
     return out

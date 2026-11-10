@@ -30,7 +30,7 @@ def test_all_entries_pass(capsys):
 
 @pytest.mark.parametrize('path', sorted(FIXTURES.glob('*.yml')), ids=lambda p: p.stem)
 def test_invalid_fixture_is_rejected(path, capsys):
-    if path.stem == 'unknown-spdx':
+    if path.stem.endswith('-spdx'):
         pytest.importorskip('license_expression')
     expected = re.match(r'# expect: (.*)', path.read_text()).group(1)
     report, out = run([path], capsys)
@@ -87,6 +87,12 @@ def test_redundant_keyword_warns(tmp_path, capsys):
     assert report.errors == 0
     assert report.warnings == 1
     assert 'keyword "microcontrollers" already appears in the summary' in out
+
+
+def test_license_operators_are_uppercase():
+    pytest.importorskip('license_expression')
+    errors = [msg for _, msg in validate.check_license('MIT or Apache-2.0', {})]
+    assert errors == ['write the operator "or" as OR']
 
 
 def test_github_format_keeps_each_message_one_command(capsys):
