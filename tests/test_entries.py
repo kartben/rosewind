@@ -87,3 +87,10 @@ def test_redundant_keyword_warns(tmp_path, capsys):
     assert report.errors == 0
     assert report.warnings == 1
     assert 'keyword "microcontrollers" already appears in the summary' in out
+
+
+def test_github_format_keeps_each_message_one_command(capsys):
+    report = validate.Report('github')
+    report.add('error', registry.MODULES_DIR / 'lz4.yml', 'bad link: x\n::set-output name=ok::true\r\n100%')
+    out = capsys.readouterr().out
+    assert out == '::error file=modules/lz4.yml::bad link: x%0A::set-output name=ok::true%0D%0A100%25\n'

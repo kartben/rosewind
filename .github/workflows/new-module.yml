@@ -50,7 +50,11 @@ jobs:
               --github-output "$GITHUB_OUTPUT" > entry.log 2>&1; then
             echo "ok=true" >> "$GITHUB_OUTPUT"
           fi
+          # The log quotes answers: print it with workflow commands turned off.
+          token=$(openssl rand -hex 16)
+          echo "::stop-commands::$token"
           cat entry.log
+          echo "::$token::"
 
       - name: Check the entry
         id: check
@@ -61,7 +65,10 @@ jobs:
           if python scripts/validate.py --online "$FILE" > check.log 2>&1; then
             echo "ok=true" >> "$GITHUB_OUTPUT"
           fi
+          token=$(openssl rand -hex 16)
+          echo "::stop-commands::$token"
           cat check.log
+          echo "::$token::"
 
       - name: Open or update the pull request
         id: pr

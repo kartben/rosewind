@@ -34,6 +34,14 @@ ZEPHYR_MANIFESTS = (
 )
 
 
+def escape_command(value: str, extra: str = '') -> str:
+    """Escape a value for a GitHub Actions workflow command."""
+    out = value.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+    for ch in extra:
+        out = out.replace(ch, f'%{ord(ch):02X}')
+    return out
+
+
 class Report:
     def __init__(self, fmt: str):
         self.fmt = fmt
@@ -47,7 +55,8 @@ class Report:
             self.warnings += 1
         rel = path.relative_to(registry.ROOT) if path.is_relative_to(registry.ROOT) else path
         if self.fmt == 'github' and level in ('error', 'warning'):
-            print(f'::{level} file={rel}::{msg}')
+            # Messages quote entry text: escape it so that it stays one command.
+            print(f'::{level} file={escape_command(str(rel), ":,")}::{escape_command(msg)}')
         else:
             print(f'{rel}: {level}: {msg}')
 
