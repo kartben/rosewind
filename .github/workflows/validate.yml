@@ -43,7 +43,7 @@ jobs:
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
-          mapfile -t changed < <(git diff --name-only --diff-filter=AM "origin/${BASE_REF}...HEAD" -- 'modules/*.yml')
+          mapfile -t changed < <(git diff --name-only --diff-filter=AMR "origin/${BASE_REF}...HEAD" -- 'modules/*.yml')
           if [ "${#changed[@]}" -eq 0 ]; then
             echo "No entry changed."
             exit 0
