@@ -72,3 +72,15 @@ def test_module_info():
     info = registry.module_info(text, 'modules/lib/foo')
     assert info == {'found': True, 'name': 'foo', 'depends': ['bar'], 'provides': ['boards', 'dts', 'samples', 'pip']}
     assert registry.module_info('build:\n  cmake: .\n', 'modules/lib/baz')['name'] == 'baz'
+
+
+@pytest.mark.parametrize('text,depends', [
+    ('- a\n- b\n', []),
+    ('build: [1]\n', []),
+    ('name: [x]\nbuild:\n  depends: [{a: b}, 1, wolfssl]\n  settings: x\npackage-managers: pip\n', ['wolfssl']),
+    ('build:\n  depends: wolfssl\n', []),
+])
+def test_module_info_ignores_unexpected_types(text, depends):
+    info = registry.module_info(text, 'modules/lib/foo')
+    assert info['name'] == 'foo'
+    assert info['depends'] == depends

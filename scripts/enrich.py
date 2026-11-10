@@ -15,6 +15,7 @@ API rate limit. --report writes a Markdown summary of what needs attention.
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import os
 import re
@@ -27,10 +28,15 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 
+import yaml
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import registry  # noqa: E402
 
 GITHUB = re.compile(r'^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$')
+# URLError, timeouts and dropped connections are OSErrors; bad responses raise
+# HTTPException; bad URLs and bad JSON raise ValueError.
+NETWORK_ERRORS = (OSError, http.client.HTTPException, ValueError)
 
 
 def github_api(path: str) -> dict | None:
@@ -134,13 +140,13 @@ def fetch_site_icon(entry: registry.Entry, dest: Path) -> tuple[str, str] | None
             continue
         try:
             html = fetch(page, 2 * 1024 * 1024).decode('utf-8', 'replace')
-        except (urllib.error.URLError, TimeoutError, ValueError):
+        except NETWORK_ERRORS:
             continue
         generic = any(host == g or host.endswith('.' + g) for g in GENERIC_HOSTS)
         for url in icon_candidates(page, html, allow_favicon=key == 'homepage' and not generic):
             try:
                 data = fetch(url, ICON_MAX_BYTES)
-            except (urllib.error.URLError, TimeoutError, ValueError):
+            except NETWORK_ERRORS:
                 continue
             kind = registry.image_type(data)
             if not kind or len(data) > ICON_MAX_BYTES:
@@ -173,7 +179,11 @@ def enrich_one(entry: registry.Entry, use_github: bool, icon_dir: Path) -> dict:
         found = registry.read_module_yml(proj['url'], proj['revision'])
     except registry.GitError as e:
         return {'error': f'Cannot fetch revision `{proj["revision"]}`: {e}'}
-    out['module'] = registry.module_info(found[1], proj['path']) if found else {'found': False}
+    try:
+        out['module'] = registry.module_info(found[1], proj['path']) if found else {'found': False}
+    except yaml.YAMLError:
+        out['module'] = {'found': True, 'invalid': True, 'name': Path(proj['path']).name, 'depends': [],
+                         'provides': []}
 
     tags = [r.removeprefix('refs/tags/') for r in refs if r.startswith('refs/tags/')]
     out['latest_tag'] = registry.latest_tag(tags, like=proj['revision'] if kind == 'tag' else None)
@@ -181,7 +191,7 @@ def enrich_one(entry: registry.Entry, use_github: bool, icon_dir: Path) -> dict:
     if use_github:
         try:
             out['repo'] = github_info(proj['url'])
-        except (urllib.error.URLError, TimeoutError) as e:
+        except NETWORK_ERRORS as e:
             out['repo'] = None
             out['github_error'] = str(e)
         icon = fetch_site_icon(entry, icon_dir)
@@ -192,6 +202,14 @@ def enrich_one(entry: registry.Entry, use_github: bool, icon_dir: Path) -> dict:
     if kind == 'tag' and latest and registry.is_newer(latest, proj['revision']):
         out['newer_release'] = latest
     return out
+
+
+def enrich_entry(entry: registry.Entry, use_github: bool, icon_dir: Path) -> dict:
+    """enrich_one(), reporting any failure as the entry's error: one module must not stop the run."""
+    try:
+        return enrich_one(entry, use_github, icon_dir)
+    except Exception as e:  # noqa: BLE001
+        return {'error': f'Collecting repository data failed: {type(e).__name__}: {e}'}
 
 
 def write_report(entries, data, path: Path):
@@ -229,7 +247,7 @@ def main(argv=None) -> int:
 
     with ThreadPoolExecutor(max_workers=8) as pool:
         icon_dir = args.out.parent / 'icons'
-        results = pool.map(lambda e: enrich_one(e, not args.no_github, icon_dir), targets)
+        results = pool.map(lambda e: enrich_entry(e, not args.no_github, icon_dir), targets)
         for entry, result in zip(targets, results):
             data[entry.name] = result
             status = result.get('error') or (

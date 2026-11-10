@@ -309,25 +309,34 @@ PROVIDES_SETTINGS = {
 }
 
 
+def _mapping(value) -> dict:
+    return value if isinstance(value, dict) else {}
+
+
 def module_info(text: str, west_path: str) -> dict:
-    """Summarize a zephyr/module.yml: name, dependencies and what it provides."""
-    data = yaml.safe_load(text) or {}
-    build = data.get('build') or {}
-    settings = build.get('settings') or {}
+    """Summarize a zephyr/module.yml: name, dependencies and what it provides.
+
+    The file comes from an upstream repository: values of an unexpected type
+    are ignored. Raises yaml.YAMLError when the file is not YAML.
+    """
+    data = _mapping(yaml.safe_load(text))
+    build = _mapping(data.get('build'))
+    settings = _mapping(build.get('settings'))
     provides = [label for key, label in PROVIDES_SETTINGS.items() if settings.get(key)]
     for key in ('samples', 'tests'):
         if data.get(key):
             provides.append(key)
-    if (data.get('package-managers') or {}).get('pip'):
+    if _mapping(data.get('package-managers')).get('pip'):
         provides.append('pip')
     if data.get('blobs'):
         provides.append('blobs')
     if build.get('sysbuild-cmake'):
         provides.append('sysbuild')
+    name, depends = data.get('name'), build.get('depends')
     return {
         'found': True,
-        'name': data.get('name') or Path(west_path).name,
-        'depends': list(build.get('depends') or []),
+        'name': name if isinstance(name, str) and name else Path(west_path).name,
+        'depends': [d for d in depends if isinstance(d, str)] if isinstance(depends, list) else [],
         'provides': provides,
     }
 
@@ -396,7 +405,10 @@ def compute_checks(entry: Entry, enr: dict | None, today, claims: dict[str, list
         add('info', 'newer-release', f'Upstream has a newer release: `{newer}`.')
 
     mod = enr.get('module') or {}
-    if mod.get('found'):
+    if mod.get('invalid'):
+        add('warning', 'module-yml', '`zephyr/module.yml` is not valid YAML: the Zephyr build will reject '
+            'this module.')
+    elif mod.get('found'):
         add('pass', 'module-yml', f'`zephyr/module.yml` found (module name `{mod["name"]}`).')
         others = [o for o in (claims or {}).get(mod['name'], []) if o != entry.name]
         if others:
