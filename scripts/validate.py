@@ -113,11 +113,34 @@ def check_west(proj: dict) -> list[tuple[str, str]]:
     return []
 
 
+def repo_key(url: str) -> str:
+    return url.lower().removesuffix('.git').rstrip('/')
+
+
+def listed_projects(skip: set[str]) -> tuple[dict, dict]:
+    """West paths and repositories of the entries in modules/, except those named in `skip`."""
+    paths, urls = {}, {}
+    for path in registry.entry_paths():
+        if path.stem in skip:
+            continue
+        try:
+            proj = registry.load_entry(path).west_project()
+        except (OSError, ValueError, yaml.YAMLError):
+            continue
+        if isinstance(proj['path'], str):
+            paths[proj['path']] = path.name
+        if isinstance(proj['url'], str):
+            urls[repo_key(proj['url'])] = path.name
+    return paths, urls
+
+
 def offline(paths: list[Path], report: Report) -> list[registry.Entry]:
     schema = json.loads(registry.ENTRY_SCHEMA.read_text())
     validator = Draft202012Validator(schema, format_checker=Draft202012Validator.FORMAT_CHECKER)
     categories = registry.load_categories()
-    entries, seen_paths, seen_urls = [], {}, {}
+    # Entries checked on their own still have to fit with the rest of the registry.
+    seen_paths, seen_urls = listed_projects({p.stem for p in paths})
+    entries = []
 
     for path in paths:
         try:
@@ -155,9 +178,9 @@ def offline(paths: list[Path], report: Report) -> list[registry.Entry]:
         if proj['path'] in seen_paths:
             report.add('error', path, f'west path {proj["path"]} already used by {seen_paths[proj["path"]]}')
         seen_paths[proj['path']] = path.name
-        url = proj['url'].lower().removesuffix('.git').rstrip('/')
+        url = repo_key(proj['url'])
         if url in seen_urls:
-            report.add('warning', path, f'repository already listed in {seen_urls[url]}')
+            report.add('error', path, f'repository already listed in {seen_urls[url]}')
         seen_urls[url] = path.name
         if 'url' in data['west'] and data['west']['url'] == data['links']['repository']:
             report.add('warning', path, 'west.url equals links.repository; drop it, it is the default')

@@ -44,7 +44,16 @@ def test_duplicate_path_is_rejected(tmp_path, capsys):
     dup.write_text(src.read_text().replace('name: lz4', 'name: lz4-copy'))
     report, out = run([src, dup], capsys)
     assert 'already used by lz4.yml' in out
-    assert report.errors == 1
+    assert 'repository already listed in lz4.yml' in out
+    assert report.errors == 2
+
+
+def test_entry_checked_alone_is_compared_with_the_registry(tmp_path, capsys):
+    dup = tmp_path / 'lz4-copy.yml'
+    dup.write_text((registry.MODULES_DIR / 'lz4.yml').read_text().replace('name: lz4', 'name: lz4-copy'))
+    report, out = run([dup], capsys)
+    assert 'already used by lz4.yml' in out
+    assert 'repository already listed in lz4.yml' in out
 
 
 def test_categories_cover_entries():
