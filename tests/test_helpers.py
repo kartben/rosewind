@@ -47,6 +47,11 @@ def test_is_newer():
     ('https://github.com/a/b', 'https://github.com/a/b'),
     ('yes', '"yes"'),
     ('a: b', '"a: b"'),
+    ('2024-01-15', '"2024-01-15"'),
+    ('0x1F', '"0x1F"'),
+    ('1.0e+3', '"1.0e+3"'),
+    ('1_000', '"1_000"'),
+    ('12:30:00', '"12:30:00"'),
 ])
 def test_yaml_scalar(value, expected):
     assert registry.yaml_scalar(value) == expected

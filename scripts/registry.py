@@ -193,7 +193,16 @@ def check_svg(data: bytes) -> list[str]:
 # --- YAML emission -----------------------------------------------------------
 
 _PLAIN = re.compile(r'^[A-Za-z0-9_][A-Za-z0-9 ._/+@():-]*$')
+# Quoted although they read back as strings: they look like numbers or booleans to other parsers.
 _RESERVED = re.compile(r'^(true|false|yes|no|on|off|null|~|[0-9][0-9._]*)$', re.I)
+
+
+def _reads_back(s: str) -> bool:
+    """Whether YAML reads the plain scalar `s` as that same string, not a number, date or bool."""
+    try:
+        return yaml.safe_load(f'k: {s}') == {'k': s}
+    except yaml.YAMLError:
+        return False
 
 
 def yaml_scalar(value) -> str:
@@ -201,7 +210,8 @@ def yaml_scalar(value) -> str:
     if isinstance(value, bool):
         return 'true' if value else 'false'
     s = str(value)
-    if _PLAIN.match(s) and not _RESERVED.match(s) and not s.endswith((' ', ':')) and ': ' not in s:
+    if (_PLAIN.match(s) and not _RESERVED.match(s) and not s.endswith((' ', ':')) and ': ' not in s
+            and _reads_back(s)):
         return s
     return json.dumps(s, ensure_ascii=False)
 
