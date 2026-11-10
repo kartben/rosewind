@@ -81,3 +81,12 @@ def test_detail_hides_passing_checks(site):
 def test_post_install_commands_on_their_own_line(site):
     page = (site / 'm' / 'dtsh' / 'index.html').read_text()
     assert 'west update dtsh\nwest packages -m dtsh pip --install' in page
+
+
+def test_warnings_come_first_and_flag_the_card(site):
+    page = (site / 'm' / 'xedge' / 'index.html').read_text()
+    assert page.index('No <code>zephyr/module.yml</code>') < page.index('class="install"') < page.index('Tracks branch')
+    catalog = (site / 'index.html').read_text()
+    card = catalog.split('data-name="xedge"', 1)[1].split('</article>', 1)[0]
+    assert '1 warning' in card
+    assert 'warning' not in catalog.split('data-name="zenoh-pico"', 1)[1].split('</article>', 1)[0]

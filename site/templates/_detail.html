@@ -1,5 +1,6 @@
 {#- Module details for record `m`, shared by the module page and the catalog panel. -#}
-{% set notes = m.checks | rejectattr('level', 'equalto', 'pass') | list %}
+{% set warnings = m.checks | selectattr('level', 'in', ['warning', 'error']) | list %}
+{% set notes = m.checks | selectattr('level', 'equalto', 'info') | list %}
 <article class="detail" id="module-detail" data-name="{{ m.name }}">
   <div class="detail-head detail-intro">
     <div class="thumb{{ ' thumb-logo' if m.image_kind == 'logo' }}"{% if not m.image %} style="--h:{{ m.hue }}"{% endif %}>{% if m.image %}<img src="{{ depth }}{{ m.image }}" alt="" width="56" height="56" loading="lazy">{% else %}<span aria-hidden="true">{{ m.initials }}</span>{% endif %}</div>
@@ -9,13 +10,19 @@
     </div>
   </div>
 
+  {% if warnings %}
+  <ul class="checks checks-warn" aria-label="Warnings">
+    {% for c in warnings %}<li class="warn"><span class="ic" aria-hidden="true">!</span><span>{{ c.message | inline_code }}</span></li>{% endfor %}
+  </ul>
+  {% endif %}
+
   <section aria-label="Install">
     {% include '_install.html' %}
   </section>
 
   {% if notes %}
-  <ul class="checks" aria-label="Registry notes">
-    {% for c in notes %}<li class="{{ 'warn' if c.level in ('warning', 'error') else 'info' }}"><span class="ic" aria-hidden="true">{{ '!' if c.level in ('warning', 'error') else 'i' }}</span><span>{{ c.message | inline_code }}</span></li>{% endfor %}
+  <ul class="checks" aria-label="Notes">
+    {% for c in notes %}<li class="info"><span class="ic" aria-hidden="true">i</span><span>{{ c.message | inline_code }}</span></li>{% endfor %}
   </ul>
   {% endif %}
 
