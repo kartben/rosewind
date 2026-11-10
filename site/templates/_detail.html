@@ -9,6 +9,7 @@
       <div class="owner">{{ m.owner }}{% if m.repo and m.repo.stars is not none %} · ★ {{ m.repo.stars | stars }}{% endif %}</div>
     </div>
   </div>
+  <p class="detail-summary detail-intro">{{ m.summary }}</p>
 
   {% if warnings %}
   <ul class="checks checks-warn" aria-label="Warnings">
