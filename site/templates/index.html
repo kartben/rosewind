@@ -14,19 +14,19 @@
 </section>
 {% endblock %}
 {% block main %}
-<nav class="pills" id="f-category" aria-label="Categories">
-  <a href="./" data-facet="category" data-v="" aria-current="true"><span class="lbl">All</span><span class="n">{{ records|length }}</span></a>
+<div class="pills" id="f-category" role="group" aria-label="Category">
+  <button type="button" data-facet="category" data-v="" aria-pressed="true"><span class="lbl">All</span><span class="n">{{ records|length }}</span></button>
   {% for k, c in categories.items() | sort(attribute='1.label') %}
-  <a href="./?category={{ k }}" data-facet="category" data-v="{{ k }}"><span class="lbl">{{ c.label }}</span><span class="n">{{ category_counts.get(k, 0) }}</span></a>
+  <button type="button" data-facet="category" data-v="{{ k }}" aria-pressed="false"><span class="lbl">{{ c.label }}</span><span class="n">{{ category_counts.get(k, 0) }}</span></button>
   {% endfor %}
-</nav>
+</div>
 <div class="toolbar">
-  <div class="count" id="count"><b>{{ records|length }}</b> modules</div>
+  <div class="count" id="count" role="status"><b>{{ records|length }}</b> modules</div>
   <button class="reset" id="reset" type="button" hidden>Clear filters</button>
   <div class="segmented" id="f-license" role="group" aria-label="License">
-    <a href="./" data-facet="license" data-v="" aria-current="true"><span class="lbl">Any license</span></a>
+    <button type="button" data-facet="license" data-v="" aria-pressed="true"><span class="lbl">Any license</span></button>
     {% for k, label in license_labels.items() %}{% if license_counts.get(k) %}
-    <a href="./?license={{ k }}" data-facet="license" data-v="{{ k }}"><span class="lbl">{{ label }}</span><span class="n">{{ license_counts[k] }}</span></a>
+    <button type="button" data-facet="license" data-v="{{ k }}" aria-pressed="false"><span class="lbl">{{ label }}</span><span class="n">{{ license_counts[k] }}</span></button>
     {% endif %}{% endfor %}
   </div>
 </div>

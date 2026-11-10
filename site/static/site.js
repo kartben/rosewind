@@ -126,7 +126,7 @@
 
   /* filters: update counts, hide options with no match unless selected; "" means all */
   function updateFacets(ts) {
-    for (const a of $$('a[data-facet]')) {
+    for (const a of $$('button[data-facet]')) {
       const key = a.dataset.facet;
       const v = a.dataset.v;
       const n = CARDS.filter(c => (!v || c[FIELD[key]] === v) && passes(c, key) && score(c, ts) > 0).length;
@@ -134,14 +134,12 @@
       const count = a.querySelector('.n');
       if (count) count.textContent = n;
       a.hidden = Boolean(v) && !n && !on;
-      if (on) a.setAttribute('aria-current', 'true');
-      else a.removeAttribute('aria-current');
+      a.setAttribute('aria-pressed', String(on));
     }
   }
   document.addEventListener('click', e => {
-    const a = e.target.closest('a[data-facet]');
-    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-    e.preventDefault();
+    const a = e.target.closest('button[data-facet]');
+    if (!a) return;
     const key = a.dataset.facet;
     const v = a.dataset.v || null;
     state[key] = state[key] === v ? null : v;

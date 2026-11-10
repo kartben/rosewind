@@ -133,21 +133,23 @@ h1, h2, h3 { font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: -0
 /* catalog */
 main { padding-block: 22px 8px; }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
-.pills a {
+.pills button, .segmented button { font-family: inherit; line-height: inherit; cursor: pointer; }
+.pills button {
   display: inline-flex; align-items: center; gap: 7px; padding: 5px 13px; min-height: 34px; border-radius: 999px;
   border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 14px; white-space: nowrap;
 }
-.pills a:hover { border-color: var(--brand); text-decoration: none; }
-.pills a[aria-current="true"] { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); font-weight: 600; }
-.n { font-size: 12px; opacity: 0.7; font-variant-numeric: tabular-nums; font-weight: 400; }
+.pills button:hover { border-color: var(--brand); }
+.pills button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); font-weight: 600; }
+.n { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 400; }
+.pills button[aria-pressed="true"] .n { color: inherit; }
 .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; min-height: 36px; }
 .count { color: var(--muted); font-size: 14px; }
 .count b { color: var(--ink); }
 .reset { font-size: 14px; background: none; border: 0; color: var(--link); cursor: pointer; padding: 4px 6px; min-height: 32px; font-family: inherit; }
 .segmented { margin-left: auto; display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
-.segmented a { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; min-height: 30px; border-radius: 7px; font-size: 13px; color: var(--muted); white-space: nowrap; }
-.segmented a:hover { color: var(--ink); text-decoration: none; }
-.segmented a[aria-current="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
+.segmented button { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; min-height: 30px; border: 0; border-radius: 7px; background: none; font-size: 13px; color: var(--muted); white-space: nowrap; }
+.segmented button:hover { color: var(--ink); }
+.segmented button[aria-pressed="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 .card {
