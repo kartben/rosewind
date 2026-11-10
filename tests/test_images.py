@@ -48,6 +48,11 @@ def test_valid_logos_pass(logos, capsys):
     assert report.errors == 0 and report.warnings == 0, out
 
 
+def test_listed_svg_logos_are_accepted():
+    for path in registry.LOGOS_DIR.glob('*.svg'):
+        assert registry.check_svg(path.read_bytes()) == [], path.name
+
+
 def test_image_sniffing():
     assert registry.image_type(png(64, 64)) == 'png'
     assert registry.image_size(png(64, 48)) == (64, 48)
@@ -62,6 +67,11 @@ def test_image_sniffing():
     ('zview.svg', SVG.replace(b'<circle', b'<script>alert(1)</script><circle'), '<script> is not allowed'),
     ('zview.svg', SVG.replace(b'<circle', b'<circle onload="x()"'), 'event attribute onload'),
     ('zview.svg', SVG.replace(b'<circle', b'<image href="https://example.com/a.png"/><circle'), 'external reference'),
+    ('zview.svg', SVG.replace(b'<circle', b'<a><set attributeName="href" to="javascript:alert(1)"/><circle'
+                              ).replace(b'</svg>', b'</a></svg>'), '<set> is not allowed'),
+    ('zview.svg', SVG.replace(b'<circle', b'<style>circle { fill: url(https://t.example/x) }</style><circle'),
+     'external reference https://t.example/x'),
+    ('zview.svg', SVG.replace(b'<circle', b'<circle fill="url(//t.example/x)"'), 'external reference //t.example/x'),
     ('dtsh.png', png(32, 32), 'at least 64 px'),
     ('dtsh.png', b'GIF89a' + b'\x00' * 40, 'not a PNG file'),
     ('nope.svg', SVG, 'no module named "nope"'),

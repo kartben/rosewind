@@ -132,25 +132,61 @@ def image_size(data: bytes) -> tuple[int, int] | None:
     return None
 
 
+SVG_NS = 'http://www.w3.org/2000/svg'
+# Metadata written by editors, which browsers ignore.
+SVG_EDITOR_NS = {
+    'http://www.inkscape.org/namespaces/inkscape', 'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'http://creativecommons.org/ns#',
+    'http://purl.org/dc/elements/1.1/',
+}
+# Static drawing elements: no script, animation, links, images or foreign content.
+SVG_ELEMENTS = {
+    'svg', 'g', 'defs', 'symbol', 'use', 'title', 'desc', 'metadata', 'style',
+    'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'text', 'tspan',
+    'linearGradient', 'radialGradient', 'stop', 'clipPath', 'mask', 'pattern',
+    'filter', 'feBlend', 'feColorMatrix', 'feComposite', 'feFlood', 'feGaussianBlur', 'feMerge',
+    'feMergeNode', 'feOffset',
+}
+_CSS_URL = re.compile(r'url\(\s*[\'"]?\s*([^\'")\s]*)', re.I)
+
+
 def check_svg(data: bytes) -> list[str]:
-    """An SVG logo must be self-contained and free of script."""
+    """An SVG image must be a static, self-contained drawing.
+
+    Logos and website icons are served from the site's own origin, where an
+    SVG opened directly runs its scripts: only known drawing elements are
+    accepted, and references must point inside the file.
+    """
     try:
         root = ET.fromstring(data)
     except ET.ParseError as e:
         return [f'not valid XML: {e}']
-    if not root.tag.endswith('svg'):
+    if root.tag not in ('svg', f'{{{SVG_NS}}}svg'):
         return ['root element is not <svg>']
     errors = []
+
+    def check_refs(text: str):
+        if 'javascript:' in text.lower() or '@import' in text.lower():
+            errors.append('scripts and imports are not allowed')
+        for ref in _CSS_URL.findall(text):
+            if not ref.startswith('#'):
+                errors.append(f'external reference {ref} is not allowed')
+
     for el in root.iter():
-        tag = el.tag.rsplit('}', 1)[-1]
-        if tag in ('script', 'foreignObject'):
+        ns, _, tag = el.tag[1:].partition('}') if el.tag.startswith('{') else ('', '', el.tag)
+        if ns in SVG_EDITOR_NS:
+            continue
+        if ns not in ('', SVG_NS) or tag not in SVG_ELEMENTS:
             errors.append(f'<{tag}> is not allowed')
+        if tag == 'style' and el.text:
+            check_refs(el.text)
         for attr, value in el.attrib.items():
             name = attr.rsplit('}', 1)[-1]
             if name.lower().startswith('on'):
                 errors.append(f'event attribute {name} is not allowed')
-            if name == 'href' and not value.startswith(('#', 'data:image/')):
+            if name == 'href' and not value.startswith('#'):
                 errors.append(f'external reference {value} is not allowed')
+            check_refs(value)
     return sorted(set(errors))
 
 
