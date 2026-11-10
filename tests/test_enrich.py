@@ -4,7 +4,10 @@
 """Collecting repository data, without network access."""
 
 import json
+import urllib.error
 from datetime import date
+
+import pytest
 
 import enrich
 import registry
@@ -36,6 +39,20 @@ def test_no_favicon_fallback_on_documentation_hosts():
 def test_shortcut_icon_rel():
     html = '<link rel="shortcut icon" href="https://cdn.example.org/i.ico">'
     assert enrich.icon_candidates(PAGE, html, allow_favicon=False) == ['https://cdn.example.org/i.ico']
+
+
+def test_only_a_few_https_candidates():
+    links = ''.join(f'<link rel="icon" href="/i{n}.png" sizes="{n}x{n}">' for n in range(100, 110))
+    html = '<link rel="icon" href="file:///etc/hosts"><link rel="icon" href="http://127.0.0.1/x.png">' + links
+    urls = enrich.icon_candidates(PAGE, html, allow_favicon=True)
+    assert urls == [f'https://example.org/i{n}.png' for n in range(109, 104, -1)]
+
+
+def test_fetch_refuses_other_schemes():
+    with pytest.raises(ValueError, match='not an https URL'):
+        enrich.fetch('file:///etc/hosts', 100, deadline=float('inf'))
+    with pytest.raises(urllib.error.HTTPError, match='non-https'):
+        enrich.HttpsOnlyRedirects().redirect_request(None, None, 302, 'Found', {}, 'http://127.0.0.1/')
 
 
 def test_one_failing_module_does_not_stop_the_run(tmp_path, monkeypatch):

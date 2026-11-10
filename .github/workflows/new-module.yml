@@ -23,6 +23,7 @@ jobs:
   entry:
     if: github.event.issue.state == 'open' && contains(github.event.issue.labels.*.name, 'new-module')
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     permissions:
       contents: write
       pull-requests: write

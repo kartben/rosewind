@@ -20,6 +20,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -80,6 +81,8 @@ def github_info(url: str) -> dict | None:
 
 ICON_MIN_PX = 32
 ICON_MAX_BYTES = 200 * 1024
+ICON_CANDIDATES = 5
+ICON_TIME_BUDGET = 60  # seconds per module for its pages and icons
 # Sites whose favicon is the host's, not the project's.
 GENERIC_HOSTS = ('github.com', 'gitlab.com', 'readthedocs.io', 'readthedocs.org', 'github.io')
 
@@ -98,10 +101,34 @@ class IconLinks(HTMLParser):
             self.icons.append(a)
 
 
-def fetch(url: str, limit: int) -> bytes:
+class HttpsOnlyRedirects(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if urlsplit(newurl).scheme != 'https':
+            raise urllib.error.HTTPError(newurl, code, 'redirect to a non-https URL', headers, fp)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_OPENER = urllib.request.build_opener(HttpsOnlyRedirects)
+
+
+def fetch(url: str, limit: int, deadline: float) -> bytes:
+    """GET an https URL, reading at most limit + 1 bytes before `deadline` (time.monotonic())."""
+    if urlsplit(url).scheme != 'https':
+        raise ValueError(f'not an https URL: {url}')
+    left = deadline - time.monotonic()
+    if left <= 0:
+        raise TimeoutError('time budget spent')
     req = urllib.request.Request(url, headers={'User-Agent': 'rosewind'})
-    with urllib.request.urlopen(req, timeout=20) as r:  # noqa: S310 (URL from a reviewed entry)
-        return r.read(limit + 1)
+    data = b''
+    with _OPENER.open(req, timeout=min(20, left)) as r:
+        while len(data) <= limit:
+            if time.monotonic() > deadline:
+                raise TimeoutError('time budget spent')
+            chunk = r.read(min(64 * 1024, limit + 1 - len(data)))
+            if not chunk:
+                break
+            data += chunk
+    return data
 
 
 def icon_candidates(page_url: str, html: str, allow_favicon: bool) -> list[str]:
@@ -121,7 +148,8 @@ def icon_candidates(page_url: str, html: str, allow_favicon: bool) -> list[str]:
     urls = [urljoin(page_url, a['href']) for a in sorted(parser.icons, key=rank, reverse=True)]
     if allow_favicon:
         urls.append(urljoin(page_url, '/favicon.ico'))
-    return list(dict.fromkeys(urls))
+    urls = [u for u in urls if urlsplit(u).scheme == 'https']
+    return list(dict.fromkeys(urls))[:ICON_CANDIDATES]
 
 
 def fetch_site_icon(entry: registry.Entry, dest: Path) -> tuple[str, str] | None:
@@ -131,6 +159,7 @@ def fetch_site_icon(entry: registry.Entry, dest: Path) -> tuple[str, str] | None
     files that fail the logo checks are skipped.
     """
     links = entry.data.get('links', {})
+    deadline = time.monotonic() + ICON_TIME_BUDGET
     for key in ('homepage', 'documentation'):
         page = links.get(key)
         if not page:
@@ -139,13 +168,13 @@ def fetch_site_icon(entry: registry.Entry, dest: Path) -> tuple[str, str] | None
         if any(host == g or host.endswith('.' + g) for g in GENERIC_HOSTS) and key == 'homepage':
             continue
         try:
-            html = fetch(page, 2 * 1024 * 1024).decode('utf-8', 'replace')
+            html = fetch(page, 2 * 1024 * 1024, deadline).decode('utf-8', 'replace')
         except NETWORK_ERRORS:
             continue
         generic = any(host == g or host.endswith('.' + g) for g in GENERIC_HOSTS)
         for url in icon_candidates(page, html, allow_favicon=key == 'homepage' and not generic):
             try:
-                data = fetch(url, ICON_MAX_BYTES)
+                data = fetch(url, ICON_MAX_BYTES, deadline)
             except NETWORK_ERRORS:
                 continue
             kind = registry.image_type(data)
