@@ -3,7 +3,9 @@
 
 """Build the site from the real entries and a frozen enrichment snapshot."""
 
+import html
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -81,6 +83,26 @@ def test_detail_hides_passing_checks(site):
 def test_post_install_commands_on_their_own_line(site):
     page = (site / 'm' / 'dtsh' / 'index.html').read_text()
     assert 'west update dtsh\nwest packages -m dtsh pip --install' in page
+
+
+def _manifest_tab(site, name):
+    page = (site / 'm' / name / 'index.html').read_text()
+    return page.split('data-panel="yml"', 1)[1]
+
+
+def test_manifest_tab_lists_the_same_follow_ups(site):
+    tab = _manifest_tab(site, 'dtsh')
+    assert ('then run <code>west update dtsh</code> and '
+            '<code>west packages -m dtsh pip --install</code>.') in tab
+
+
+def test_manifest_tab_copies_only_project_entries(site):
+    tab = _manifest_tab(site, 'wolftpm')
+    snippet = re.sub(r'<[^>]+>', '', tab.split('<pre>', 1)[1].split('</pre>', 1)[0])
+    assert 'manifest:' not in snippet and 'projects:' not in snippet
+    projects = yaml.safe_load(html.unescape(snippet))
+    assert [p['name'] for p in projects] == ['wolfssl', 'wolftpm']
+    assert '<code>west update wolfssl wolftpm</code>.' in tab
 
 
 def test_warnings_come_first_and_flag_the_card(site):

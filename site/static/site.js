@@ -60,10 +60,10 @@
 
   /* tabs, shell switch and copy buttons, delegated so they also work inside the panel */
   document.addEventListener('click', e => {
-    const tab = e.target.closest('[role="tab"][data-tab]');
+    const tab = e.target.closest('.tabs button[data-tab]');
     if (tab) {
       const box = tab.closest('.install');
-      $$('[role="tab"]', box).forEach(b => b.setAttribute('aria-selected', String(b === tab)));
+      $$('.tabs button', box).forEach(b => b.setAttribute('aria-pressed', String(b === tab)));
       $$('.tabpanel', box).forEach(p => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
       return;
     }
