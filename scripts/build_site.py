@@ -45,21 +45,29 @@ LICENSE_LABELS = {'permissive': 'Permissive', 'copyleft': 'Copyleft', 'other': '
 
 # --- text rendering ----------------------------------------------------------
 
+_LINK = re.compile(r'\[([^\]]+)\]\((https://[^)\s]+)\)')
+
+
+def _emphasis(text: str) -> str:
+    """Escape text and render **strong** and *em*."""
+    s = html.escape(text, quote=False)
+    s = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', s)
+    return re.sub(r'(?<![\w*])\*([^*\s][^*]*)\*(?![\w*])', r'<em>\1</em>', s)
+
+
 def _inline(text: str, links: bool = True) -> str:
     """Escape text and render `code`, [links](https://…), **strong** and *em*."""
-    parts = re.split(r'(`[^`]+`)', text)
     out = []
-    for part in parts:
+    for part in re.split(r'(`[^`]+`)', text):
         if part.startswith('`') and part.endswith('`') and len(part) > 1:
             out.append(f'<code>{html.escape(part[1:-1])}</code>')
             continue
-        s = html.escape(part, quote=False)
-        if links:
-            s = re.sub(r'\[([^\]]+)\]\((https://[^)\s]+)\)',
-                       lambda m: f'<a href="{html.escape(m[2])}" rel="noopener">{m[1]}</a>', s)
-        s = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', s)
-        s = re.sub(r'(?<![\w*])\*([^*\s][^*]*)\*(?![\w*])', r'<em>\1</em>', s)
-        out.append(s)
+        pos = 0
+        for m in _LINK.finditer(part) if links else ():
+            out.append(_emphasis(part[pos:m.start()]))
+            out.append(f'<a href="{html.escape(m[2])}" rel="noopener">{_emphasis(m[1])}</a>')
+            pos = m.end()
+        out.append(_emphasis(part[pos:]))
     return ''.join(out)
 
 

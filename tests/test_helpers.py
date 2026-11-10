@@ -68,6 +68,12 @@ def test_markdown_subset_escapes_html():
     assert '<script' not in str(build_site.markdown('<script>alert(1)</script>'))
 
 
+def test_markdown_link_urls_are_escaped_once():
+    out = str(build_site.markdown('See [the *docs*](https://x.org/a?b=1&c=2) and [x](https://x.org/*a*).'))
+    assert '<a href="https://x.org/a?b=1&amp;c=2" rel="noopener">the <em>docs</em></a>' in out
+    assert '<a href="https://x.org/*a*" rel="noopener">x</a>' in out
+
+
 def test_script_json_cannot_end_its_element():
     value = [{'title': 'Foo <!--<script>', 'summary': '</script> & more'}]
     text = str(build_site.script_json(value))
