@@ -8,7 +8,7 @@
   <div class="wrap">
     <a class="back" href="{{ depth }}">← All modules</a>
     <h1>List your module</h1>
-    <p class="lead">Fill in a short form, or add the entry yourself with a pull request. A registry maintainer reviews every listing against the <a href="{{ config.repository }}/blob/{{ config.branch }}/CONTRIBUTING.md">listing criteria</a>.</p>
+    <p class="lead">Proposed additions are evaluated against the listing criteria described <a href="{{ config.repository }}/blob/{{ config.branch }}/CONTRIBUTING.md#listing-criteria">here</a>.</p>
   </div>
 </section>
 {% endblock %}
@@ -16,19 +16,14 @@
 <div class="detail-page">
   <div class="options">
     <section class="option option-main" aria-labelledby="h-form">
-      <span class="option-tag">Easiest</span>
-      <h2 id="h-form">Fill in a form</h2>
-      <p>Answer a few questions in a GitHub issue: name, repository, revision, license, category. A workflow turns your answers into a pull request, and a registry maintainer reviews it.</p>
-      <a class="btn" href="{{ config.repository }}/issues/new?template=new-module.yml" rel="noopener">Open the New module form ↗</a>
-      <p class="option-note">All you need is a GitHub account.</p>
+      <h2 id="h-form">From an issue</h2>
+      <p>Describe your module in a short form.</p>
+      <a class="btn" href="{{ config.repository }}/issues/new?template=new-module.yml" rel="noopener">Open an issue ↗</a>
     </section>
     <section class="option" aria-labelledby="h-pr">
-      <h2 id="h-pr">Open a pull request</h2>
-      <ol class="steps">
-        <li><div><b>Add one file</b><p>Fork <a href="{{ config.repository }}">the registry</a> and create <code>modules/&lt;name&gt;.yml</code>, like the example below.</p></div></li>
-        <li><div><b>Check it</b><p><code>python scripts/validate.py --online modules/&lt;name&gt;.yml</code></p></div></li>
-        <li><div><b>Open the pull request</b><p>CI runs the same checks and builds a preview of the site.</p></div></li>
-      </ol>
+      <h2 id="h-pr">With a pull request</h2>
+      <p>Add <code>modules/&lt;name&gt;.yml</code>, like the example below, and check it with <code>scripts/validate.py --online</code>.</p>
+      <a class="btn btn-secondary" href="{{ config.repository }}/fork" rel="noopener">Fork the repository ↗</a>
     </section>
   </div>
   {% if sample %}
