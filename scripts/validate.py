@@ -267,6 +267,8 @@ def online_one(entry: registry.Entry) -> list[tuple[str, str]]:
     except registry.GitError as e:
         return [('error', f'repository not reachable: {proj["url"]}: {e}')]
     kind, _ = registry.resolve_revision(refs, proj['revision'])
+    if kind == 'short-sha':
+        return [('error', f'revision "{proj["revision"]}" is an abbreviated commit SHA: use all 40 characters')]
     if kind == 'missing':
         return [('error', f'revision "{proj["revision"]}" is not a branch, tag or SHA of {proj["url"]}')]
     if kind == 'branch':

@@ -35,6 +35,18 @@ def test_latest_tag(tags, like, latest):
     assert registry.latest_tag(tags, like) == latest
 
 
+@pytest.mark.parametrize('revision,kind', [
+    ('v1.0', 'tag'),
+    ('main', 'branch'),
+    ('0123456789abcdef0123456789abcdef01234567', 'sha'),
+    ('0123456', 'short-sha'),
+    ('nope', 'missing'),
+])
+def test_resolve_revision(revision, kind):
+    refs = {'refs/tags/v1.0': 'a' * 40, 'refs/heads/main': 'b' * 40}
+    assert registry.resolve_revision(refs, revision)[0] == kind
+
+
 def test_is_newer():
     assert registry.is_newer('v1.10.0', 'v1.9.3')
     assert not registry.is_newer('v1.4.0', 'v1.4.0')

@@ -200,6 +200,8 @@ def enrich_one(entry: registry.Entry, use_github: bool, icon_dir: Path) -> dict:
     except registry.GitError as e:
         return {'error': f'Repository not reachable: {e}'}
     kind, sha = registry.resolve_revision(refs, proj['revision'])
+    if kind == 'short-sha':
+        return {'error': f'Revision `{proj["revision"]}` is an abbreviated commit SHA: use all 40 characters.'}
     if kind == 'missing':
         return {'error': f'Revision `{proj["revision"]}` does not exist in the repository.'}
     out['revision'] = {'kind': kind, 'sha': sha}

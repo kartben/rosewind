@@ -310,13 +310,18 @@ def ls_remote(url: str) -> dict[str, str]:
 
 
 def resolve_revision(refs: dict[str, str], revision: str) -> tuple[str, str | None]:
-    """Return (kind, sha) where kind is tag, branch, sha or missing."""
+    """Return (kind, sha) where kind is tag, branch, sha, short-sha or missing.
+
+    A commit is fetched by its full SHA: servers do not resolve abbreviated ones.
+    """
     if f'refs/tags/{revision}' in refs:
         return 'tag', refs[f'refs/tags/{revision}']
     if f'refs/heads/{revision}' in refs:
         return 'branch', refs[f'refs/heads/{revision}']
-    if re.fullmatch(r'[0-9a-f]{7,40}', revision):
+    if re.fullmatch(r'[0-9a-f]{40}', revision):
         return 'sha', revision
+    if re.fullmatch(r'[0-9a-f]{7,39}', revision):
+        return 'short-sha', None
     return 'missing', None
 
 
