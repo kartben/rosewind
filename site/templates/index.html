@@ -39,11 +39,11 @@
         <h2><a href="m/{{ m.name }}/" data-module="{{ m.name }}">{{ m.title }}</a></h2>
         <div class="owner">{{ m.owner }}</div>
       </div>
-      {% if m.repo and m.repo.stars is not none %}<span class="stars" title="GitHub stars">★ {{ m.repo.stars | stars }}</span>{% endif %}
+      {% if m.repo and m.repo.stars is not none %}<span class="stars"><span aria-hidden="true">★</span> {{ m.repo.stars | stars }}<span class="vh"> GitHub stars</span></span>{% endif %}
     </div>
     <p>{{ m.summary }}</p>
     <div class="meta">
-      {% if m.activity %}<span class="status {{ m.activity }}" title="Last commit {{ m.repo.pushed_at[:10] }}">{{ m.days | ago }}</span>{% endif %}
+      {% if m.activity %}<span class="status {{ m.activity }}" title="Last commit {{ m.repo.pushed_at[:10] }}">Updated {{ m.days | ago }}</span>{% endif %}
       <span class="lic" title="{{ m.license }}">{{ m.license }}</span>
       {% if 'west-commands' in m.provides %}<span class="badge">West commands</span>{% endif %}
       {% set nwarn = m.checks | selectattr('level', 'in', ['warning', 'error']) | list | length %}
