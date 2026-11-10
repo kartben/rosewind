@@ -86,12 +86,13 @@
   const cardsEl = $('#cards');
   if (!grid || !cardsEl) return;
 
+  const search = window.rosewindSearch;
   const CARDS = JSON.parse(cardsEl.textContent);
   const TAX = JSON.parse($('#taxonomy').textContent);
   const byName = new Map(CARDS.map(c => [c.name, c]));
   const elByName = new Map($$('.card', grid).map(el => [el.dataset.name, el]));
   for (const c of CARDS) {
-    c.hay = [c.name, c.title, c.summary, c.keywords.join(' '), c.description, TAX.categories[c.category].label, c.owner, c.license].join(' ').toLowerCase();
+    c.fields = search.prepare(c, [TAX.categories[c.category].label]);
     const el = elByName.get(c.name);
     c.titleEl = el.querySelector('h2 a');
     c.summaryEl = el.querySelector('p');
@@ -104,30 +105,23 @@
   q.value = state.q;
   q.closest('form').addEventListener('submit', e => e.preventDefault());
 
-  const terms = () => state.q.toLowerCase().split(/\s+/).filter(Boolean);
-  function score(c, ts) {
-    let s = 0;
-    for (const t of ts) {
-      if (!c.hay.includes(t)) return 0;
-      const title = c.title.toLowerCase();
-      if (c.name.startsWith(t) || title.startsWith(t)) s += 10;
-      else if (c.name.includes(t) || title.includes(t)) s += 6;
-      if (c.keywords.some(g => g.startsWith(t))) s += 5;
-      if (c.summary.toLowerCase().includes(t)) s += 2;
-      s += 1;
-    }
-    return ts.length ? s : 1;
-  }
+  const terms = () => search.terms(state.q);
+  const score = (c, ts) => search.score(c.fields, ts);
   function passes(c, skip) {
     if (skip !== 'category' && state.category && c.category !== state.category) return false;
     if (skip !== 'license' && state.license && c.license_kind !== state.license) return false;
     return true;
   }
-  function highlight(text, ts) {
-    const out = esc(text);
-    if (!ts.length) return out;
-    const re = new RegExp('(' + ts.map(t => esc(t).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'gi');
-    return out.replace(re, '<mark>$1</mark>');
+  function highlight(text, re) {
+    if (!re) return esc(text);
+    let out = '';
+    let last = 0;
+    for (const m of text.matchAll(re)) {
+      const at = m.index + m[1].length;
+      out += esc(text.slice(last, at)) + '<mark>' + esc(m[2]) + '</mark>';
+      last = at + m[2].length;
+    }
+    return out + esc(text.slice(last));
   }
 
   /* filters: update counts, hide options with no match unless selected; "" means all */
@@ -169,10 +163,12 @@
     const scored = CARDS.map(c => [c, score(c, ts)]).filter(([c, s]) => s > 0 && passes(c));
     scored.sort((a, b) => b[1] - a[1] || a[0].title.localeCompare(b[0].title));
     const shown = new Set(scored.map(([c]) => c.name));
+    const re = search.pattern(ts);
+    const reTitle = search.pattern(ts, true);
     for (const c of CARDS) {
       elByName.get(c.name).hidden = !shown.has(c.name);
-      c.titleEl.innerHTML = highlight(c.title, ts);
-      c.summaryEl.innerHTML = highlight(c.summary, ts);
+      c.titleEl.innerHTML = highlight(c.title, reTitle);
+      c.summaryEl.innerHTML = highlight(c.summary, re);
     }
     for (const [c] of scored) grid.appendChild(elByName.get(c.name));
     grid.appendChild($('#empty'));

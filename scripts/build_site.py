@@ -240,8 +240,8 @@ def card_data(records) -> list[dict]:
     """The subset of fields the catalog script filters and searches on."""
     return [{
         'name': r['name'], 'title': r['title'], 'summary': r['summary'], 'category': r['category'],
-        'keywords': r['keywords'], 'description': r['description'], 'license': r['license'],
-        'license_kind': r['license_kind'], 'owner': r['owner'],
+        'keywords': r['keywords'], 'license': r['license'], 'license_kind': r['license_kind'],
+        'owner': r['owner'],
     } for r in records]
 
 
