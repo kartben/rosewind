@@ -35,6 +35,7 @@
       <dt>License</dt><dd>{% if m.links.license %}<a href="{{ m.links.license }}" rel="noopener">{{ m.license }}</a>{% else %}{{ m.license }}{% endif %}</dd>
       <dt>Maintainers</dt><dd>{% for p in m.maintainers %}{% if p.github %}<a href="https://github.com/{{ p.github }}" rel="noopener">{{ p.name or ('@' ~ p.github) }}</a>{% else %}{{ p.name }}{% endif %}{{ ', ' if not loop.last }}{% endfor %}</dd>
       {% if m.repo and m.repo.pushed_at %}<dt>Last commit</dt><dd><span class="status {{ m.activity }}">{{ m.days | ago }}</span></dd>{% endif %}
+      {% if m.provides %}<dt>Includes</dt><dd>{% for p in m.provides %}{{ provides_labels[p] }}{{ ', ' if not loop.last }}{% endfor %}</dd>{% endif %}
       {% if m.dependencies %}<dt>Depends on</dt><dd>{% for d in m.dependencies %}{% if d.entry %}<a href="{{ depth }}m/{{ d.entry }}/" data-module="{{ d.entry }}">{{ d.module }}</a>{% else %}{{ d.module }}{% endif %}{{ ', ' if not loop.last }}{% endfor %}</dd>{% endif %}
     </dl>
     <div class="links">

@@ -112,3 +112,9 @@ def test_warnings_come_first_and_flag_the_card(site):
     card = catalog.split('data-name="xedge"', 1)[1].split('</article>', 1)[0]
     assert '1 warning' in card
     assert 'warning' not in catalog.split('data-name="zenoh-pico"', 1)[1].split('</article>', 1)[0]
+
+
+def test_details_list_what_a_module_includes(site):
+    page = (site / 'm' / 'dtsh' / 'index.html').read_text()
+    assert '<dt>Includes</dt><dd>West commands, Python requirements</dd>' in page
+    assert '<dt>Includes</dt>' not in (site / 'm' / 'lz4' / 'index.html').read_text()
