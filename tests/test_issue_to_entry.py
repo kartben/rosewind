@@ -76,6 +76,21 @@ def test_unusable_answers_are_reported(change, message):
         issue_to_entry.entry_text(issue_to_entry.parse_body(body(dict(ANSWERS, **change))))
 
 
+def test_answers_that_break_yaml_are_reported():
+    with pytest.raises(issue_to_entry.FormError, match='well-formed entry'):
+        issue_to_entry.entry_text(issue_to_entry.parse_body(body(dict(ANSWERS, title='Demo\x7f'))))
+
+
+def test_cli_refuses_to_replace_an_entry(tmp_path, monkeypatch, capsys):
+    existing = tmp_path / 'demo-module.yml'
+    existing.write_text('listed\n')
+    monkeypatch.setenv('ISSUE_BODY', body(ANSWERS))
+    rc = issue_to_entry.main(['--body-env', 'ISSUE_BODY', '--out-dir', str(tmp_path)])
+    assert rc == 2
+    assert existing.read_text() == 'listed\n'
+    assert 'already listed' in capsys.readouterr().err
+
+
 def test_cli_writes_the_file_and_outputs(tmp_path, monkeypatch):
     monkeypatch.setenv('ISSUE_BODY', body(ANSWERS))
     out = tmp_path / 'github_output'

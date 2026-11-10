@@ -98,7 +98,10 @@ def entry_text(fields: dict[str, str]) -> tuple[str, str]:
     text = '\n'.join(lines) + '\n'
 
     # The answers are untrusted: make sure none of them changed the structure.
-    data = yaml.safe_load(text)
+    try:
+        data = yaml.safe_load(text)
+    except yaml.YAMLError as e:
+        raise FormError('the answers could not be written as a well-formed entry') from e
     expected = {'name': name, 'title': title, 'summary': summary}
     if any(data.get(k) != v for k, v in expected.items()) or set(data) - {
             'name', 'title', 'summary', 'description', 'category', 'keywords', 'license', 'maintainers',
@@ -123,6 +126,10 @@ def main(argv=None) -> int:
         print(f'error: {e}', file=sys.stderr)
         return 2
     path = args.out_dir / f'{name}.yml'
+    if path.exists():
+        print(f'error: a module named "{name}" is already listed; to change it, open a pull request',
+              file=sys.stderr)
+        return 2
     path.write_text(text)
     rel = path.relative_to(registry.ROOT) if path.is_relative_to(registry.ROOT) else path
     print(f'wrote {rel}')

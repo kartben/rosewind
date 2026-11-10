@@ -67,11 +67,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). In short: add `modules/<name>.yml`, run
 The New module issue form gives contributors a way in without git. The `New module` workflow
 writes the entry from the answers, checks it with `validate.py --online`, opens or updates a pull
 request from the `new-module/<issue number>` branch, and comments on the issue with the result.
-It needs:
+It only adds modules: a name that is already listed is refused. It needs:
 
 - a `new-module` label, which the issue form applies;
 - **Allow GitHub Actions to create and approve pull requests**, under Settings > Actions >
-  General.
+  General;
+- a rule on `main` that dismisses approvals when new commits are pushed, since editing the issue
+  force-pushes the pull request branch.
 
 On pull requests opened by the workflow, GitHub holds the `Validate` workflow until a maintainer
 approves the run; the `New module` workflow has already run the same checks. Its commits carry no
