@@ -203,15 +203,18 @@ footer { margin-top: 40px; border-top: 1px solid var(--line); color: var(--muted
 footer .wrap { display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; padding-block: 20px 28px; }
 
 /* detail: catalog panel and module page */
-.scrim { position: fixed; inset: 0; background: rgb(14 10 26 / 0.45); opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 40; }
-.scrim.open { opacity: 1; pointer-events: auto; }
 .panel {
-  position: fixed; top: 0; right: 0; bottom: 0; width: min(640px, 100%); background: var(--bg); z-index: 50; overflow-y: auto;
-  transform: translateX(102%); transition: transform 0.25s ease; box-shadow: -20px 0 40px -20px rgb(0 0 0 / 0.4);
-  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  position: fixed; inset: 0 0 0 auto; margin: 0; padding: 0; border: 0; width: min(640px, 100%); max-width: none; height: auto; max-height: none;
+  background: var(--bg); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; box-shadow: -20px 0 40px -20px rgb(0 0 0 / 0.4);
 }
-.panel.open { transform: none; }
-.panel-inner { padding: 14px max(22px, env(safe-area-inset-right, 0px)) 28px 22px; display: grid; gap: 8px; }
+.panel[open] { transform: none; transition: transform 0.25s ease; }
+@starting-style { .panel[open] { transform: translateX(102%); } }
+.panel::backdrop { background: rgb(14 10 26 / 0.45); }
+html:has(.panel[open]) { overflow: hidden; }
+.panel-inner {
+  min-height: 100%; display: grid; align-content: start; gap: 8px;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) max(22px, env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) 22px;
+}
 .panel-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; }
 .close { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; color: var(--ink); font-size: 18px; line-height: 1; }
 .detail { display: grid; gap: 20px; min-width: 0; }

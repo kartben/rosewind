@@ -54,13 +54,12 @@
   <div class="empty" id="empty" hidden>No module matches. Missing one? <a href="contribute/">List it</a>.</div>
 </div>
 
-<div class="scrim" id="scrim"></div>
-<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-label="Module details" aria-hidden="true">
+<dialog class="panel" id="panel" aria-labelledby="detail-title">
   <div class="panel-inner">
     <div class="panel-bar"><a id="panel-page" href="#">Open full page</a><button class="close" type="button" id="close" aria-label="Close details">×</button></div>
     <div id="panel-body"></div>
   </div>
-</aside>
+</dialog>
 <script type="application/json" id="cards">{{ cards_json }}</script>
 <script type="application/json" id="taxonomy">{{ {'categories': categories, 'licenses': license_labels} | tojson }}</script>
 {% endblock %}

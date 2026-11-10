@@ -5,7 +5,7 @@
   <div class="detail-head detail-intro">
     <div class="thumb{{ ' thumb-logo' if m.image_kind == 'logo' }}"{% if not m.image %} style="--h:{{ m.hue }}"{% endif %}>{% if m.image %}<img src="{{ depth }}{{ m.image }}" alt="" width="56" height="56" loading="lazy">{% else %}<span aria-hidden="true">{{ m.initials }}</span>{% endif %}</div>
     <div>
-      <h2 class="detail-title">{{ m.title }}</h2>
+      <h2 class="detail-title" id="detail-title">{{ m.title }}</h2>
       <div class="owner">{{ m.owner }}{% if m.repo and m.repo.stars is not none %} · ★ {{ m.repo.stars | stars }}{% endif %}</div>
     </div>
   </div>

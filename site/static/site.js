@@ -192,9 +192,9 @@
 
   /* detail panel: loads the module page and shows its #module-detail */
   const panel = $('#panel');
-  const scrim = $('#scrim');
   let lastFocus = null;
   let loading = 0;
+  let closingFromHistory = false;
 
   async function openPanel(name, push) {
     if (!byName.has(name)) return;
@@ -218,25 +218,26 @@
     applyShell(body);
     $('#panel-page').href = href;
     lastFocus = lastFocus || document.activeElement;
-    panel.classList.add('open');
-    panel.setAttribute('aria-hidden', 'false');
-    scrim.classList.add('open');
+    if (!panel.open) panel.showModal();
     panel.scrollTop = 0;
     $('#close').focus();
     if (push && location.hash !== '#' + name) history.pushState({ panel: name }, '', '#' + name);
   }
   function closePanel(fromHistory) {
-    if (!panel.classList.contains('open')) return;
-    panel.classList.remove('open');
-    panel.setAttribute('aria-hidden', 'true');
-    scrim.classList.remove('open');
-    if (!fromHistory && location.hash) {
+    if (!panel.open) return;
+    closingFromHistory = fromHistory;
+    panel.close();
+  }
+  // also runs when Escape closes the dialog
+  panel.addEventListener('close', () => {
+    if (!closingFromHistory && location.hash) {
       if (history.state && history.state.panel) history.back();
       else try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ }
     }
+    closingFromHistory = false;
     lastFocus?.focus?.();
     lastFocus = null;
-  }
+  });
 
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-module]');
@@ -246,9 +247,10 @@
     openPanel(a.dataset.module, true);
   });
   $('#close').addEventListener('click', () => closePanel(false));
-  scrim.addEventListener('click', () => closePanel(false));
+  // a click on the dialog itself, not its content, is a click on the backdrop
+  panel.addEventListener('click', e => { if (e.target === panel) closePanel(false); });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && panel.classList.contains('open')) closePanel(false);
+    if (panel.open) return;
     const tag = document.activeElement?.tagName || '';
     if (e.key === '/' && document.activeElement !== q && !/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) { e.preventDefault(); q.focus(); }
   });
