@@ -290,6 +290,19 @@ def read_module_yml(url: str, revision: str) -> tuple[str, str] | None:
     return None
 
 
+def module_names(entries, enriched: dict) -> dict[str, list[str]]:
+    """Map each Zephyr module name to the entries whose zephyr/module.yml declares it.
+
+    The names come from upstream repositories, not from reviewed entries: a
+    dependency is only linked to an entry when exactly one entry declares it.
+    """
+    claims: dict[str, list[str]] = {}
+    for e in entries:
+        name = ((enriched.get(e.name) or {}).get('module') or {}).get('name')
+        claims.setdefault(name if isinstance(name, str) and name else e.name, []).append(e.name)
+    return claims
+
+
 PROVIDES_SETTINGS = {
     'board_root': 'boards', 'soc_root': 'socs', 'arch_root': 'archs', 'dts_root': 'dts',
     'snippet_root': 'snippets', 'module_ext_root': 'module-ext',
@@ -352,8 +365,11 @@ def is_newer(candidate: str, current: str) -> bool:
 
 # --- checks shown on the site and in the report ------------------------------
 
-def compute_checks(entry: Entry, enr: dict | None, today) -> list[dict]:
-    """Derive the user-facing checks of one entry from its enrichment data."""
+def compute_checks(entry: Entry, enr: dict | None, today, claims: dict[str, list[str]] | None = None) -> list[dict]:
+    """Derive the user-facing checks of one entry from its enrichment data.
+
+    `claims` is the result of module_names() for the whole registry.
+    """
     from datetime import date
 
     proj = entry.west_project()
@@ -382,6 +398,10 @@ def compute_checks(entry: Entry, enr: dict | None, today) -> list[dict]:
     mod = enr.get('module') or {}
     if mod.get('found'):
         add('pass', 'module-yml', f'`zephyr/module.yml` found (module name `{mod["name"]}`).')
+        others = [o for o in (claims or {}).get(mod['name'], []) if o != entry.name]
+        if others:
+            add('warning', 'module-name', f'Module name `{mod["name"]}` is also used by '
+                f'{", ".join(f"`{o}`" for o in others)}: a workspace cannot hold both.')
     elif 'west-commands' in proj:
         add('info', 'no-module-yml', 'No `zephyr/module.yml`: listed for its west extension commands.')
     else:

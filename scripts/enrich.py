@@ -197,8 +197,9 @@ def enrich_one(entry: registry.Entry, use_github: bool, icon_dir: Path) -> dict:
 def write_report(entries, data, path: Path):
     today = date.today()
     sections = {'error': [], 'warning': [], 'newer-release': []}
+    claims = registry.module_names(entries, data)
     for e in entries:
-        for c in registry.compute_checks(e, data.get(e.name), today):
+        for c in registry.compute_checks(e, data.get(e.name), today, claims):
             if c['code'] == 'newer-release':
                 sections['newer-release'].append(f'- `{e.name}`: `{e.west_project()["revision"]}` → '
                                                  f'`{data[e.name]["newer_release"]}`')

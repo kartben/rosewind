@@ -142,12 +142,7 @@ def fmt_stars(n) -> str:
 # --- model -------------------------------------------------------------------
 
 def build_records(entries, categories, enriched, today: date, base_url: str, icon_dir: Path):
-    by_module_name = {}
-    for e in entries:
-        mod = (enriched.get(e.name) or {}).get('module') or {}
-        by_module_name[mod.get('name') or e.name] = e.name
-        by_module_name.setdefault(e.name, e.name)
-
+    claims = registry.module_names(entries, enriched)
     records = []
     for e in entries:
         d = e.data
@@ -161,8 +156,8 @@ def build_records(entries, categories, enriched, today: date, base_url: str, ico
             provides.insert(0, 'west-commands')
         deps = []
         for dep in mod.get('depends') or []:
-            target = by_module_name.get(dep)
-            deps.append({'module': dep, 'entry': target})
+            owners = claims.get(dep, [])
+            deps.append({'module': dep, 'entry': owners[0] if len(owners) == 1 else None})
 
         image, image_src = module_image(e.name, enr, icon_dir)
         pushed = repo.get('pushed_at')
@@ -191,7 +186,7 @@ def build_records(entries, categories, enriched, today: date, base_url: str, ico
             'dependencies': deps,
             'repo': {k: repo.get(k) for k in ('stars', 'pushed_at', 'archived', 'latest_release')} if repo else None,
             'newer_release': enr.get('newer_release'),
-            'checks': registry.compute_checks(e, enr or None, today),
+            'checks': registry.compute_checks(e, enr or None, today, claims),
             'days': days,
             'activity': activity,
             'owner': proj['url'].split('://', 1)[-1].split('/')[1],

@@ -6,6 +6,7 @@
 import html
 import json
 import re
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -59,6 +60,20 @@ def test_dependency_installed_alongside(site):
     page = (site / 'm' / 'wolftpm' / 'index.html').read_text()
     assert f'{BASE}/m/wolfssl.yaml' in page
     assert 'west update wolfssl wolftpm' in page
+
+
+def test_contested_module_name_links_no_dependency(tmp_path):
+    def found(name, depends=()):
+        return {'revision': {'kind': 'branch', 'sha': None},
+                'module': {'found': True, 'name': name, 'depends': list(depends), 'provides': []}}
+
+    entries = [registry.load_entry(registry.MODULES_DIR / f'{n}.yml') for n in ('wolfssh', 'wolfssl', 'zview')]
+    enriched = {'wolfssh': found('wolfssh', ['wolfssl']), 'wolfssl': found('wolfssl'), 'zview': found('wolfssl')}
+    records = {r['name']: r for r in build_site.build_records(
+        entries, registry.load_categories(), enriched, date(2026, 11, 9), BASE, tmp_path)}
+    assert records['wolfssh']['dependencies'] == [{'module': 'wolfssl', 'entry': None}]
+    assert [r['name'] for r in records['wolfssh']['install_set']] == ['wolfssh']
+    assert any(c['code'] == 'module-name' and '`zview`' in c['message'] for c in records['wolfssl']['checks'])
 
 
 def test_catalog_lists_every_module(site):
