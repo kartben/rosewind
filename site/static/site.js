@@ -210,8 +210,10 @@
       return;
     }
     if (ticket !== loading) return;
-    // links in the fetched page are relative to m/<name>/
-    $$('a[href]', detail).forEach(a => { a.href = new URL(a.getAttribute('href'), new URL(href, location.href)).href; });
+    // links and images in the fetched page are relative to m/<name>/
+    const base = new URL(href, location.href);
+    $$('a[href]', detail).forEach(a => { a.href = new URL(a.getAttribute('href'), base).href; });
+    $$('img[src]', detail).forEach(img => { img.src = new URL(img.getAttribute('src'), base).href; });
     const body = $('#panel-body');
     body.replaceChildren(document.importNode(detail, true));
     applyShell(body);
