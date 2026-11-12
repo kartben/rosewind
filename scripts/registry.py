@@ -425,6 +425,16 @@ def is_newer(candidate: str, current: str) -> bool:
 
 # --- checks shown on the site and in the report ------------------------------
 
+# Warnings about the revision an entry lists rather than a problem with the repository: shown on
+# the module page, but not flagged on catalog cards or in the report.
+PIN_WARNINGS = frozenset({'tracks-branch'})
+
+
+def flagged(checks: list[dict]) -> list[dict]:
+    """Return the warnings and errors to flag on catalog cards and in the report."""
+    return [c for c in checks if c['level'] in ('warning', 'error') and c['code'] not in PIN_WARNINGS]
+
+
 def compute_checks(entry: Entry, enr: dict | None, today, claims: dict[str, list[str]] | None = None) -> list[dict]:
     """Derive the user-facing checks of one entry from its enrichment data.
 
@@ -448,9 +458,6 @@ def compute_checks(entry: Entry, enr: dict | None, today, claims: dict[str, list
     kind = enr['revision']['kind']
     label = {'tag': 'release tag', 'branch': 'branch', 'sha': 'commit'}.get(kind, kind)
     add('pass', 'revision', f'Revision `{proj["revision"]}` resolves ({label}).')
-    if kind == 'branch':
-        add('info', 'tracks-branch', f'Tracks branch `{proj["revision"]}`: `west update` can bring new '
-            'commits at any time. Pin a release tag for reproducible builds.')
     newer = enr.get('newer_release')
     if newer:
         add('info', 'newer-release', f'Upstream has a newer release: `{newer}`.')
@@ -479,6 +486,9 @@ def compute_checks(entry: Entry, enr: dict | None, today, claims: dict[str, list
         days = (today - pushed).days
         if days > 365:
             add('warning', 'inactive', f'No commits for {days // 30} months.')
+    if kind == 'branch':
+        add('warning', 'tracks-branch', f'Follows branch `{proj["revision"]}`: each `west update` will get '
+            'its latest commits. To stay on one version, it is recommended to use a release tag.')
 
     kind_l = license_kind(entry.data['license'])
     if kind_l == 'other':

@@ -46,7 +46,7 @@
       {% if m.activity %}<span class="status {{ m.activity }}" title="Last commit {{ m.repo.pushed_at[:10] }}">Updated {{ m.days | ago }}</span>{% endif %}
       <span class="lic" title="{{ m.license }}">{{ m.license }}</span>
       {% if 'west-commands' in m.provides %}<span class="badge">West commands</span>{% endif %}
-      {% set nwarn = m.checks | selectattr('level', 'in', ['warning', 'error']) | list | length %}
+      {% set nwarn = flagged(m.checks) | length %}
       {% if nwarn %}<span class="flag">{{ nwarn }} warning{{ 's' if nwarn > 1 }}</span>{% endif %}
     </div>
   </article>

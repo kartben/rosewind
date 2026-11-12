@@ -248,12 +248,12 @@ def write_report(entries, data, path: Path):
     sections = {'error': [], 'warning': [], 'newer-release': []}
     claims = registry.module_names(entries, data)
     for e in entries:
-        for c in registry.compute_checks(e, data.get(e.name), today, claims):
-            if c['code'] == 'newer-release':
-                sections['newer-release'].append(f'- `{e.name}`: `{e.west_project()["revision"]}` → '
-                                                 f'`{data[e.name]["newer_release"]}`')
-            elif c['level'] in ('error', 'warning'):
-                sections[c['level']].append(f'- `{e.name}`: {c["message"]}')
+        checks = registry.compute_checks(e, data.get(e.name), today, claims)
+        if any(c['code'] == 'newer-release' for c in checks):
+            sections['newer-release'].append(f'- `{e.name}`: `{e.west_project()["revision"]}` → '
+                                             f'`{data[e.name]["newer_release"]}`')
+        for c in registry.flagged(checks):
+            sections[c['level']].append(f'- `{e.name}`: {c["message"]}')
     lines = [f'# Registry report, {today.isoformat()}', '']
     for key, title in (('error', 'Errors'), ('warning', 'Warnings'),
                        ('newer-release', 'Pinned to an older release')):

@@ -6,6 +6,7 @@
 import json
 import urllib.error
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -73,3 +74,12 @@ def test_invalid_module_yml_is_reported(monkeypatch, tmp_path):
     assert data['module']['invalid']
     checks = registry.compute_checks(entry, data, date(2026, 11, 9))
     assert any(c['code'] == 'module-yml' and c['level'] == 'warning' for c in checks)
+
+
+def test_report_leaves_out_branch_tracking(tmp_path):
+    enriched = json.loads((Path(__file__).parent / 'fixtures' / 'enriched.json').read_text())['modules']
+    report = tmp_path / 'report.md'
+    enrich.write_report([registry.load_entry(registry.MODULES_DIR / 'xedge.yml')], enriched, report)
+    text = report.read_text()
+    assert 'zephyr/module.yml' in text
+    assert 'Follows branch' not in text

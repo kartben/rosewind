@@ -92,7 +92,7 @@ def test_contribute_example_is_minimal(site):
 def test_detail_hides_passing_checks(site):
     page = (site / 'm' / 'zenoh-pico' / 'index.html').read_text()
     assert 'resolves (' not in page
-    assert 'Tracks branch' in page
+    assert page.index('checks-warn') < page.index('Follows branch') < page.index('class="install"')
 
 
 def test_post_install_commands_on_their_own_line(site):
@@ -138,7 +138,7 @@ def test_manifest_tab_copies_only_project_entries(site):
 
 def test_warnings_come_first_and_flag_the_card(site):
     page = (site / 'm' / 'xedge' / 'index.html').read_text()
-    assert page.index('No <code>zephyr/module.yml</code>') < page.index('class="install"') < page.index('Tracks branch')
+    assert page.index('No <code>zephyr/module.yml</code>') < page.index('Follows branch') < page.index('class="install"')
     catalog = (site / 'index.html').read_text()
     card = catalog.split('data-name="xedge"', 1)[1].split('</article>', 1)[0]
     assert '1 warning' in card

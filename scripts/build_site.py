@@ -308,6 +308,7 @@ def main(argv=None) -> int:
     env.globals.update(config=config, base_url=base_url, categories=categories,
                        provides_labels=PROVIDES_LABELS, license_labels=LICENSE_LABELS,
                        submanifest_text=registry.submanifest_text, project_lines=registry.project_lines,
+                       flagged=registry.flagged,
                        enriched_at=enriched_doc.get('generated'), generated=generated,
                        category_counts=Counter(r['category'] for r in records),
                        license_counts=Counter(r['license_kind'] for r in records))
