@@ -5,8 +5,12 @@
 
 import pytest
 import yaml
+from yamllint import linter
+from yamllint.config import YamlLintConfig
 
+import build_site
 import issue_to_entry
+import registry
 import validate
 
 ANSWERS = {
@@ -98,3 +102,17 @@ def test_cli_writes_the_file_and_outputs(tmp_path, monkeypatch):
     assert rc == 0
     assert (tmp_path / 'demo-module.yml').is_file()
     assert 'name=demo-module\n' in out.read_text()
+
+
+def test_long_answers_are_wrapped_without_changing_the_text():
+    words = 'The device decodes the stream to PCM and sends it to an I2S DAC through a ready-made sink'
+    description = (f'{words}, then {words}, then {words}.\n\n'
+                   f'- {words} on the first board.\n- See [the guide](https://example.org/{"x" * 120}).')
+    answers = dict(ANSWERS, summary=f'{words}, plus a player application for touch screens.',
+                   documentation=f'https://example.org/{"docs/" * 25}', description=description)
+    _, text = issue_to_entry.entry_text(issue_to_entry.parse_body(body(answers)))
+    config = YamlLintConfig(file=str(registry.ROOT / '.yamllint'))
+    assert [str(p) for p in linter.run(text, config)] == []
+    data = yaml.safe_load(text)
+    assert data['summary'] == answers['summary']
+    assert build_site.markdown(data['description']) == build_site.markdown(description)

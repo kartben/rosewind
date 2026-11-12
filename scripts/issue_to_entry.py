@@ -16,6 +16,7 @@ import argparse
 import os
 import re
 import sys
+import textwrap
 from pathlib import Path
 
 import yaml
@@ -26,6 +27,7 @@ import registry  # noqa: E402
 FORM = registry.ROOT / '.github' / 'ISSUE_TEMPLATE' / 'new-module.yml'
 NO_RESPONSE = '_No response_'
 NAME = re.compile(r'^[a-z0-9][a-z0-9._-]{1,62}$')
+WIDTH = 100  # line length of the written entry, as in the hand-written ones
 HEADER = ('# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors\n'
           '# SPDX-License-Identifier: Apache-2.0\n')
 
@@ -60,6 +62,24 @@ def parse_body(body: str) -> dict[str, str]:
     return fields
 
 
+def wrapped(text: str, indent: str = '  ') -> list[str]:
+    """Return the lines of a block scalar holding `text`, wrapped to WIDTH columns.
+
+    YAML folds the lines of a summary and the site joins the lines of a description paragraph or
+    list item, so wrapping does not change what is shown.
+    """
+    out = []
+    for line in text.splitlines():
+        if not line.strip():
+            out.append('')
+            continue
+        lead = indent + line[:len(line) - len(line.lstrip())]
+        more = '  ' if re.match(r'[-*] ', line.lstrip()) else ''
+        out += textwrap.wrap(line.strip(), WIDTH, initial_indent=lead, subsequent_indent=lead + more,
+                             break_long_words=False, break_on_hyphens=False)
+    return out
+
+
 def entry_text(fields: dict[str, str]) -> tuple[str, str]:
     """Return (name, YAML text) of the entry described by the form fields."""
     def one_line(key: str, required: bool = True) -> str:
@@ -79,10 +99,10 @@ def entry_text(fields: dict[str, str]) -> tuple[str, str]:
     keywords = [k.strip().lower() for k in fields.get('keywords', '').split(',') if k.strip()]
     description = '\n'.join(line.rstrip() for line in fields.get('description', '').strip().splitlines())
 
-    lines = [HEADER, f'name: {q(name)}', f'title: {q(title)}', 'summary: >-', f'  {summary}']
+    lines = [HEADER, f'name: {q(name)}', f'title: {q(title)}', 'summary: >-', *wrapped(summary)]
     if description:
         lines.append('description: |')
-        lines += [f'  {line}' if line else '' for line in description.splitlines()]
+        lines += wrapped(description)
     lines.append(f'category: {q(one_line("category"))}')
     if keywords:
         lines.append(f'keywords: [{", ".join(q(k) for k in keywords)}]')

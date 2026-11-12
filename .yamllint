@@ -5,6 +5,7 @@ rules:
   document-start: disable
   line-length:
     max: 120
+    allow-non-breakable-inline-mappings: true
   truthy:
     allowed-values: ['true', 'false', 'on']
   comments:
