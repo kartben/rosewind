@@ -31,7 +31,7 @@
   <section aria-labelledby="h-details-{{ m.name }}">
     <h2 id="h-details-{{ m.name }}">Details</h2>
     <dl class="facts">
-      <dt>Revision</dt><dd><span class="rev">{{ m.west.revision }}</span>{% if m.revision_kind %} <span class="kind">{{ {'tag': 'release', 'branch': 'branch', 'sha': 'commit'}[m.revision_kind] }}</span>{% endif %}</dd>
+      <dt>Revision</dt><dd><span class="rev">{{ m.west.revision }}</span></dd>
       <dt>License</dt><dd>{% if m.links.license %}<a href="{{ m.links.license }}" rel="noopener">{{ m.license }}</a>{% else %}{{ m.license }}{% endif %}</dd>
       <dt>Maintainers</dt><dd>{% for p in m.maintainers %}{% if p.github %}<a href="https://github.com/{{ p.github }}" rel="noopener">{{ p.name or ('@' ~ p.github) }}</a>{% else %}{{ p.name }}{% endif %}{{ ', ' if not loop.last }}{% endfor %}</dd>
       {% if m.repo and m.repo.pushed_at %}<dt>Last commit</dt><dd><span class="status {{ m.activity }}">{{ m.days | ago }}</span></dd>{% endif %}
