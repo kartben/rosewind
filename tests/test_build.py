@@ -100,6 +100,16 @@ def test_post_install_commands_on_their_own_line(site):
     assert 'west update dtsh\nwest packages -m dtsh pip --install' in page
 
 
+def test_commands_say_where_to_run_them(site):
+    page = (site / 'm' / 'lz4' / 'index.html').read_text()
+    blocks = re.findall(r'<pre data-os="(\w+)"[^>]*>(.*?)</pre>', page, re.S)
+    assert [os for os, _ in blocks] == ['unix', 'windows']
+    for _, text in blocks:
+        first, second = html.unescape(re.sub(r'<[^>]+>', '', text)).splitlines()[:2]
+        assert first == '# From the workspace root'
+        assert second.startswith(('curl ', 'Invoke-WebRequest '))
+
+
 def _manifest_tab(site, name):
     page = (site / 'm' / name / 'index.html').read_text()
     return page.split('data-panel="yml"', 1)[1]

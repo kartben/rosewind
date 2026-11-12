@@ -24,14 +24,17 @@
         </div>
         <button class="copy" type="button">Copy</button>
       </div>
-<pre data-os="unix">{% for x in m.install_set %}curl -fsSL {{ x.submanifest_url }} \
+{% set where = '<span class="y-c"># From the workspace root</span>\n' | safe %}
+<pre data-os="unix">{{ where }}{% for x in m.install_set %}curl -fsSL {{ x.submanifest_url }} \
      -o zephyr/submanifests/{{ x.name }}.yaml
 {% endfor %}{{ then | join('\n') }}</pre>
-<pre data-os="windows" hidden>{% for x in m.install_set %}Invoke-WebRequest {{ x.submanifest_url }} `
+<pre data-os="windows" hidden>{{ where }}{% for x in m.install_set %}Invoke-WebRequest {{ x.submanifest_url }} `
   -OutFile zephyr/submanifests/{{ x.name }}.yaml
 {% endfor %}{{ then | join('\n') }}</pre>
     </div>
-    <p class="hint">Run from the workspace root, the folder that contains <code>zephyr/</code>.{% if m.install_set|length > 1 %} Includes {{ m.install_set[:-1] | map(attribute='name') | join(', ') }}, a dependency.{% endif %}</p>
+    {% if m.install_set|length > 1 %}
+    <p class="hint">Includes {{ m.install_set[:-1] | map(attribute='name') | join(', ') }}, a dependency.</p>
+    {% endif %}
   </div>
   <div class="tabpanel" data-panel="yml" hidden>
     {% set lines = [] %}{% for x in m.install_set %}{% for l in project_lines(x.west, 4) %}{% set _ = lines.append(l) %}{% endfor %}{% endfor %}

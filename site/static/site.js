@@ -77,7 +77,12 @@
     const btn = e.target.closest('button.copy');
     if (btn) {
       const src = btn.closest('.codebox')?.querySelector('pre:not([hidden])') || btn.closest('.cmd')?.querySelector('code');
-      if (src) copyText(src.textContent.replace(/\n+$/, '') + '\n');
+      if (src) {
+        let text = src.textContent;
+        // zsh runs "#" lines as commands unless interactivecomments is set: copy commands only
+        if (src.matches('pre[data-os]')) text = text.split('\n').filter(l => !l.startsWith('#')).join('\n');
+        copyText(text.replace(/\n+$/, '') + '\n');
+      }
     }
   });
 
