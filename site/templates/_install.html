@@ -5,10 +5,10 @@
 {% if 'blobs' in m.provides %}{% set _ = post.append('west blobs fetch ' ~ m.name) %}{% endif %}
 {% set then = ['west update ' ~ names] + post %}
 <div class="install">
-  <div class="tabs" role="group" aria-label="Workspace type">
+  <div class="tabs" role="group" aria-label="Workspace manifest">
     {% if config.west_command %}<button type="button" data-tab="west" aria-pressed="true">west</button>{% endif %}
-    <button type="button" data-tab="quick" aria-pressed="{{ 'false' if config.west_command else 'true' }}">Standard workspace</button>
-    <button type="button" data-tab="yml" aria-pressed="false">Custom manifest</button>
+    <button type="button" data-tab="quick" aria-pressed="{{ 'false' if config.west_command else 'true' }}">Zephyr's manifest</button>
+    <button type="button" data-tab="yml" aria-pressed="false">Your own manifest</button>
   </div>
   {% if config.west_command %}
   <div class="tabpanel" data-panel="west">

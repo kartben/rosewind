@@ -110,6 +110,12 @@ def test_commands_say_where_to_run_them(site):
         assert second.startswith(('curl ', 'Invoke-WebRequest '))
 
 
+def test_tabs_name_the_manifest_they_need(site):
+    page = (site / 'm' / 'lz4' / 'index.html').read_text()
+    tabs = re.findall(r'<button type="button" data-tab="\w+"[^>]*>([^<]+)</button>', page)
+    assert tabs == ["Zephyr's manifest", 'Your own manifest']
+
+
 def _manifest_tab(site, name):
     page = (site / 'm' / name / 'index.html').read_text()
     return page.split('data-panel="yml"', 1)[1]

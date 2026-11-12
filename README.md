@@ -29,8 +29,8 @@ each module's maintainers confirm their entry, `maintainers` names the owner of 
 
 ## Add a module to your workspace
 
-From the root of a workspace created with `west init` (Zephyr's `west.yml` imports every file in
-`zephyr/submanifests/`):
+When the workspace manifest is Zephyr's `west.yml` (`west config manifest.path` prints `zephyr`),
+which imports every file in `zephyr/submanifests/`, run from the workspace root:
 
 ```shell
 curl -fsSL https://zephyrproject-rtos.github.io/rosewind/m/zenoh-pico.yaml \
@@ -38,8 +38,9 @@ curl -fsSL https://zephyrproject-rtos.github.io/rosewind/m/zenoh-pico.yaml \
 west update zenoh-pico
 ```
 
-Each module page also shows the project entry to paste into your own `west.yml`, for workspaces
-with their own manifest repository. Delete the file to remove the module.
+Delete the file to remove the module. When `zephyr` is a project of your own manifest, west reads
+Zephyr's manifest from git and ignores that directory: paste the project entry shown on each module
+page into your `west.yml` instead.
 
 ## List a module
 
