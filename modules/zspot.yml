@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: zspot
+title: Spotify Connect protocol
+summary: >-
+  A Spotify Connect protocol library with a plain C API and I2S output, plus an LVGL player
+  application.
+description: |
+  zspot packages the Spotify Connect protocol, derived from
+  [cspot](https://github.com/feelfreelinux/cspot), as a Zephyr module with a plain C API. The device
+  shows up in the Spotify app, takes over playback and decodes the tracks to PCM, which a ready-made
+  sink sends to an I2S DAC. Threads, sockets, TLS, PSA crypto, mDNS and nanopb come from Zephyr;
+  only the Tremor decoder is bundled.
+
+  The repository also holds a player application with a Now Playing touch screen: cover art, synced
+  lyrics, search, Your Library and Wi-Fi setup. It runs on the ESP32-S3 (VIEWE UEDX32480035E-WB-A)
+  and on `native_sim`.
+
+  A Spotify Premium account is required.
+category: communication
+keywords: [audio, streaming, vorbis, speaker]
+license: GPL-3.0-only AND BSD-3-Clause
+maintainers:
+  - github: walidbadar
+links:
+  repository: https://github.com/walidbadar/zspot
+  documentation: https://walidbadar.github.io/zspot/
+west:
+  revision: v0.1.0
+  path: modules/lib/zspot
