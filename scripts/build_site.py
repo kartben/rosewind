@@ -194,7 +194,7 @@ def build_records(entries, categories, enriched, today: date, base_url: str, ico
             'dependencies': deps,
             'repo': {k: repo.get(k) for k in ('stars', 'pushed_at', 'archived', 'latest_release')} if repo else None,
             'newer_release': enr.get('newer_release'),
-            'checks': registry.compute_checks(e, enr or None, today, claims),
+            'checks': registry.compute_checks(e, enr or None, claims),
             'days': days,
             'activity': activity,
             'owner': proj['url'].split('://', 1)[-1].split('/')[1],

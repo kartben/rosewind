@@ -52,7 +52,7 @@ def test_index_json(site):
     assert mods['zenoh-pico']['submanifest_url'] == f'{BASE}/m/zenoh-pico.yaml'
     assert mods['wolftpm']['dependencies'] == [{'module': 'wolfssl', 'entry': 'wolfssl'}]
     assert any(c['code'] == 'no-module-yml' and c['level'] == 'warning' for c in mods['xedge']['checks'])
-    assert any(c['code'] == 'inactive' for c in mods['heatshrink']['checks'])
+    assert registry.flagged(mods['heatshrink']['checks']) == []
     assert mods['lz4']['checks'][0]['code'] == 'not-enriched'
 
 

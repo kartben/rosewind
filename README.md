@@ -107,5 +107,4 @@ Only the fields of an entry are written by hand. Everything else is derived:
   no logo in `logos/`. SVG icons that contain scripts and raster icons under 32 px are ignored.
 
 The nightly publish job writes a report of entries needing attention (unreachable repositories,
-missing `zephyr/module.yml`, no activity for a year, newer releases than the listed tag) to the
-workflow summary.
+missing `zephyr/module.yml`, newer releases than the listed tag) to the workflow summary.

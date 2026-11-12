@@ -445,13 +445,11 @@ def flagged(checks: list[dict]) -> list[dict]:
     return [c for c in checks if c['level'] in ('warning', 'error') and c['code'] not in PIN_WARNINGS]
 
 
-def compute_checks(entry: Entry, enr: dict | None, today, claims: dict[str, list[str]] | None = None) -> list[dict]:
+def compute_checks(entry: Entry, enr: dict | None, claims: dict[str, list[str]] | None = None) -> list[dict]:
     """Derive the user-facing checks of one entry from its enrichment data.
 
     `claims` is the result of module_names() for the whole registry.
     """
-    from datetime import date
-
     proj = entry.west_project()
     checks = []
 
@@ -496,11 +494,6 @@ def compute_checks(entry: Entry, enr: dict | None, today, claims: dict[str, list
     repo = enr.get('repo') or {}
     if repo.get('archived'):
         add('warning', 'archived', 'The repository is archived upstream.')
-    if repo.get('pushed_at'):
-        pushed = date.fromisoformat(repo['pushed_at'][:10])
-        days = (today - pushed).days
-        if days > 365:
-            add('warning', 'inactive', f'No commits for {days // 30} months.')
     if kind == 'branch':
         add('warning', 'tracks-branch', f'Follows branch `{proj["revision"]}`: each `west update` will get '
             'its latest commits. To stay on one version, it is recommended to use a release tag.')

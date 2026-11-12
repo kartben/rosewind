@@ -6,7 +6,6 @@
 import json
 import subprocess
 import urllib.error
-from datetime import date
 from pathlib import Path
 
 import pytest
@@ -73,7 +72,7 @@ def test_invalid_module_yml_is_reported(monkeypatch, tmp_path):
     entry = registry.load_entry(registry.MODULES_DIR / 'lz4.yml')
     data = enrich.enrich_one(entry, use_github=False, icon_dir=tmp_path)
     assert data['module']['invalid']
-    checks = registry.compute_checks(entry, data, date(2026, 11, 9))
+    checks = registry.compute_checks(entry, data)
     assert any(c['code'] == 'module-yml' and c['level'] == 'warning' for c in checks)
 
 
@@ -112,6 +111,6 @@ def test_build_files_only_is_a_note(monkeypatch, tmp_path):
     data = enrich.enrich_one(entry, use_github=False, icon_dir=tmp_path)
     name = Path(entry.west_project()['path']).name
     assert data['module']['name'] == name and data['module']['build_files_only']
-    checks = registry.compute_checks(entry, data, date(2026, 11, 9))
+    checks = registry.compute_checks(entry, data)
     assert any(c['code'] == 'no-module-yml' and c['level'] == 'info' and f'`{name}`' in c['message']
                for c in checks)

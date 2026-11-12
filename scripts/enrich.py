@@ -259,7 +259,7 @@ def write_report(entries, data, path: Path):
     sections = {'error': [], 'warning': [], 'newer-release': []}
     claims = registry.module_names(entries, data)
     for e in entries:
-        checks = registry.compute_checks(e, data.get(e.name), today, claims)
+        checks = registry.compute_checks(e, data.get(e.name), claims)
         if any(c['code'] == 'newer-release' for c in checks):
             sections['newer-release'].append(f'- `{e.name}`: `{e.west_project()["revision"]}` → '
                                              f'`{data[e.name]["newer_release"]}`')
