@@ -326,10 +326,17 @@ def resolve_revision(refs: dict[str, str], revision: str) -> tuple[str, str | No
 
 
 MODULE_FILES = ('zephyr/module.yml', 'zephyr/module.yaml')
+# Without a module file, Zephyr still takes a repository that has both of these files as a module,
+# named after its directory (scripts/zephyr_module.py).
+BUILD_FILES = ('zephyr/CMakeLists.txt', 'zephyr/Kconfig')
 
 
-def read_module_yml(url: str, revision: str) -> tuple[str, str] | None:
-    """Fetch only the commit and trees of a revision, then read its module file."""
+def read_module_yml(url: str, revision: str) -> tuple[str, str | None] | None:
+    """Fetch only the commit and trees of a revision, then read its module file.
+
+    Returns (path, text) of the module file, (BUILD_FILES[0], None) when the revision has no module
+    file but has BUILD_FILES, or None when Zephyr would not take it as a module.
+    """
     with tempfile.TemporaryDirectory(prefix='rosewind-') as tmp:
         _git('init', '-q', cwd=tmp)
         _git('fetch', '-q', '--depth', '1', '--filter=blob:none', url, revision, cwd=tmp)
@@ -338,6 +345,9 @@ def read_module_yml(url: str, revision: str) -> tuple[str, str] | None:
                 return path, _git('show', f'FETCH_HEAD:{path}', cwd=tmp)
             except GitError:
                 continue
+        listed = _git('ls-tree', '--name-only', 'FETCH_HEAD', '--', *BUILD_FILES, cwd=tmp).split()
+        if set(listed) == set(BUILD_FILES):
+            return BUILD_FILES[0], None
     return None
 
 
@@ -467,7 +477,12 @@ def compute_checks(entry: Entry, enr: dict | None, today, claims: dict[str, list
         add('warning', 'module-yml', '`zephyr/module.yml` is not valid YAML: the Zephyr build will reject '
             'this module.')
     elif mod.get('found'):
-        add('pass', 'module-yml', f'`zephyr/module.yml` found (module name `{mod["name"]}`).')
+        if mod.get('build_files_only'):
+            add('info', 'no-module-yml', f'No `zephyr/module.yml`: Zephyr finds the module from '
+                f'`zephyr/CMakeLists.txt` and `zephyr/Kconfig`, and names it `{mod["name"]}` after its '
+                'directory.')
+        else:
+            add('pass', 'module-yml', f'`zephyr/module.yml` found (module name `{mod["name"]}`).')
         others = [o for o in (claims or {}).get(mod['name'], []) if o != entry.name]
         if others:
             add('warning', 'module-name', f'Module name `{mod["name"]}` is also used by '

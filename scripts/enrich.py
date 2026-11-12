@@ -211,7 +211,12 @@ def enrich_one(entry: registry.Entry, use_github: bool, icon_dir: Path) -> dict:
     except registry.GitError as e:
         return {'error': f'Cannot fetch revision `{proj["revision"]}`: {e}'}
     try:
-        out['module'] = registry.module_info(found[1], proj['path']) if found else {'found': False}
+        if found is None:
+            out['module'] = {'found': False}
+        elif found[1] is None:
+            out['module'] = {**registry.module_info('', proj['path']), 'build_files_only': True}
+        else:
+            out['module'] = registry.module_info(found[1], proj['path'])
     except yaml.YAMLError:
         out['module'] = {'found': True, 'invalid': True, 'name': Path(proj['path']).name, 'depends': [],
                          'provides': []}
@@ -241,6 +246,12 @@ def enrich_entry(entry: registry.Entry, use_github: bool, icon_dir: Path) -> dic
         return enrich_one(entry, use_github, icon_dir)
     except Exception as e:  # noqa: BLE001
         return {'error': f'Collecting repository data failed: {type(e).__name__}: {e}'}
+
+
+def module_source(module: dict) -> str:
+    if not module['found']:
+        return 'none'
+    return 'build files only' if module.get('build_files_only') else 'module.yml'
 
 
 def write_report(entries, data, path: Path):
@@ -282,7 +293,7 @@ def main(argv=None) -> int:
         for entry, result in zip(targets, results):
             data[entry.name] = result
             status = result.get('error') or (
-                f'{result["revision"]["kind"]}, module.yml {"yes" if result["module"]["found"] else "no"}'
+                f'{result["revision"]["kind"]}, module: {module_source(result["module"])}'
                 + (f', newer: {result["newer_release"]}' if result.get('newer_release') else ''))
             print(f'{entry.name:24} {status}', file=sys.stderr)
 

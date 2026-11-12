@@ -292,6 +292,9 @@ def online_one(entry: registry.Entry) -> list[tuple[str, str]]:
         else:
             out.append(('warning', f'no zephyr/module.yml at "{proj["revision"]}": the Zephyr build '
                         'will not detect this repository as a module'))
+    elif found[1] is None:
+        out.append(('note', f'no zephyr/module.yml; Zephyr finds module "{Path(proj["path"]).name}" from '
+                    'zephyr/CMakeLists.txt and zephyr/Kconfig'))
     else:
         try:
             info = registry.module_info(found[1], proj['path'])

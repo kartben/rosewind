@@ -14,7 +14,8 @@ registry maintainer then reviews it. Editing the issue updates the pull request.
 A module is listed when:
 
 - its repository is public and can be cloned over https without credentials;
-- it contains `zephyr/module.yml` at the listed revision, or it provides west extension commands
+- it contains `zephyr/module.yml` at the listed revision (or, failing that, both
+  `zephyr/CMakeLists.txt` and `zephyr/Kconfig`), or it provides west extension commands
   (`west.west-commands`);
 - its license is declared as an [SPDX expression](https://spdx.org/licenses/). Licenses with
   custom terms are accepted with a `LicenseRef-*` identifier and `links.license` pointing to the

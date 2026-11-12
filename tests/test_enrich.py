@@ -4,6 +4,7 @@
 """Collecting repository data, without network access."""
 
 import json
+import subprocess
 import urllib.error
 from datetime import date
 from pathlib import Path
@@ -83,3 +84,34 @@ def test_report_leaves_out_branch_tracking(tmp_path):
     text = report.read_text()
     assert 'zephyr/module.yml' in text
     assert 'Follows branch' not in text
+
+
+def git_repo(path, files):
+    """Commit `files` (path: text) to a new repository on branch main and return its URL."""
+    for name, text in files.items():
+        (path / name).parent.mkdir(parents=True, exist_ok=True)
+        (path / name).write_text(text)
+    git = ['git', '-C', str(path), '-c', 'user.name=t', '-c', 'user.email=t@example.org']
+    subprocess.run(git[:3] + ['init', '-q', '-b', 'main'], check=True)
+    subprocess.run(git + ['add', '.'], check=True)
+    subprocess.run(git + ['commit', '-q', '-m', 'files'], check=True)
+    return path.as_uri()
+
+
+def test_build_files_make_a_module(tmp_path):
+    both = git_repo(tmp_path / 'both', {'zephyr/CMakeLists.txt': '', 'zephyr/Kconfig': ''})
+    assert registry.read_module_yml(both, 'main') == ('zephyr/CMakeLists.txt', None)
+    one = git_repo(tmp_path / 'one', {'zephyr/CMakeLists.txt': ''})
+    assert registry.read_module_yml(one, 'main') is None
+
+
+def test_build_files_only_is_a_note(monkeypatch, tmp_path):
+    monkeypatch.setattr(registry, 'ls_remote', lambda url: {'refs/heads/zephyr': 'a' * 40})
+    monkeypatch.setattr(registry, 'read_module_yml', lambda url, rev: (registry.BUILD_FILES[0], None))
+    entry = registry.load_entry(registry.MODULES_DIR / 'lz4.yml')
+    data = enrich.enrich_one(entry, use_github=False, icon_dir=tmp_path)
+    name = Path(entry.west_project()['path']).name
+    assert data['module']['name'] == name and data['module']['build_files_only']
+    checks = registry.compute_checks(entry, data, date(2026, 11, 9))
+    assert any(c['code'] == 'no-module-yml' and c['level'] == 'info' and f'`{name}`' in c['message']
+               for c in checks)
