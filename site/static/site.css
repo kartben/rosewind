@@ -184,8 +184,7 @@ main { padding-block: 22px 8px; }
 .status { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .status.active { color: var(--ok); }
-.status.quiet { color: var(--warn); }
-.status.inactive { color: var(--idle); }
+.status.quiet, .status.inactive { color: var(--idle); }
 mark { background: var(--mark); color: inherit; border-radius: 3px; padding: 0 1px; }
 .empty { grid-column: 1 / -1; text-align: center; padding: 40px 16px; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
 
