@@ -98,6 +98,15 @@ def test_script_json_cannot_end_its_element():
     assert json.loads(text) == value
 
 
+@pytest.mark.parametrize('items, text', [
+    (['a'], 'a'),
+    (['a', 'b'], 'a and b'),
+    (['a', 'b', 'c'], 'a, b and c'),
+])
+def test_and_join(items, text):
+    assert build_site.and_join(items) == text
+
+
 def test_module_info():
     text = 'name: foo\nbuild:\n  depends: [bar]\n  settings:\n    board_root: .\n    dts_root: .\n' \
            'samples: [samples]\npackage-managers:\n  pip:\n    requirement-files: [r.txt]\n'

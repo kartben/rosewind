@@ -32,8 +32,9 @@
   -OutFile zephyr/submanifests/{{ x.name }}.yaml
 {% endfor %}{{ then | join('\n') }}</pre>
     </div>
-    {% if m.install_set|length > 1 %}
-    <p class="hint">Includes {{ m.install_set[:-1] | map(attribute='name') | join(', ') }}, a dependency.</p>
+    {% set deps = m.install_set[:-1] | map(attribute='name') | list %}
+    {% if deps %}
+    <p class="hint">Includes {{ 'its dependency' if deps | length == 1 else 'its dependencies' }} {{ deps | and_join }}.</p>
     {% endif %}
   </div>
   <div class="tabpanel" data-panel="yml" hidden>

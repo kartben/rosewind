@@ -147,6 +147,13 @@ def fmt_stars(n) -> str:
     return f'{n / 1000:.1f}k'.replace('.0k', 'k') if n >= 1000 else str(n)
 
 
+def and_join(items: list[str]) -> str:
+    """Join as in a sentence: "a", "a and b", "a, b and c"."""
+    if len(items) < 2:
+        return ''.join(items)
+    return f'{", ".join(items[:-1])} and {items[-1]}'
+
+
 # --- model -------------------------------------------------------------------
 
 def build_records(entries, categories, enriched, today: date, base_url: str, icon_dir: Path):
@@ -304,7 +311,7 @@ def main(argv=None) -> int:
     env = Environment(loader=FileSystemLoader(SITE_DIR / 'templates'),
                       autoescape=select_autoescape(['html']), trim_blocks=True, lstrip_blocks=True)
     env.filters.update(markdown=markdown, inline_code=inline_code, yaml_highlight=yaml_highlight,
-                       ago=ago, stars=fmt_stars)
+                       ago=ago, stars=fmt_stars, and_join=and_join)
     env.globals.update(config=config, base_url=base_url, categories=categories,
                        provides_labels=PROVIDES_LABELS, license_labels=LICENSE_LABELS,
                        submanifest_text=registry.submanifest_text, project_lines=registry.project_lines,

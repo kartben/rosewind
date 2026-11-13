@@ -60,6 +60,7 @@ def test_dependency_installed_alongside(site):
     page = (site / 'm' / 'wolftpm' / 'index.html').read_text()
     assert f'{BASE}/m/wolfssl.yaml' in page
     assert 'west update wolfssl wolftpm' in page
+    assert 'Includes its dependency wolfssl.' in page
 
 
 def test_contested_module_name_links_no_dependency(tmp_path):
