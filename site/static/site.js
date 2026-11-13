@@ -22,6 +22,11 @@
     try { localStorage.setItem('rosewind-theme', root.dataset.theme); } catch (e) { /* storage unavailable */ }
   });
 
+  /* last input, so cards are outlined only after keyboard use: focus that the panel
+     restores after a click also matches :focus-visible */
+  addEventListener('pointerdown', () => { root.dataset.input = 'pointer'; }, true);
+  addEventListener('keydown', () => { root.dataset.input = 'keyboard'; }, true);
+
   /* shell preference: Windows visitors see PowerShell first */
   let shell = /Win/.test(navigator.platform || navigator.userAgent) ? 'windows' : 'unix';
   try { shell = localStorage.getItem('rosewind-shell') || shell; } catch (e) { /* storage unavailable */ }
