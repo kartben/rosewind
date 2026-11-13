@@ -95,6 +95,11 @@ def test_detail_hides_passing_checks(site):
     assert page.index('checks-warn') < page.index('Follows branch') < page.index('class="install"')
 
 
+def test_module_page_names_owner_and_stars(site):
+    band = (site / 'm' / 'zenoh-pico' / 'index.html').read_text().split('<main', 1)[0]
+    assert '<div class="owner">eclipse-zenoh · <span aria-hidden="true">★</span> 294' in band
+
+
 def test_post_install_commands_on_their_own_line(site):
     page = (site / 'm' / 'dtsh' / 'index.html').read_text()
     assert 'west update dtsh\nwest packages -m dtsh pip --install' in page

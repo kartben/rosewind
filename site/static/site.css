@@ -227,7 +227,8 @@ html:has(.panel[open]) { overflow: hidden; }
 .band-head .thumb { width: 64px; height: 64px; border-radius: 14px; }
 .band-head .thumb span { font-size: 22px; }
 .detail-head h2 { font-size: 26px; line-height: 1.15; }
-.detail-head .owner { margin-top: 2px; font-size: 13px; }
+.detail-head .owner, .band-head .owner { margin-top: 2px; font-size: 13px; }
+.band-head > div { min-width: 0; }
 .detail-summary { margin: -6px 0 0; font-size: 17px; color: var(--muted); }
 .detail-page .detail-intro { display: none; }
 .detail section h2 { font-size: 19px; margin-bottom: 10px; }
