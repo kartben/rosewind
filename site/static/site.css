@@ -80,6 +80,11 @@ a { color: var(--link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 code, pre, .mono { font-family: var(--font-mono); }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.skip {
+  position: absolute; top: 8px; left: 8px; z-index: 20; padding: 8px 14px; border-radius: 8px;
+  background: var(--surface); color: var(--ink); box-shadow: var(--shadow);
+}
+.skip:not(:focus) { transform: translateY(-200%); }
 h1, h2, h3 { font-weight: 700; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
 
 .wrap {
