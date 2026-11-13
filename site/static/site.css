@@ -219,7 +219,10 @@ html:has(.panel[open]) { overflow: hidden; }
   min-height: 100%; display: grid; align-content: start; gap: 8px;
   padding: calc(14px + env(safe-area-inset-top, 0px)) max(22px, env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) 22px;
 }
-.panel-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; }
+.panel-bar {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px;
+  position: sticky; top: 0; z-index: 1; background: var(--bg); padding-block: 8px; margin-block: -8px;
+}
 .close { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; width: 36px; height: 36px; cursor: pointer; color: var(--ink); font-size: 18px; line-height: 1; }
 .detail { display: grid; gap: 20px; min-width: 0; }
 .detail-head { display: flex; align-items: center; gap: 14px; }
