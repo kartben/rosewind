@@ -46,8 +46,13 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
   }
-  function copyText(text) {
-    const done = () => toast('Copied');
+  function copyText(text, btn) {
+    const done = () => {
+      toast('Copied');
+      btn.textContent = 'Copied';
+      clearTimeout(btn.resetTimer);
+      btn.resetTimer = setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+    };
     const fallback = () => {
       const ta = document.createElement('textarea');
       ta.value = text;
@@ -86,7 +91,7 @@
         let text = src.textContent;
         // zsh runs "#" lines as commands unless interactivecomments is set: copy commands only
         if (src.matches('pre[data-os]')) text = text.split('\n').filter(l => !l.startsWith('#')).join('\n');
-        copyText(text.replace(/\n+$/, '') + '\n');
+        copyText(text.replace(/\n+$/, '') + '\n', btn);
       }
     }
   });
