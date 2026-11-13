@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
 # SPDX-License-Identifier: Apache-2.0
 
-"""Shared helpers for the Rosewind registry scripts."""
+"""Shared helpers for the Windrose registry scripts."""
 
 from __future__ import annotations
 
@@ -337,7 +337,7 @@ def read_module_yml(url: str, revision: str) -> tuple[str, str | None] | None:
     Returns (path, text) of the module file, (BUILD_FILES[0], None) when the revision has no module
     file but has BUILD_FILES, or None when Zephyr would not take it as a module.
     """
-    with tempfile.TemporaryDirectory(prefix='rosewind-') as tmp:
+    with tempfile.TemporaryDirectory(prefix='windrose-') as tmp:
         _git('init', '-q', cwd=tmp)
         _git('fetch', '-q', '--depth', '1', '--filter=blob:none', url, revision, cwd=tmp)
         for path in MODULE_FILES:

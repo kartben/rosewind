@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 name: New module
-description: Propose a module for Rosewind without writing the YAML yourself.
+description: Propose a module for Windrose without writing the YAML yourself.
 title: "New module: "
 labels: [new-module]
 body:

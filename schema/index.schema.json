@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/zephyrproject-rtos/rosewind/schema/index.schema.json",
-  "title": "Rosewind index",
+  "$id": "https://github.com/zephyrproject-rtos/windrose/schema/index.schema.json",
+  "title": "Windrose index",
   "description": "Published as index.json. Tools (west commands, IDE extensions) can rely on this contract; a breaking change increments schema-version.",
   "type": "object",
   "required": ["schema-version", "generated", "site", "categories", "modules"],

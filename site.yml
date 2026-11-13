@@ -1,12 +1,12 @@
 # SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
 # SPDX-License-Identifier: Apache-2.0
 
-name: Rosewind
-title: Rosewind · Third-party modules for Zephyr
+name: Windrose
+title: Windrose · Third-party modules for Zephyr
 headline: Extend Zephyr with third-party modules
 # Absolute URL of the published site, without trailing slash. build_site.py --base-url overrides it.
-base_url: https://zephyrproject-rtos.github.io/rosewind
-repository: https://github.com/zephyrproject-rtos/rosewind
+base_url: https://zephyrproject-rtos.github.io/windrose
+repository: https://github.com/zephyrproject-rtos/windrose
 branch: main
 docs_url: https://docs.zephyrproject.org/latest/develop/modules.html
 tagline: >-

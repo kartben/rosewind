@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/zephyrproject-rtos/rosewind/schema/entry.schema.json",
-  "title": "Rosewind module entry",
+  "$id": "https://github.com/zephyrproject-rtos/windrose/schema/entry.schema.json",
+  "title": "Windrose module entry",
   "description": "One file per module: modules/<name>.yml",
   "type": "object",
   "additionalProperties": false,

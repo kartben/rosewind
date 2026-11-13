@@ -43,7 +43,7 @@ NETWORK_ERRORS = (OSError, http.client.HTTPException, ValueError)
 def github_api(path: str) -> dict | None:
     req = urllib.request.Request(f'https://api.github.com/{path}',
                                  headers={'Accept': 'application/vnd.github+json',
-                                          'User-Agent': 'rosewind'})
+                                          'User-Agent': 'windrose'})
     token = os.environ.get('GITHUB_TOKEN')
     if token:
         req.add_header('Authorization', f'Bearer {token}')
@@ -118,7 +118,7 @@ def fetch(url: str, limit: int, deadline: float) -> bytes:
     left = deadline - time.monotonic()
     if left <= 0:
         raise TimeoutError('time budget spent')
-    req = urllib.request.Request(url, headers={'User-Agent': 'rosewind'})
+    req = urllib.request.Request(url, headers={'User-Agent': 'windrose'})
     data = b''
     with _OPENER.open(req, timeout=min(20, left)) as r:
         while len(data) <= limit:

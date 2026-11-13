@@ -19,7 +19,7 @@
   $('#theme')?.addEventListener('click', () => {
     const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
     root.dataset.theme = dark ? 'light' : 'dark';
-    try { localStorage.setItem('rosewind-theme', root.dataset.theme); } catch (e) { /* storage unavailable */ }
+    try { localStorage.setItem('windrose-theme', root.dataset.theme); } catch (e) { /* storage unavailable */ }
   });
 
   /* last input, so cards are outlined only after keyboard use: focus that the panel
@@ -29,7 +29,7 @@
 
   /* shell preference: Windows visitors see PowerShell first */
   let shell = /Win/.test(navigator.platform || navigator.userAgent) ? 'windows' : 'unix';
-  try { shell = localStorage.getItem('rosewind-shell') || shell; } catch (e) { /* storage unavailable */ }
+  try { shell = localStorage.getItem('windrose-shell') || shell; } catch (e) { /* storage unavailable */ }
   function applyShell(scope) {
     $$('.os-switch button', scope).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.os === shell)));
     $$('pre[data-os]', scope).forEach(p => { p.hidden = p.dataset.os !== shell; });
@@ -80,7 +80,7 @@
     const os = e.target.closest('.os-switch button');
     if (os) {
       shell = os.dataset.os;
-      try { localStorage.setItem('rosewind-shell', shell); } catch (err) { /* storage unavailable */ }
+      try { localStorage.setItem('windrose-shell', shell); } catch (err) { /* storage unavailable */ }
       applyShell(document);
       return;
     }
@@ -101,7 +101,7 @@
   const cardsEl = $('#cards');
   if (!grid || !cardsEl) return;
 
-  const search = window.rosewindSearch;
+  const search = window.windroseSearch;
   const CARDS = JSON.parse(cardsEl.textContent);
   const TAX = JSON.parse($('#taxonomy').textContent);
   const byName = new Map(CARDS.map(c => [c.name, c]));

@@ -3,9 +3,9 @@ SPDX-FileCopyrightText: Copyright The Zephyr Project Contributors
 SPDX-License-Identifier: Apache-2.0
 -->
 
-# Rosewind
+# Windrose
 
-Rosewind is a catalog of third-party [Zephyr modules](https://docs.zephyrproject.org/latest/develop/modules.html):
+Windrose is a catalog of third-party [Zephyr modules](https://docs.zephyrproject.org/latest/develop/modules.html):
 modules maintained outside the Zephyr tree and its default manifest. This repository holds the
 registry and the website built from it.
 
@@ -33,7 +33,7 @@ When the workspace manifest is Zephyr's `west.yml` (`west config manifest.path` 
 which imports every file in `zephyr/submanifests/`, run from the workspace root:
 
 ```shell
-curl -fsSL https://zephyrproject-rtos.github.io/rosewind/m/zenoh-pico.yaml \
+curl -fsSL https://zephyrproject-rtos.github.io/windrose/m/zenoh-pico.yaml \
      -o zephyr/submanifests/zenoh-pico.yaml
 west update zenoh-pico
 ```

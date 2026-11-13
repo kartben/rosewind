@@ -9,7 +9,7 @@
  */
 ((root, factory) => {
   if (typeof module === 'object' && module.exports) module.exports = factory();
-  else root.rosewindSearch = factory();
+  else root.windroseSearch = factory();
 })(typeof self !== 'undefined' ? self : this, () => {
   'use strict';
 
